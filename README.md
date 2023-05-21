@@ -2,7 +2,7 @@
 Backend Respository of SAP FYP Purchase Ordering
 
 ## Team Members
-1. 
+1. P2008716 TAY JIA HUI
 2. P2129583 AMALIE CHUA QI WEI
 3. 
 4. 

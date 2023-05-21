@@ -10,6 +10,7 @@ const purchaseOrderController = require('../../controller/purchaseOrderControlle
 //  ---> example: http://localhost:3000/api/user/
 //  ---> example2: http://localhost:3000/api/user/:id
 
-
+router.get('/', purchaseOrderController.getAllPO);
+router.get('/:prID', purchaseOrderController.getPObyID);
 
 module.exports = router;

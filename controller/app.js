@@ -15,6 +15,27 @@ app.use(cors());
 // app.use(express.json());
 
 
+function isLocalhost() 
+{
+    // console.log(url.includes('localhost') || url.includes('127.0.0.1'));
+    // return url.includes('localhost') || url.includes('127.0.0.1');
+    if (typeof window !== 'undefined') {
+        const hostname = window.location.hostname;
+        console.log('hostname   ' + hostname);
+        // isLocalhost(hostname);
+        if(hostname == 'localhost'){
+            return 'localhost:3000'
+        }
+        else if(hostname == 'abc-cooking-studio'){
+            return 'abc-cooking-studio-backend.azurewebsites.net'
+        }
+
+    }
+}
+
+const baseUrl = `http://${isLocalhost()}`;
+console.log('backendbaseurl ' + baseUrl);
+
 // set up for frontend
 // app.use("/", express.static(path.join(__dirname + '/frontend/.next')));
 // // app.use("/public", express.static('../frontend/public'));
@@ -26,7 +47,7 @@ app.use(cors());
 
 // display app running
 app.get('/', (req, res) => {
-  res.send(`app running on port ${PORT}`)
+  res.send(`App running on port ${PORT}`)
 });
 
 // setting main routes for API

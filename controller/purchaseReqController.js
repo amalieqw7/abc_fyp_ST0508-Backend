@@ -57,7 +57,7 @@ module.exports.getPRByUserID = async(req, res, next) => {
         }
     })
     .catch((err) => {
-        console.log(err)
+        console.log(err);
         res.status(500).send(`Unknown Error`);
     });
 };
@@ -84,7 +84,7 @@ module.exports.getPRByPRID = async(req, res, next) => {
         }
     })
     .catch((err) => {
-        console.log(err)
+        console.log(err);
         res.status(500).send(`Unknown Error`);
     });
 };
@@ -164,9 +164,8 @@ module.exports.addLineItem = async(req, res, next) => {
 // get PR by PR ID
 module.exports.getLineItemByPRID = async(req, res, next) => {
     let prId = parseInt(req.params.id);
-    console.log(prId)
+
     if(isNaN(prId)){
-        // console.log(prId)
         res.status(400).send(`UserId provided is not a number!`);
         return;
     }
@@ -182,7 +181,7 @@ module.exports.getLineItemByPRID = async(req, res, next) => {
         }
     })
     .catch((err) => {
-        console.log(err)
+        console.log(err);
         res.status(500).send(`Unknown Error`);
     });
 };

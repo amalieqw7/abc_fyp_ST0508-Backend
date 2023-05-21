@@ -97,7 +97,7 @@ const purchaseReqDB = {
             }
         })
         .catch((err) => {
-            console.log(err)
+            console.log(err);
             throw err;
         });
     },
@@ -176,7 +176,7 @@ const purchaseReqDB = {
             }
         })
         .catch((err) => {
-            console.log(err)
+            console.log(err);
             throw err;
         });
     },

@@ -39,7 +39,7 @@ module.exports.getInventoryByItemID = async(req, res, next) => {
         }
     })
     .catch((err) => {
-        console.log(err)
+        console.log(err);
         res.status(500).send(`Unknown Error`);
     });
 };

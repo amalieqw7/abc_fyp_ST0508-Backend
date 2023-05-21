@@ -47,7 +47,9 @@ console.log('backendbaseurl ' + baseUrl);
 
 // display app running
 app.get('/', (req, res) => {
-  res.send(`App running on port ${PORT}`)
+  res.send(`App running on port ${PORT}`);
+  isLocalhost();
+  console.log('backendbaseurl ' + baseUrl);
 });
 
 // setting main routes for API

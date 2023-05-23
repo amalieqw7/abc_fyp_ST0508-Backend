@@ -25,6 +25,8 @@ router.delete('/:paymentStatusID', paymentTrackController.deletePaymentStatusByI
 router.get('/supplier/:supplierName', paymentTrackController.getSupplierInformationByName)
 //get supplier info by id
 router.get('/supplier/info/:supplierID', paymentTrackController.getSupplierInformationByID)
-
-
+//get supplierid by pr
+router.get('/supplier/pr/:prID', paymentTrackController.getSIDbyPRID)
+//get id by status
+router.get('/status/:paymentStatus', paymentTrackController.getIDbyStatus)
 module.exports = router;

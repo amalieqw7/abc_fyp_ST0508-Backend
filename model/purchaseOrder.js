@@ -56,6 +56,17 @@ const purchaseOrderDB = {
             throw err;
         });
 
+    },
+
+    savePO: async(poID) => {
+        let sql = `INSERT INTO purchaseOrder (poID, prID, paymentStatusID, purchaseStatusID, invoice, deliveryOrder, qtyReceived, ptRemarks, ptReceipt)
+        VALUES (?,?,?,?,?,?,?,?,?)`;
+
+        return connection.promise()
+        .query(sql, [poID, prID, paymentStatusID, purchaseStatusID, invoice, deliveryOrder, qtyReceived, ptRemarks, ptReceipt])
+        .catch((err) => {
+            console.log(err)
+        })
     }
 };
 

@@ -5,6 +5,7 @@ const router = express.Router();
 // for each routes file, add a const & router.use
 
 const DBTableRoutes = require('./DBTableRoutes');
+const userRoutes = require('./userRoutes');
 const purchaseReqRoutes = require('./idvRoutes/purchaseReqRoutes');
 const inventoryRoutes = require('./idvRoutes/inventoryRoutes');
 const purchaseOrderRoutes = require('./idvRoutes/purchaseOrderRoutes');
@@ -13,6 +14,9 @@ const paymentTrackRoutes = require('./idvRoutes/paymentTrackRoutes');
 
 // Database Route
 router.use('/DBTable', DBTableRoutes);
+
+// User Routes
+router.use('/user', userRoutes);
 
 // Individual Routes
 router.use('/purchaseReq', purchaseReqRoutes);

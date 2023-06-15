@@ -81,6 +81,19 @@ module.exports.purchaseRequestTable = async(req, res, next) => {
         });
 };
 
+// Delivery Location
+module.exports.deliveryLocationTable = async(req, res ,next) => {
+    return DBTablesModel
+        .initDeliveryLocationTable()
+        .then(() => {
+            return res.status(201).send(`Delivery Location Table Created!`);
+        })
+        .catch((err) =>{
+            console.log(err);
+            return res.status(500).send(`Table Creation Failed`);
+        });
+};
+
 // Item Table
 module.exports.itemTable = async(req, res ,next) => {
     return DBTablesModel

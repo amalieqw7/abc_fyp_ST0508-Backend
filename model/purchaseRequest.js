@@ -4,11 +4,11 @@ const purchaseReqDB = {
     // ===============================
     // PR
     // add PR
-    addPR: async(requestDate, userID, supplierID, paymentModeID, branchID, remarks) => {
-        let sql = `INSERT INTO purchaseRequest(requestDate, userID, supplierID, paymentModeID, branchID, remarks) VALUES (?,?,?,?,?,?)`;
+    addPR: async(targetDeliveryDate, userID, supplierID, paymentModeID, remarks) => {
+        let sql = `INSERT INTO purchaseRequest(targetDeliveryDate, userID, supplierID, paymentModeID, remarks) VALUES (?,?,?,?,?)`;
 
         return connection.promise()
-        .query(sql, [requestDate, userID, supplierID, paymentModeID, branchID, remarks])
+        .query(sql, [targetDeliveryDate, userID, supplierID, paymentModeID, remarks])
         .catch((err) => {
             console.log(err);
             throw err;
@@ -18,9 +18,10 @@ const purchaseReqDB = {
     // get all PR
     getAllPR: async() => {
         let sql = `SELECT PR.prID, U.name, B.branchName, S.supplierName, PR.prStatusID, PRS.prStatus
-                    FROM purchaseRequest PR, user U, branch B, supplier S, prStatus PRS
+                    FROM purchaseRequest PR, user U, branch B, deliveryLocation DL, supplier S, prStatus PRS
                     WHERE PR.userID = U.userID
-                    AND PR.branchID = B.branchID
+                    AND PR.prID = DL.prID
+                    AND DL.branchID = B.branchID
                     AND PR.supplierID = S.supplierID
                     AND PR.prStatusID = PRS.prStatusID
                     ORDER BY prID asc`;
@@ -44,9 +45,10 @@ const purchaseReqDB = {
     // get PR by userid
     getPRByUserID: async(userID) => {
         let sql = `SELECT PR.prID, PR.userID, U.name, B.branchName, S.supplierName, PR.prStatusID, PRS.prStatus
-                    FROM purchaseRequest PR, user U, branch B, supplier S, prStatus PRS
+                    FROM purchaseRequest PR, user U, branch B, deliveryLocation DL, supplier S, prStatus PRS
                     WHERE PR.userID = U.userID
-                    AND PR.branchID = B.branchID
+                    AND PR.prID = DL.prID
+                    AND DL.branchID = B.branchID
                     AND PR.supplierID = S.supplierID
                     AND PR.prStatusID = PRS.prStatusID
                     AND PR.userID = ?
@@ -70,14 +72,15 @@ const purchaseReqDB = {
 
     // get PR by PR ID
     getPRByPRID: async(prID) => {
-        let sql = `SELECT PR.prID, PR.requestDate, PR.userID, U.name, B.branchName, S.supplierName, PM.paymentMode, PR.remarks, PR.prStatusID, PRS.prStatus
-                    FROM purchaseRequest PR, user U, branch B, supplier S, paymentMode PM, prStatus PRS
+        let sql = `SELECT PR.prID, PR.requestDate, PR.targetDeliveryDate, PR.userID, U.name, B.branchName, S.supplierName, PM.paymentMode, PR.remarks, PR.prStatusID, PRS.prStatus
+                    FROM purchaseRequest PR, user U, branch B, deliveryLocation DL, supplier S, paymentMode PM, prStatus PRS
                     WHERE PR.userID = U.userID
-                    AND PR.branchID = B.branchID
+                    AND PR.prID = DL.prID
+                    AND DL.branchID = B.branchID
                     AND PR.supplierID = S.supplierID
                     AND PR.paymentModeID = PM.paymentModeID
                     AND PR.prStatusID = PRS.prStatusID
-                    AND prID = ?
+                    AND PR.prID = ?
                     ORDER BY prID asc`;
 
                     // SELECT PR.prID, I.itemName, LI.quantity, I.unitPrice, LI.totalUnitPrice
@@ -90,6 +93,28 @@ const purchaseReqDB = {
         .query(sql, [prID])
         .then((result) => {
             if (result[0] == 0){
+                return null;
+            }
+            else{
+                return result[0];
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            throw err;
+        });
+    },
+
+    // get latest PR ID created
+    getLatestPRIDByUserID: async(userID) => {
+        let sql = `SELECT MAX(prID) AS prID, userID
+                    FROM purchaseRequest
+                    WHERE userID = ?`;
+
+        return connection.promise()
+        .query(sql, [userID])
+        .then((result) => {
+            if(result[0] == 0){
                 return null;
             }
             else{
@@ -252,6 +277,66 @@ const purchaseReqDB = {
     },
 
     // get branch by id
+
+    // ===============================
+    // Delivery Location
+    // add deliveryLocation
+    addDeliveryLocation: async(prID, branchID) => {
+        let sql = `INSERT INTO deliveryLocation(prID, branchID) VALUES (?,?)`;
+
+        return connection.promise()
+        .query(sql, [prID, branchID])
+        .catch((err) => {
+            console.log(err);
+            throw err;
+        });
+    },
+
+    // get all deliveryLocation
+    getAllDeliveryLocation: async() => {
+        let sql = `SELECT * FROM deliveryLocation
+                    ORDER BY deliveryLocationID asc`;
+
+        return connection.promise()
+        .query(sql)
+        .then((result) => {
+            if(result[0] == 0){
+                return null;
+            }
+            else{
+                return result[0];
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            throw err;
+        });
+    },
+
+    // get branch by PR ID
+    getDeliveryLocationByPRID: async(prID) => {
+        let sql = `SELECT PR.prID, DL.branchID, B.branchName
+                    FROM deliveryLocation DL, branch B, purchaseRequest PR
+                    WHERE PR.prID = DL.prID
+                    AND DL.branchID = B.branchID
+                    AND DL.prID = ?
+                    ORDER BY branchID asc`;
+
+        return connection.promise()
+        .query(sql, [prID])
+        .then((result) => {
+            if (result[0] == 0){
+                return null;
+            }
+            else{
+                return result[0];
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            throw err;
+        });
+    },
 
 
     // ===============================

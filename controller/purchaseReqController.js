@@ -67,7 +67,7 @@ module.exports.getPRByPRID = async(req, res, next) => {
     let prId = parseInt(req.params.id);
 
     if(isNaN(prId)){
-        res.status(400).send(`UserId provided is not a number!`);
+        res.status(400).send(`Purchase Request ID provided is not a number!`);
         return;
     }
 
@@ -189,7 +189,7 @@ module.exports.getLineItemByPRID = async(req, res, next) => {
     let prId = parseInt(req.params.id);
 
     if(isNaN(prId)){
-        res.status(400).send(`PRId provided is not a number!`);
+        res.status(400).send(`Purchase Request ID provided is not a number!`);
         return;
     }
 
@@ -311,7 +311,7 @@ module.exports.getDeliveryLocationByPRID = async(req, res, next) => {
     let prId = parseInt(req.params.id);
 
     if(isNaN(prId)){
-        res.status(400).send(`PR Id provided is not a number!`);
+        res.status(400).send(`Purchase Request ID provided is not a number!`);
         return;
     }
 

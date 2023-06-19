@@ -14,6 +14,7 @@ router.post('/', purchaseReqController.addPR);
 router.get('/', purchaseReqController.getAllPR);
 router.get('/:id', purchaseReqController.getPRByUserID);
 router.get('/PR/:id', purchaseReqController.getPRByPRID);
+router.get('/latestPRID/:id', purchaseReqController.getLatestPRIDByUserID);
 router.put('/PR/:id', purchaseReqController.updatePRStatus);
 router.delete('/PR/:id', purchaseReqController.deletePRById);
 
@@ -28,6 +29,11 @@ router.get('/paymentMode/all', purchaseReqController.getAllPaymentMode);
 // Branch
 router.post('/branch', purchaseReqController.addBranch);
 router.get('/branch/all', purchaseReqController.getAllBranch);
+
+// Delivery Location
+router.post('/deliveryLocation', purchaseReqController.addDeliveryLocation);
+router.get('/deliveryLocation/show/all', purchaseReqController.getAllDeliveryLocation);
+router.get('/deliveryLocation/:id', purchaseReqController.getDeliveryLocationByPRID);
 
 // PR Status Types
 router.post('/PRStatus', purchaseReqController.addPRStatusType);

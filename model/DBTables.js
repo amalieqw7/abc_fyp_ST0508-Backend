@@ -239,9 +239,21 @@ const DBTables = {
             console.log(error)
             throw error;
         });
-    }
+    },
     // Purchase Status Table
-
+    initpurchaseStatusTable: () => {
+      const sql = `CREATE TABLE purchaseStatus (
+          purchaseStatusID INT auto_increment,
+          purchaseStatus VARCHAR(255) NOT NULL UNIQUE,
+          PRIMARY KEY (purchaseStatusID)
+      )`;
+      return connection.promise()
+      .query(sql)
+      .catch((error) => {
+          console.log(error)
+          throw error;
+      });
+  }
 
     // PURCHASE PLANNER
     // Planner Table

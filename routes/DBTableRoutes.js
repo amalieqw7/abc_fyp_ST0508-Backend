@@ -30,6 +30,7 @@ router.post('/supplier', DBTablesController.supplierTable);
 router.post('/supplierscategory', DBTablesController.suppliersCategoryTable);
 
 // PURCHASE ORDERING
+router.post('/purchaseStatus', DBTablesController.purchaseStatusTable);
 
 // PAYMENT TRACKING
 router.post('/paymentStatus', DBTablesController.paymentStatusTable);

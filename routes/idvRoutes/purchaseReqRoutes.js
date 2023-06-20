@@ -39,4 +39,7 @@ router.get('/deliveryLocation/:id', purchaseReqController.getDeliveryLocationByP
 router.post('/PRStatus', purchaseReqController.addPRStatusType);
 router.get('/PRStatus/all', purchaseReqController.getAllPRStatusType);
 
+// Search
+router.get('/search/:id', purchaseReqController.searchPRByUserID);
+
 module.exports = router;

@@ -81,6 +81,19 @@ module.exports.purchaseRequestTable = async(req, res, next) => {
         });
 };
 
+// Delivery Location
+module.exports.deliveryLocationTable = async(req, res ,next) => {
+    return DBTablesModel
+        .initDeliveryLocationTable()
+        .then(() => {
+            return res.status(201).send(`Delivery Location Table Created!`);
+        })
+        .catch((err) =>{
+            console.log(err);
+            return res.status(500).send(`Table Creation Failed`);
+        });
+};
+
 // Item Table
 module.exports.itemTable = async(req, res ,next) => {
     return DBTablesModel
@@ -177,6 +190,17 @@ module.exports.paymentStatusTable = (req, res, next) => {
 }
 
 // Purchase Status Table
+module.exports.purchaseStatusTable = (req, res, next) => {
+  return DBTablesModel
+  .initpurchaseStatusTable()
+  .then(() => {
+      return res.status(201).send(`Purchase Status Table Created!`);
+  })
+  .catch((err) => {
+      console.log(err);
+      return res.status(500).send(`Failed to create Purchase Status Table`);
+  })
+}
 
 
 // PURCHASE PLANNER

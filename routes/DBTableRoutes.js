@@ -19,6 +19,7 @@ router.post('/paymentMode', DBTablesController.paymentModeTable);
 router.post('/branch', DBTablesController.branchTable);
 router.post('/prStatus', DBTablesController.prStatusTable);
 router.post('/purchaseReq', DBTablesController.purchaseRequestTable);
+router.post('/deliveryLocation', DBTablesController.deliveryLocationTable);
 router.post('/item', DBTablesController.itemTable);
 router.post('/inventory', DBTablesController.inventoryTable);
 router.post('/lineItem',DBTablesController.lineItemTable);
@@ -30,6 +31,7 @@ router.post('/supplier', DBTablesController.supplierTable);
 router.post('/supplierscategory', DBTablesController.suppliersCategoryTable);
 
 // PURCHASE ORDERING
+router.post('/purchaseStatus', DBTablesController.purchaseStatusTable);
 
 // PAYMENT TRACKING
 router.post('/paymentStatus', DBTablesController.paymentStatusTable);

@@ -91,17 +91,34 @@ const DBTables = {
     // Purchase Request Table
     initPurchaseRequestTable: async() => {
         const sql = 
-        `CREATE TABLE purchaseRequest (
+        `CREATE TABLE purchaseReq (
             prID INT auto_increment,
-            requestDate VARCHAR(100) NOT NULL,
+            requestDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             userID INT NOT NULL,
             supplierID INT NOT NULL,
             paymentModeID INT NOT NULL,
-            branchID INT NOT NULL,
+            targetDeliveryDate TIMESTAMP NOT NULL,
             remarks VARCHAR(500),
             apprRemarks VARCHAR(500),
             prStatusID INT DEFAULT(1),
             PRIMARY KEY (prID)
+        )`;
+        return connection.promise()
+            .query(sql)
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            })
+    },
+
+    // Delivery Location Table
+    initDeliveryLocationTable: async() => {
+        const sql = 
+        `CREATE TABLE deliveryLocation (
+            deliveryLocationID INT auto_increment,
+            prID INT NOT NULL,
+            branchID INT NOT NULL,
+            PRIMARY KEY (deliveryLocationID)
         )`;
         return connection.promise()
             .query(sql)
@@ -239,9 +256,21 @@ const DBTables = {
             console.log(error)
             throw error;
         });
-    }
+    },
     // Purchase Status Table
-
+    initpurchaseStatusTable: () => {
+      const sql = `CREATE TABLE purchaseStatus (
+          purchaseStatusID INT auto_increment,
+          purchaseStatus VARCHAR(255) NOT NULL UNIQUE,
+          PRIMARY KEY (purchaseStatusID)
+      )`;
+      return connection.promise()
+      .query(sql)
+      .catch((error) => {
+          console.log(error)
+          throw error;
+      });
+  }
 
     // PURCHASE PLANNER
     // Planner Table

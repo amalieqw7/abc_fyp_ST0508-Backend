@@ -97,7 +97,7 @@ const DBTables = {
             userID INT NOT NULL,
             supplierID INT NOT NULL,
             paymentModeID INT NOT NULL,
-            targetDeliveryDate VARCHAR(100) NOT NULL,
+            targetDeliveryDate TIMESTAMP NOT NULL,
             remarks VARCHAR(500),
             apprRemarks VARCHAR(500),
             prStatusID INT DEFAULT(1),

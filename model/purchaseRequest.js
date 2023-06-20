@@ -17,14 +17,15 @@ const purchaseReqDB = {
 
     // get all PR
     getAllPR: async() => {
-        let sql = `SELECT PR.prID, U.name, B.branchName, S.supplierName, PR.prStatusID, PRS.prStatus
+        let sql = `SELECT PR.prID, U.name, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PR.prStatusID, PRS.prStatus
                     FROM purchaseRequest PR, user U, branch B, deliveryLocation DL, supplier S, prStatus PRS
                     WHERE PR.userID = U.userID
                     AND PR.prID = DL.prID
                     AND DL.branchID = B.branchID
                     AND PR.supplierID = S.supplierID
                     AND PR.prStatusID = PRS.prStatusID
-                    ORDER BY prID asc`;
+                    GROUP BY PR.prID
+                    ORDER BY prID asc;`;
 
         return connection.promise()
         .query(sql)
@@ -44,7 +45,7 @@ const purchaseReqDB = {
 
     // get PR by userid
     getPRByUserID: async(userID) => {
-        let sql = `SELECT PR.prID, PR.userID, U.name, B.branchName, S.supplierName, PR.prStatusID, PRS.prStatus
+        let sql = `SELECT PR.prID, PR.userID, U.name, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PR.prStatusID, PRS.prStatus
                     FROM purchaseRequest PR, user U, branch B, deliveryLocation DL, supplier S, prStatus PRS
                     WHERE PR.userID = U.userID
                     AND PR.prID = DL.prID
@@ -52,7 +53,8 @@ const purchaseReqDB = {
                     AND PR.supplierID = S.supplierID
                     AND PR.prStatusID = PRS.prStatusID
                     AND PR.userID = ?
-                    ORDER BY prID asc`;
+                    GROUP BY PR.prID
+                    ORDER BY prID asc;`;
 
         return connection.promise()
         .query(sql, [userID])
@@ -72,7 +74,7 @@ const purchaseReqDB = {
 
     // get PR by PR ID
     getPRByPRID: async(prID) => {
-        let sql = `SELECT PR.prID, PR.requestDate, PR.targetDeliveryDate, PR.userID, U.name, B.branchName, S.supplierName, PM.paymentMode, PR.remarks, PR.prStatusID, PRS.prStatus
+        let sql = `SELECT PR.prID, PR.requestDate, PR.targetDeliveryDate, PR.userID, U.name, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PM.paymentMode, PR.remarks, PR.prStatusID, PRS.prStatus
                     FROM purchaseRequest PR, user U, branch B, deliveryLocation DL, supplier S, paymentMode PM, prStatus PRS
                     WHERE PR.userID = U.userID
                     AND PR.prID = DL.prID
@@ -81,7 +83,8 @@ const purchaseReqDB = {
                     AND PR.paymentModeID = PM.paymentModeID
                     AND PR.prStatusID = PRS.prStatusID
                     AND PR.prID = ?
-                    ORDER BY prID asc`;
+                    GROUP BY PR.prID
+                    ORDER BY prID asc;`;
 
                     // SELECT PR.prID, I.itemName, LI.quantity, I.unitPrice, LI.totalUnitPrice
                     // FROM purchaseRequest PR, item I, lineItem LI
@@ -390,7 +393,7 @@ const purchaseReqDB = {
                             AND PR.supplierID = S.supplierID
                             AND PR.prStatusID = PRS.prStatusID
                             AND PR.userID = ?
-                            GROUP BY PR.prID;`
+                            GROUP BY PR.prID;`;
 
         // Chcek if temp table exists
         const checkPRTempTableQuery = `DROP TABLE IF EXISTS pr_temp_table;`;

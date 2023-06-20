@@ -364,3 +364,31 @@ module.exports.getAllPRStatusType = async(req, res, next) => {
 };
 
 // get status by id 
+
+// ===============================
+// Search Function
+// Search All columns for Purchaser by User ID
+module.exports.searchPRByUserID = async(req, res, next) => {
+    let userId = parseInt(req.params.id);
+    let searchValue = req.body.searchValue;
+
+    if(isNaN(userId)){
+        res.status(400).send(`UserId provided is not a number!`);
+        return;
+    }
+
+    return purchaseRequestModel
+    .searchPRByUserID(searchValue, userId)
+    .then((result) => {
+        if(result == null){
+            res.status(404).send(`Purchase Requests with "${searchValue}" Do not exist!`);
+        }
+        else{
+            res.status(200).send(result);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown Error`);
+    });
+};

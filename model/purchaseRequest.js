@@ -17,14 +17,15 @@ const purchaseReqDB = {
 
     // get all PR
     getAllPR: async() => {
-        let sql = `SELECT PR.prID, U.name, B.branchName, S.supplierName, PR.prStatusID, PRS.prStatus
+        let sql = `SELECT PR.prID, U.name, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PR.prStatusID, PRS.prStatus
                     FROM purchaseRequest PR, user U, branch B, deliveryLocation DL, supplier S, prStatus PRS
                     WHERE PR.userID = U.userID
                     AND PR.prID = DL.prID
                     AND DL.branchID = B.branchID
                     AND PR.supplierID = S.supplierID
                     AND PR.prStatusID = PRS.prStatusID
-                    ORDER BY prID asc`;
+                    GROUP BY PR.prID
+                    ORDER BY prID asc;`;
 
         return connection.promise()
         .query(sql)
@@ -44,7 +45,7 @@ const purchaseReqDB = {
 
     // get PR by userid
     getPRByUserID: async(userID) => {
-        let sql = `SELECT PR.prID, PR.userID, U.name, B.branchName, S.supplierName, PR.prStatusID, PRS.prStatus
+        let sql = `SELECT PR.prID, PR.userID, U.name, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PR.prStatusID, PRS.prStatus
                     FROM purchaseRequest PR, user U, branch B, deliveryLocation DL, supplier S, prStatus PRS
                     WHERE PR.userID = U.userID
                     AND PR.prID = DL.prID
@@ -52,7 +53,8 @@ const purchaseReqDB = {
                     AND PR.supplierID = S.supplierID
                     AND PR.prStatusID = PRS.prStatusID
                     AND PR.userID = ?
-                    ORDER BY prID asc`;
+                    GROUP BY PR.prID
+                    ORDER BY prID asc;`;
 
         return connection.promise()
         .query(sql, [userID])
@@ -72,7 +74,7 @@ const purchaseReqDB = {
 
     // get PR by PR ID
     getPRByPRID: async(prID) => {
-        let sql = `SELECT PR.prID, PR.requestDate, PR.targetDeliveryDate, PR.userID, U.name, B.branchName, S.supplierName, PM.paymentMode, PR.remarks, PR.prStatusID, PRS.prStatus
+        let sql = `SELECT PR.prID, PR.requestDate, PR.targetDeliveryDate, PR.userID, U.name, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PM.paymentMode, PR.remarks, PR.prStatusID, PRS.prStatus
                     FROM purchaseRequest PR, user U, branch B, deliveryLocation DL, supplier S, paymentMode PM, prStatus PRS
                     WHERE PR.userID = U.userID
                     AND PR.prID = DL.prID
@@ -81,7 +83,8 @@ const purchaseReqDB = {
                     AND PR.paymentModeID = PM.paymentModeID
                     AND PR.prStatusID = PRS.prStatusID
                     AND PR.prID = ?
-                    ORDER BY prID asc`;
+                    GROUP BY PR.prID
+                    ORDER BY prID asc;`;
 
                     // SELECT PR.prID, I.itemName, LI.quantity, I.unitPrice, LI.totalUnitPrice
                     // FROM purchaseRequest PR, item I, lineItem LI
@@ -376,6 +379,54 @@ const purchaseReqDB = {
 
     // get status by id 
 
+
+    // ===============================
+    // Search Function
+    // Search All columns for Purchaser by User ID
+    searchPRByUserID: async(searchValue, userID) => {
+
+        const selectSQL = `SELECT PR.prID, U.name, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PR.prStatusID, PRS.prStatus
+                            FROM purchaseRequest PR, user U, branch B, deliveryLocation DL, supplier S, prStatus PRS
+                            WHERE PR.prID = DL.prID
+                            AND DL.branchID = B.branchID
+                            AND PR.userID = U.userID
+                            AND PR.supplierID = S.supplierID
+                            AND PR.prStatusID = PRS.prStatusID
+                            AND PR.userID = ?
+                            GROUP BY PR.prID;`;
+
+        // Chcek if temp table exists
+        const checkPRTempTableQuery = `DROP TABLE IF EXISTS pr_temp_table;`;
+        connection.promise().query(checkPRTempTableQuery);
+
+        // // SQL to create temp table
+        const createTempTableQuery = `CREATE TEMPORARY TABLE pr_temp_table AS ${selectSQL}`;
+        connection.promise().query(createTempTableQuery, [userID]);
+
+        // SQL to search
+        const searchQuery = `SELECT * FROM pr_temp_table 
+                                WHERE prID LIKE '%${searchValue}%' 
+                                OR name LIKE '%${searchValue}%' 
+                                OR branchName LIKE '%${searchValue}%'
+                                OR supplierName LIKE '%${searchValue}%'
+                                OR prStatus LIKE '%${searchValue}%'
+                                ORDER BY prID asc;`;
+
+        return connection.promise()
+        .query(searchQuery, [searchValue])
+        .then((result) => {
+            if(result[0] == 0){
+                return null;
+            }
+            else{
+                return result[0];
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            throw err;
+        });
+    },
 };
 
 module.exports = purchaseReqDB;

@@ -10,6 +10,11 @@ const trackOrderController = require('../../controller/trackOrderController');
 //  ---> example: http://localhost:3000/api/user/
 //  ---> example2: http://localhost:3000/api/user/:id
 
+// get all track orders
 router.get('/', trackOrderController.getAllTrackOrder);
+// create status
+router.post('/purchaseStatus', trackOrderController.addPurchaseStatus);
+// get all purchase status
+router.get('/purchaseStatus/all', trackOrderController.getAllPurchaseStatus);
 
 module.exports = router;

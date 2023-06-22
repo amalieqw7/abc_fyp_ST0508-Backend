@@ -16,5 +16,7 @@ router.get('/', trackOrderController.getAllTrackOrder);
 router.post('/purchaseStatus', trackOrderController.addPurchaseStatus);
 // get all purchase status
 router.get('/purchaseStatus/all', trackOrderController.getAllPurchaseStatus);
+// create purchase order
+router.post('/purchaseOrder', trackOrderController.addPurchaseOrder);
 
 module.exports = router;

@@ -42,3 +42,21 @@ module.exports.getAllPurchaseStatus = async(req, res, next) => {
       }
   });
 };
+
+// add purchase order
+module.exports.addPurchaseOrder = async(req, res, next) => {
+  let prID = req.body.prID;
+  let paymentStatusID = req.body.paymentStatusID;
+  let purchaseStatusID = req.body.purchaseStatusID;
+  let ptRemarks = req.body.ptRemarks;
+
+  return trackOrderModel
+  .addPurchaseOrder(prID, paymentStatusID, purchaseStatusID, ptRemarks)
+  .then(() => {
+      return res.status(201).send(`Purchase Order Successful!`);
+  })
+  .catch((err) => {
+      console.log(err);
+      return res.status(500).send(`Unknown Error`);
+  });
+};

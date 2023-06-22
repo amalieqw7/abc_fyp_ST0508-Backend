@@ -3,7 +3,7 @@ const connection = require('../db');
 const trackOrderDB = {
   // get all track order to display
   getAllTrackOrder: async () => {
-    let sql = `SELECT PR.prID, U.name, S.supplierName
+    let sql = `SELECT PR.prID, DATE_FORMAT(PR.requestdate, "%d %M %Y") as requestDate, U.name, S.supplierName
               FROM purchaseRequest PR, user U, supplier S
               WHERE PR.userID = U.userID
               AND PR.supplierID = S.supplierID

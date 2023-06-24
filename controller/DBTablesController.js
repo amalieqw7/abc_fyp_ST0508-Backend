@@ -175,6 +175,17 @@ module.exports.suppliersCategoryTable = (req, res, next) => {
 
 // PURCHASE ORDERING
 // Purchase Order Table
+module.exports.purchaseOrderTable = async(req, res, next) => {
+    return DBTablesModel
+        .initPurchaseOrderTable()
+        .then(() => {
+            return res.status(201).send(`Purchase Order Table Created!`);
+        })
+        .catch((err) =>{
+            console.log(err);
+            return res.status(500).send(`Table Creation Failed`);
+        });
+};
 
 // Payament Status Table
 module.exports.paymentStatusTable = (req, res, next) => {

@@ -54,6 +54,12 @@ module.exports.addPurchaseOrder = async(req, res, next) => {
   })
   .catch((err) => {
       console.log(err);
-      return res.status(500).send(`Unknown Error`);
+      if(err.code === 'ER_DUP_ENTRY'){
+        console.log("DUPLICATE");
+        return res.status(409).send(`Duplicate Purchase Order!`);
+      }
+      else{
+        return res.status(500).send(`Unknown Error`);
+      }
   });
 };

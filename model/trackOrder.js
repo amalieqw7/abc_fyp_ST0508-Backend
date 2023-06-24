@@ -61,7 +61,7 @@ const trackOrderDB = {
   },
 
   // insert data into purchase order
-  addPurchaseOrder: async (prID, paymentStatusID, purchaseStatusID, ptRemarks) => {
+  addPurchaseOrder: async (prID) => {
     let sql = `INSERT INTO purchaseOrder(prID) VALUES (?);`;                           
 
     return connection.promise()

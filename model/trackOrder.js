@@ -104,7 +104,7 @@ const trackOrderDB = {
 
     // get purchase order details by PO ID
     getPODByPOID: async (poID) => {
-        let sql = `SELECT PR.requestDate, U.name, S.supplierName, B.branchName, payM.paymentMode, PR.remarks
+        let sql = `SELECT DATE_FORMAT(PR.requestDate, "%d %M %Y"), U.name, S.supplierName, B.branchName, payM.paymentMode, PR.remarks
               FROM purchaseOrder PO, purchaseRequest PR, user U, supplier S, branch B, paymentMode payM, deliveryLocation DL
               WHERE PR.prID = DL.prID
               AND DL.branchID = B.branchID
@@ -115,12 +115,6 @@ const trackOrderDB = {
               AND DL.prID = PR.prID
               AND PO.poID = ?
               `;
-
-        // SELECT PR.prID, I.itemName, LI.quantity, I.unitPrice, LI.totalUnitPrice
-        // FROM purchaseRequest PR, item I, lineItem LI
-        // WHERE PR.prID = LI.prID
-        // AND LI.itemID = I.itemID
-        // ORDER BY LI.prID;
 
         return connection.promise()
             .query(sql, [poID])
@@ -170,7 +164,29 @@ const trackOrderDB = {
             });
     },
 
-    // hello
+    // update PO dropdown status by id
+    updatePOByPoId: async (purchaseStatusID, poID) => {
+        let sql = `UPDATE purchaseOrder 
+        SET purchaseStatusID = ?
+        WHERE poID = ?`
+
+        return connection.promise()
+            .query(sql, [purchaseStatusID, poID])
+            .then((result) => {
+                console.log(result);
+                if (result.length == 0) {
+                    return null;
+                }
+                else {
+                    console.log(result[0]);
+                    return result[0];
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            });
+    }
 
 };
 

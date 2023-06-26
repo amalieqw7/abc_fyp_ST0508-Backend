@@ -132,3 +132,31 @@ module.exports.getPDByPOID = async(req, res, next) => {
         res.status(500).send(`Unknown Error`);
     });
 };
+
+// update PO dropdown status by id
+
+module.exports.updatePOByPoId = async(req, res, next) => {
+    let poID= parseInt(req.params.id);
+    let purchaseStatusID = req.body.purchaseStatusID;
+
+    if (isNaN(poID)) {
+        res.status(400).send(`Purchase Request ID provided is not a number!`);
+        return;
+    };
+
+    return trackOrderModel
+    .updatePOByPoId(purchaseStatusID, poID)
+    .then((result) => {
+        if(result.affectedRows == 0){
+            res.status(404).send(`Dropdown not updated.`);
+        }
+        else{
+            res.status(201).send(`Dropdown updated successfully!`);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        return res.status(500).send(`Unknown Error`);
+    });
+    
+}

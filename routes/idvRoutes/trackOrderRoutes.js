@@ -12,11 +12,19 @@ const trackOrderController = require('../../controller/trackOrderController');
 
 // get all track orders
 router.get('/', trackOrderController.getAllTrackOrder);
-// create status
+// create purchase status
 router.post('/purchaseStatus', trackOrderController.addPurchaseStatus);
 // get all purchase status
 router.get('/purchaseStatus/all', trackOrderController.getAllPurchaseStatus);
-// create purchase order
+// insert data into purchase order table
 router.post('/purchaseOrder', trackOrderController.addPurchaseOrder);
+// get purchase order by ID
+router.get('/purchaseOrder/:id', trackOrderController.getPOByPOID);
+// get purchase order details by ID 
+router.get('/purchaseOrderDetails/:id', trackOrderController.getPODByPOID);
+// get product details by PO ID 
+router.get('/productDetails/:id', trackOrderController.getPDByPOID);
+// update PO status dropdown by PO ID 
+router.put('/purchaseOrderStatus/:id', trackOrderController.updatePOByPoId);
 
 module.exports = router;

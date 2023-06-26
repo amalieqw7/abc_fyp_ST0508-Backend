@@ -17,7 +17,7 @@ const purchaseReqDB = {
 
     // get all PR
     getAllPR: async() => {
-        let sql = `SELECT PR.prID, U.name, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PR.prStatusID, PRS.prStatus, PR.apprRemarks
+        let sql = `SELECT  PR.requestDate, PR.prID, U.name, PR.targetDeliveryDate, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PR.prStatusID, PRS.prStatus, PR.apprRemarks
                     FROM purchaseRequest PR, user U, branch B, deliveryLocation DL, supplier S, prStatus PRS
                     WHERE PR.userID = U.userID
                     AND PR.prID = DL.prID
@@ -45,7 +45,7 @@ const purchaseReqDB = {
 
     // get PR by userid
     getPRByUserID: async(userID) => {
-        let sql = `SELECT PR.prID, PR.userID, U.name, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PR.prStatusID, PRS.prStatus, PR.apprRemarks
+        let sql = `SELECT PR.requestDate, PR.prID, PR.userID, U.name, PR.targetDeliveryDate, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PR.prStatusID, PRS.prStatus, PR.apprRemarks
                     FROM purchaseRequest PR, user U, branch B, deliveryLocation DL, supplier S, prStatus PRS
                     WHERE PR.userID = U.userID
                     AND PR.prID = DL.prID

@@ -15,7 +15,7 @@ router.get('/', purchaseReqController.getAllPR);
 router.get('/:id', purchaseReqController.getPRByUserID);
 router.get('/PR/:id', purchaseReqController.getPRByPRID);
 router.get('/latestPRID/:id', purchaseReqController.getLatestPRIDByUserID);
-router.put('/PR/:id', purchaseReqController.updatePRStatus);
+router.put('/PR/:id', purchaseReqController.updatePRApprover);
 router.delete('/PR/:id', purchaseReqController.deletePRById);
 
 // Line Item
@@ -38,5 +38,9 @@ router.get('/deliveryLocation/:id', purchaseReqController.getDeliveryLocationByP
 // PR Status Types
 router.post('/PRStatus', purchaseReqController.addPRStatusType);
 router.get('/PRStatus/all', purchaseReqController.getAllPRStatusType);
+
+// Search
+router.post('/search', purchaseReqController.searchPRAll);
+router.post('/search/:id', purchaseReqController.searchPRByUserID);
 
 module.exports = router;

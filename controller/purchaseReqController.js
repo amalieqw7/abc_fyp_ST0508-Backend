@@ -138,6 +138,33 @@ module.exports.updatePRStatus = async(req, res, next) => {
     });
 };
 
+// update PR by PR ID (Approver) ------> approver remarks?
+module.exports.updatePRApprover = async(req, res, next) => {
+    let prId = parseInt(req.params.id);
+    let apprRemarks = req.body.comments;
+    let prStatusId = req.body.prStatusID;
+
+    if (isNaN(prId)) {
+        res.status(400).send(`Purchase Request ID provided is not a number!`);
+        return;
+    };
+
+    return purchaseRequestModel
+    .updatePRApprover(apprRemarks, prStatusId, prId)
+    .then((result) => {
+        if(result.affectedRows == 0){
+            res.status(404).send(`Purchase Request #${prId} does not exist!`);
+        }
+        else{
+            res.status(201).send(`Purchase Request Status Updated!`);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown error`);
+    });
+};
+
 // delete PR
 module.exports.deletePRById = async(req, res, next) => {
     let prId = parseInt(req.params.id);
@@ -364,3 +391,51 @@ module.exports.getAllPRStatusType = async(req, res, next) => {
 };
 
 // get status by id 
+
+// ===============================
+// Search Function
+// Search All columns FOR admin / approver
+module.exports.searchPRAll = async(req, res, next) => {
+    let searchValue = req.body.searchValue;
+
+    return purchaseRequestModel
+    .searchPRAll(searchValue)
+    .then((result) => {
+        if(result == null){
+            res.status(404).send(`Purchase Requests with "${searchValue}" Do not exist!`);
+        }
+        else{
+            res.status(200).send(result);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown Error`);
+    });
+};
+
+// Search All columns for Purchaser by User ID
+module.exports.searchPRByUserID = async(req, res, next) => {
+    let userId = parseInt(req.params.id);
+    let searchValue = req.body.searchValue;
+
+    if(isNaN(userId)){
+        res.status(400).send(`UserId provided is not a number!`);
+        return;
+    }
+
+    return purchaseRequestModel
+    .searchPRByUserID(searchValue, userId)
+    .then((result) => {
+        if(result == null){
+            res.status(404).send(`Purchase Requests with "${searchValue}" Do not exist!`);
+        }
+        else{
+            res.status(200).send(result);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown Error`);
+    });
+};

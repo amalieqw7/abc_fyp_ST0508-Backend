@@ -61,16 +61,10 @@ const trackOrderDB = {
 
   // insert data into purchase order
   addPurchaseOrder: async (prID, paymentStatusID, purchaseStatusID, ptRemarks) => {
-    let sql = `INSERT INTO purchaseOrder(prID, paymentStatusID, purchaseStatusID, ptRemarks) 
-                SELECT PR.prID, PayS.paymentStatusID, PS.purchaseStatusID, PR.remarks
-                FROM purchaseRequest PR, paymentStatus PayS, purchaseStatus PS
-                WHERE PR.prStatusID = 2
-                AND PayS.paymentStatusID = 1
-                AND PS.purchaseStatusID = 1;    
-                                `;
+    let sql = `INSERT INTO purchaseOrder(prID) VALUES (?);`;                           
 
     return connection.promise()
-      .query(sql, [prID, paymentStatusID, purchaseStatusID, ptRemarks])
+      .query(sql, [prID])
       .catch((err) => {
         console.log(err);
         throw err;

@@ -242,6 +242,27 @@ const DBTables = {
 
     // PURCHASE ORDERING
     // Purchase Order Table
+    initPurchaseOrderTable: async() => {
+        const sql = 
+        `CREATE TABLE purchaseOrder(
+            poID INT auto_increment,
+            prID INT UNIQUE NOT NULL,
+            paymentStatusID INT NOT NULL DEFAULT(1),
+            purchaseStatusID INT NOT NULL DEFAULT(1),
+            invoice BLOB,
+            deliveryOrder BLOB,
+            qtyReceived INT,
+            ptRemarks VARCHAR(255),
+            ptReceipt BLOB,
+            PRIMARY KEY (poID)
+        )`;
+        return connection.promise()
+        .query(sql)
+        .catch((error) => {
+            console.log(error)
+            throw error;
+        });
+    },
 
     // Payament Status Table
     initpaymentStatusTable: () => {

@@ -12,7 +12,7 @@ const trackOrderController = require('../../controller/trackOrderController');
 
 // get all track orders
 router.get('/', trackOrderController.getAllTrackOrder);
-// create status
+// create purchase status
 router.post('/purchaseStatus', trackOrderController.addPurchaseStatus);
 // get all purchase status
 router.get('/purchaseStatus/all', trackOrderController.getAllPurchaseStatus);

@@ -41,8 +41,7 @@ const trackOrderDB = {
 
   // get all purchase statuses
   getAllPurchaseStatus: async () => {
-    let sql = `SELECT * FROM purchaseStatus
-              ORDER BY purchaseStatusID asc`;
+    let sql = `SELECT purchaseStatus FROM purchaseStatus`;
 
     return connection.promise()
       .query(sql)

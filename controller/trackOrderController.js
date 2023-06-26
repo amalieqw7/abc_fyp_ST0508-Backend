@@ -58,4 +58,77 @@ module.exports.addPurchaseOrder = async(req, res, next) => {
   });
 };
 
+// get PO by PO ID
+module.exports.getPOByPOID = async(req, res, next) => {
+    let poId = parseInt(req.params.id);
 
+    if(isNaN(poId)){
+        res.status(400).send(`Purchase Order ID provided is not a number!`);
+        return;
+    }
+
+    return trackOrderModel
+    .getPOByPOID(poId)
+    .then((result) => {
+        if(result == null){
+            res.status(404).send(`Purchase Order #${poId} does not exist!`);
+        }
+        else{
+            res.status(200).send(result);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown Error`);
+    });
+};
+
+// get purchase order details by PO ID
+module.exports.getPODByPOID = async(req, res, next) => {
+    let poId = parseInt(req.params.id);
+
+    if(isNaN(poId)){
+        res.status(400).send(`Purchase Order ID provided is not a number!`);
+        return;
+    }
+
+    return trackOrderModel
+    .getPODByPOID(poId)
+    .then((result) => {
+        if(result == null){
+            res.status(404).send(`Purchase Order #${poId} does not exist!`);
+        }
+        else{
+            res.status(200).send(result);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown Error`);
+    });
+};
+
+// get product details by PO ID
+module.exports.getPDByPOID = async(req, res, next) => {
+    let poId = parseInt(req.params.id);
+
+    if(isNaN(poId)){
+        res.status(400).send(`Purchase Order ID provided is not a number!`);
+        return;
+    }
+
+    return trackOrderModel
+    .getPDByPOID(poId)
+    .then((result) => {
+        if(result == null){
+            res.status(404).send(`Purchase Order #${poId} does not exist!`);
+        }
+        else{
+            res.status(200).send(result);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown Error`);
+    });
+};

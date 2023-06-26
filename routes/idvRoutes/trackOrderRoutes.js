@@ -16,5 +16,11 @@ router.get('/', trackOrderController.getAllTrackOrder);
 router.post('/purchaseStatus', trackOrderController.addPurchaseStatus);
 // get all purchase status
 router.get('/purchaseStatus/all', trackOrderController.getAllPurchaseStatus);
+// get purchase order by ID
+router.get('/purchaseOrder/:id', trackOrderController.getPOByPOID);
+// get purchase order details by ID 
+router.get('/purchaseOrderDetails/:id', trackOrderController.getPODByPOID);
+// get product details by PO ID 
+router.get('/productDetails/:id', trackOrderController.getPDByPOID);
 
 module.exports = router;

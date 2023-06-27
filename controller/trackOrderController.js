@@ -191,3 +191,25 @@ module.exports.getPOstatusbyID = async(req, res, next) => {
       res.status(500).send(`Unknown Error`);
   });
 };
+
+// add quantity received (full or partial received)
+module.exports.updateQtyReceived = async(req, res, next) => {
+    let poID = req.params.id;
+    let qtyReceived = req.body.qtyReceived;
+  
+    return trackOrderModel
+    .updateQtyReceived(qtyReceived, poID)
+    .then(() => {
+        return res.status(201).send(`Quantity has been updated!`);
+    })
+    .catch((err) => {
+        console.log(err);
+        // if(err.code === 'ER_DUP_ENTRY'){
+        //   console.log("DUPLICATE");
+        //   return res.status(409).send(`Duplicate Purchase Order!`);
+        // }
+        // else{
+          return res.status(500).send(`Unknown Error`);
+        //}
+    });
+  };

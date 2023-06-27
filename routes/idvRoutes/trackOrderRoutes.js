@@ -26,5 +26,7 @@ router.get('/purchaseOrderDetails/:id', trackOrderController.getPODByPOID);
 router.get('/productDetails/:id', trackOrderController.getPDByPOID);
 // update PO status dropdown by PO ID 
 router.put('/purchaseOrderStatus/:id', trackOrderController.updatePOByPoId);
+// get purchase status by ID
+router.get('/purchaseStatus/:id', trackOrderController.getPOstatusbyID);
 
 module.exports = router;

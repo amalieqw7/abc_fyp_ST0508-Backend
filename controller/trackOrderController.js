@@ -165,4 +165,29 @@ module.exports.updatePOByPoId = async(req, res, next) => {
         return res.status(500).send(`Unknown Error`);
     });
     
-}
+};
+
+// get purchase status id
+module.exports.getPOstatusbyID = async(req, res, next) => {
+  let poId = parseInt(req.params.id);
+
+  if(isNaN(poId)){
+      res.status(400).send(`Purchase Status ID provided is not a number!`);
+      return;
+  }
+
+  return trackOrderModel
+  .getPOstatusbyID(poId)
+  .then((result) => {
+      if(result == null){
+          res.status(404).send(`Purchase Status does not exist!`);
+      }
+      else{
+          res.status(200).send(result);
+      }
+  })
+  .catch((err) => {
+      console.log(err);
+      res.status(500).send(`Unknown Error`);
+  });
+};

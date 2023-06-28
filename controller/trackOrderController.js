@@ -196,6 +196,15 @@ module.exports.getPOstatusbyID = async(req, res, next) => {
 module.exports.updateQtyReceived = async(req, res, next) => {
     let poID = req.params.id;
     let qtyReceived = req.body.qtyReceived;
+
+    if(isNaN(qtyReceived)){
+        res.status(400).send(`Quantity is not a number!`);
+        return;
+    }
+    else if(qtyReceived < 0){
+        res.status(400).send(`Please put in a valid number!`);
+        return;
+    }
   
     return trackOrderModel
     .updateQtyReceived(qtyReceived, poID)

@@ -1,5 +1,25 @@
 const supplierModel = require('../model/supplier');
 
+// insert bank name
+module.exports.insertBank = async (req, res, next) => {
+    let bankName = req.body.bankName;
+
+    return supplierModel
+        .insertBank(bankName)
+        .then((result) => {
+            return res.status(201).send(`Bank Name added`);
+        })
+        .catch((err) => {
+            if (err.code === "ER_DUP_ENTRY") {
+                return res.status(422).send(`Bank already exist`);
+            }
+            else {
+                console.log(err);
+                return res.sendStatus(500);
+            }
+        })
+}
+
 // create category
 module.exports.createCategory = async (req, res, next) => {
     let categoryName = req.body.categoryName;
@@ -20,19 +40,38 @@ module.exports.createCategory = async (req, res, next) => {
         })
 }
 
+// retrieve all categories
+module.exports.getAllCategories = async(req, res, next) => {
+    return supplierModel
+    .getAllCategories()
+    .then((result) => {
+        if (result === null) {
+          return res.send("Sorry, no categories created");
+        }
+        else {
+          return res.status(200).send(result);
+        }  
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.sendStatus(500);
+    })
+}
+
 // create supplier
 module.exports.createSupplier = async (req, res, next) => {
     let supplierName = req.body.supplierName;
-    let contactPersonName = req.body.contactPersonName;
     let email = req.body.email;
-    let phoneNum = req.body.phoneNum;
     let officeNum = req.body.officeNum;
-    let address = req.body.address;
     let webAddress = req.body.webAddress;
+    let contactPersonName = req.body.contactPersonName;
+    let phoneNum = req.body.phoneNum;
+    let address = req.body.address;
     let bankAccountNum = req.body.bankAccountNum;
+    let bankID = req.body.bankID;
 
     return supplierModel
-        .createSupplier(supplierName, contactPersonName, email, phoneNum, officeNum, address, webAddress, bankAccountNum)
+        .createSupplier(supplierName, email, officeNum, webAddress, contactPersonName, phoneNum, address, bankAccountNum, bankID)
         .then((result) => {
             return res.status(201).send(`Supplier created`);
         })
@@ -44,31 +83,6 @@ module.exports.createSupplier = async (req, res, next) => {
                 console.log(err);
                 return res.sendStatus(500);
             }
-        })
-}
-
-// retrieve supplier by supplierID
-module.exports.getSupplierBySupplierId = async (req, res, next) => {
-    let supplierID = parseInt(req.params.supplierID);
-
-    if (isNaN(supplierID)) {
-        res.status(400).send(`Enter number only`);
-        return;
-    };
-
-    return supplierModel
-        .getSupplierBySupplierId(supplierID)
-        .then((result) => {
-            if (result === null) {
-                return res.send(`Supplier does not exist`)
-            }
-            else {
-                return res.status(200).send(result);
-            }
-        })
-        .catch((err) => {
-            console.log(err);
-            return res.sendStatus(500);
         })
 }
 
@@ -93,17 +107,43 @@ module.exports.createSuppliersCategory = async (req, res, next) => {
         })
 }
 
-// retrieve supplier name by supplierID (test foreign key)
-module.exports.getFullSupplierDetailsByID = async (req, res, next) => {
-    let fkSupplier_id = parseInt(req.params.fkSupplier_id);
+// update supplier category
+// module.exports.updateSupplierCategory = async (req, res, next) => {
+//     let supplierID = parseInt(req.params.fkSupplier_id);
+//     let fkSupplierID = req.body.fkSupplier_id;
+//     let categoryID = req.body.fkCategory_id;
 
-    if (isNaN(fkSupplier_id)) {
+//     if (isNaN(supplierID)) {
+//         res.status(400).send(`Enter numbers only!`);
+//         return;
+//     };
+
+//     return supplierModel
+//         .updateSupplierCategory(categoryID, fkSupplierID, supplierID)
+//         .then((result) => {
+//             if (result === null) {
+//                 return res.send(`Supplier category does not exist`);
+//             }
+//             else {
+//                 return res.status(200).send(`Supplier category updated!`);
+//             }
+//         })
+//         .catch((err) => {
+//             return res.sendStatus(500);
+//         })
+// }
+
+// retrieve full supplier details by supplierID
+module.exports.getFullSupplierDetailsByID = async (req, res, next) => {
+    let supplierID = parseInt(req.params.supplierID);
+
+    if (isNaN(supplierID)) {
         res.status(400).send(`Enter number only`);
         return;
     };
 
     return supplierModel
-        .getFullSupplierDetailsByID(fkSupplier_id)
+        .getFullSupplierDetailsByID(supplierID)
         .then((result) => {
             if (result === null) {
                 return res.send(`Supplier does not exist`)
@@ -118,7 +158,7 @@ module.exports.getFullSupplierDetailsByID = async (req, res, next) => {
         })
 }
 
-// getAllSuppliers
+// retrieve all suppliers - id, contact person name & number, supplier name, category
 module.exports.getAllSuppliers = async(req, res, next) => {
     return supplierModel
     .getAllSuppliers()
@@ -136,7 +176,7 @@ module.exports.getAllSuppliers = async(req, res, next) => {
     })
 }
 
-// update supplier details - category not included
+// update supplier details
 module.exports.updateSupplierDetails = async (req, res, next) => {
     let supplierID = parseInt(req.params.supplierID);
     let supplierName = req.body.supplierName;
@@ -147,6 +187,7 @@ module.exports.updateSupplierDetails = async (req, res, next) => {
     let address = req.body.address;
     let webAddress = req.body.webAddress;
     let bankAccountNum = req.body.bankAccountNum;
+    let bankID = req.body.bankID;
 
     if (isNaN(supplierID)) {
         res.status(400).send(`Enter numbers only!`);
@@ -154,7 +195,7 @@ module.exports.updateSupplierDetails = async (req, res, next) => {
     };
 
     return supplierModel
-        .updateSupplierDetails(supplierName, contactPersonName, email, phoneNum, officeNum, address, webAddress, bankAccountNum, supplierID)
+        .updateSupplierDetails(supplierName, contactPersonName, email, phoneNum, officeNum, address, webAddress, bankAccountNum, bankID, supplierID)
         .then((result) => {
             if (result === null) {
                 return res.send(`Supplier does not exist`);
@@ -168,7 +209,7 @@ module.exports.updateSupplierDetails = async (req, res, next) => {
         })
 }
 
-// delete supplier - category not included
+// delete supplier
 module.exports.deleteSupplier = async (req, res, next) => {
     let supplierID = parseInt(req.params.supplierID);
 

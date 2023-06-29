@@ -180,6 +180,7 @@ const DBTables = {
             address VARCHAR(255) NOT NULL,
             webAddress VARCHAR(255) NULL,
             bankAccountNum VARCHAR(255) NOT NULL,
+            bankID VARCHAR(255) NOT NULL,
             PRIMARY KEY (supplierID)
         )`;
         return connection.promise()
@@ -214,6 +215,22 @@ const DBTables = {
             fkSupplier_id INT NOT NULL,
             fkCategory_id INT NOT NULL,
             PRIMARY KEY (id)
+        )`;
+        return connection.promise()
+            .query(sql)
+            .catch((error) => {
+                console.log(error)
+                throw error;
+            });
+    },
+
+    // Bank
+    initBankTable: async() => {
+        const sql = 
+        `CREATE TABLE bank (
+            bankID INT auto_increment,
+            bankName VARCHAR(255) NOT NULL,
+            PRIMARY KEY (bankID)
         )`;
         return connection.promise()
             .query(sql)

@@ -160,6 +160,19 @@ module.exports.suppliersCategoryTable = (req, res, next) => {
         });
 };
 
+// Bank
+module.exports.bankTable = (req, res, next) => {
+    return DBTablesModel
+        .initBankTable()
+        .then(() => {
+            return res.status(201).send(`Bank table created!`);
+        })
+        .catch((err) => {
+            console.log(err)
+            return res.status(500).json({ error: "Failed to create Bank table" });
+        });
+};
+
 // PURCHASE ORDERING
 // Purchase Order Table
 

@@ -28,6 +28,7 @@ router.post('/lineItem',DBTablesController.lineItemTable);
 router.post('/category', DBTablesController.categoryTable);
 router.post('/supplier', DBTablesController.supplierTable);
 router.post('/supplierscategory', DBTablesController.suppliersCategoryTable);
+router.post('/bank', DBTablesController.bankTable);
 
 // PURCHASE ORDERING
 

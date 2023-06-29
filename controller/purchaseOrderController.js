@@ -1,6 +1,5 @@
 const purchaseOrderModel = require('../model/purchaseOrder');
 
-
 //get all PO
 module.exports.getAllPO = async(req, res, next) => {
     return purchaseOrderModel

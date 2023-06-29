@@ -139,3 +139,46 @@ module.exports.getSupplierInformationByID = async (req, res, next) => {
         res.status(500).send(`Unknown error`);
     })
 }
+
+
+module.exports.getSIDbyPRID = async(req, res, next) => {
+    let prID = req.params.prID;
+
+    if (isNaN(prID)) {
+        res.status(400).send(`Please input a prID`);
+        return;
+    }
+
+    return paymentTrackModel
+    .getSIDbyPRID(prID)
+    .then((result) => {
+        if (result[0] == null) {
+            res.send(`Purchase Request ID ${prID} not found`);
+        } else {
+            res.status(200).send(result);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown error`);
+    })
+}
+
+module.exports.getIDbyStatus = async(req, res, next) => {
+    let status = req.params.paymentStatus;
+
+    return paymentTrackModel
+    .getIDbyStatus(status)
+    .then((result) => {
+        if (result[0] == null) {
+            res.send(`Payment Status ${status} not found`);
+        } else {
+            res.status(200).send(result);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown error`);
+    })
+    
+}

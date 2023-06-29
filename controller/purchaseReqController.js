@@ -4,15 +4,14 @@ const purchaseRequestModel = require('../model/purchaseRequest');
 // PR
 // add PR
 module.exports.addPR = async(req, res, next) => {
-    let requestDate = req.body.requestDate;
+    let targetDeliveryDate = req.body.targetDeliveryDate;
     let userId = req.body.userID;
     let supplierId = req.body.supplierID;
     let paymentModeId = req.body.paymentModeID;
-    let branchId = req.body.branchID;
     let remarks = req.body.remarks;
 
     return purchaseRequestModel
-    .addPR(requestDate, userId, supplierId, paymentModeId, branchId, remarks)
+    .addPR(targetDeliveryDate, userId, supplierId, paymentModeId, remarks)
     .then(() => {
         return res.status(201).send(`Purchase Request Created!`);
     })
@@ -20,7 +19,6 @@ module.exports.addPR = async(req, res, next) => {
         console.log(err);
         return res.status(500).send(`Unknown Error`);
     });
-
 };
 
 // get all PR
@@ -69,7 +67,7 @@ module.exports.getPRByPRID = async(req, res, next) => {
     let prId = parseInt(req.params.id);
 
     if(isNaN(prId)){
-        res.status(400).send(`UserId provided is not a number!`);
+        res.status(400).send(`Purchase Request ID provided is not a number!`);
         return;
     }
 
@@ -78,6 +76,31 @@ module.exports.getPRByPRID = async(req, res, next) => {
     .then((result) => {
         if(result == null){
             res.status(404).send(`Purchase Request #${prId} does not exist!`);
+        }
+        else{
+            res.status(200).send(result);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown Error`);
+    });
+};
+
+ // get latest PR ID created
+ module.exports.getLatestPRIDByUserID = async(req, res, next) => {
+    let userId = parseInt(req.params.id);
+
+    if(isNaN(userId)){
+        res.status(400).send(`UserId provided is not a number!`);
+        return;
+    }
+
+    return purchaseRequestModel
+    .getLatestPRIDByUserID(userId)
+    .then((result) => {
+        if(result == null){
+            res.status(404).send(`Latest PR ID does not exist!`);
         }
         else{
             res.status(200).send(result);
@@ -101,6 +124,33 @@ module.exports.updatePRStatus = async(req, res, next) => {
 
     return purchaseRequestModel
     .updatePRStatus(prStatusId, prId)
+    .then((result) => {
+        if(result.affectedRows == 0){
+            res.status(404).send(`Purchase Request #${prId} does not exist!`);
+        }
+        else{
+            res.status(201).send(`Purchase Request Status Updated!`);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown error`);
+    });
+};
+
+// update PR by PR ID (Approver) ------> approver remarks?
+module.exports.updatePRApprover = async(req, res, next) => {
+    let prId = parseInt(req.params.id);
+    let apprRemarks = req.body.comments;
+    let prStatusId = req.body.prStatusID;
+
+    if (isNaN(prId)) {
+        res.status(400).send(`Purchase Request ID provided is not a number!`);
+        return;
+    };
+
+    return purchaseRequestModel
+    .updatePRApprover(apprRemarks, prStatusId, prId)
     .then((result) => {
         if(result.affectedRows == 0){
             res.status(404).send(`Purchase Request #${prId} does not exist!`);
@@ -166,7 +216,7 @@ module.exports.getLineItemByPRID = async(req, res, next) => {
     let prId = parseInt(req.params.id);
 
     if(isNaN(prId)){
-        res.status(400).send(`UserId provided is not a number!`);
+        res.status(400).send(`Purchase Request ID provided is not a number!`);
         return;
     }
 
@@ -251,6 +301,62 @@ module.exports.getAllBranch = async(req, res, next) => {
 
 // get branch by id
 
+// ===============================
+// Delivery Location
+// add delivery Location
+module.exports.addDeliveryLocation = async(req, res, next) => {
+    let prID = req.body.prID;
+    let branchID = req.body.branchID;
+
+    return purchaseRequestModel
+    .addDeliveryLocation(prID, branchID)
+    .then(() => {
+        return res.status(201).send(`Delivery Location Created!`);
+    })
+    .catch((err) => {
+        console.log(err);
+        return res.status(500).send(`Unknown Error`);
+    });
+};
+
+// get all Delivery Location
+module.exports.getAllDeliveryLocation = async(req, res, next) => {
+    return purchaseRequestModel
+    .getAllDeliveryLocation()
+    .then((result) => {
+        if (result == null){
+            res.send(404).send(`There are no Delivery Locations Available`);
+        }
+        else{
+            res.status(200).send(result);
+        }
+    });
+};
+
+// get Delivery Location by PR ID
+module.exports.getDeliveryLocationByPRID = async(req, res, next) => {
+    let prId = parseInt(req.params.id);
+
+    if(isNaN(prId)){
+        res.status(400).send(`Purchase Request ID provided is not a number!`);
+        return;
+    }
+
+    return purchaseRequestModel
+    .getDeliveryLocationByPRID(prId)
+    .then((result) => {
+        if(result == null){
+            res.status(404).send(`Delivery Location does not exist in Purchase Request #${prId}!`);
+        }
+        else{
+            res.status(200).send(result);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown Error`);
+    });
+};
     
 // ===============================
 // PR status
@@ -285,3 +391,51 @@ module.exports.getAllPRStatusType = async(req, res, next) => {
 };
 
 // get status by id 
+
+// ===============================
+// Search Function
+// Search All columns FOR admin / approver
+module.exports.searchPRAll = async(req, res, next) => {
+    let searchValue = req.body.searchValue;
+
+    return purchaseRequestModel
+    .searchPRAll(searchValue)
+    .then((result) => {
+        if(result == null){
+            res.status(404).send(`Purchase Requests with "${searchValue}" Do not exist!`);
+        }
+        else{
+            res.status(200).send(result);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown Error`);
+    });
+};
+
+// Search All columns for Purchaser by User ID
+module.exports.searchPRByUserID = async(req, res, next) => {
+    let userId = parseInt(req.params.id);
+    let searchValue = req.body.searchValue;
+
+    if(isNaN(userId)){
+        res.status(400).send(`UserId provided is not a number!`);
+        return;
+    }
+
+    return purchaseRequestModel
+    .searchPRByUserID(searchValue, userId)
+    .then((result) => {
+        if(result == null){
+            res.status(404).send(`Purchase Requests with "${searchValue}" Do not exist!`);
+        }
+        else{
+            res.status(200).send(result);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown Error`);
+    });
+};

@@ -133,8 +133,46 @@ const paymentTrackDB = {
             console.log(err)
             return err;
         })
-    }
+    },
 
+    getSIDbyPRID: async(prID) => {
+        const sql = `SELECT s.supplierID, s.supplierName
+        FROM purchaseRequest AS pr
+        JOIN supplier AS s ON pr.supplierID = s.supplierID
+        WHERE pr.prID = ?`;
+
+        return connection.promise()
+        .query(sql, [prID])
+        .then((result) => {
+            if (result.length == 0) {
+                return null;
+            } else {
+                return result[0]
+            }
+        })
+        .catch((err) => {
+            console.log(err)
+            return err;
+        })
+    },
+
+    getIDbyStatus: async(status) => {
+        const sql = `SELECT PaymentStatusID FROM paymentStatus WHERE paymentStatus = ?`;
+
+        return connection.promise()
+        .query(sql, [status])
+        .then((result) => {
+            if (result.length == 0) {
+                return null;
+            } else {
+                return result[0]
+            }
+        })
+        .catch((err) => {
+            console.log(err)
+            return err;
+        })
+    }
 }
 
 module.exports = paymentTrackDB;

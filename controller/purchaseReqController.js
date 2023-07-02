@@ -117,6 +117,7 @@ module.exports.getPRByPRID = async(req, res, next) => {
 module.exports.updatePRStatus = async(req, res, next) => {
     let prId = parseInt(req.params.id);
     let prStatusId = req.body.prStatusID;
+    let apprUserID = req.body.apprUserID;
 
     if (isNaN(prId)) {
         res.status(400).send(`Purchase Request ID provided is not a number!`);
@@ -124,7 +125,7 @@ module.exports.updatePRStatus = async(req, res, next) => {
     };
 
     return purchaseRequestModel
-    .updatePRStatus(prStatusId, prId)
+    .updatePRStatus(prStatusId, apprUserID, prId)
     .then((result) => {
         if(result.affectedRows == 0){
             res.status(404).send(`Purchase Request #${prId} does not exist!`);
@@ -144,6 +145,7 @@ module.exports.updatePRApprover = async(req, res, next) => {
     let prId = parseInt(req.params.id);
     let apprRemarks = req.body.comments;
     let prStatusId = req.body.prStatusID;
+    let apprUserID = req.body.apprUserID;
 
     if (isNaN(prId)) {
         res.status(400).send(`Purchase Request ID provided is not a number!`);
@@ -151,7 +153,7 @@ module.exports.updatePRApprover = async(req, res, next) => {
     };
 
     return purchaseRequestModel
-    .updatePRApprover(apprRemarks, prStatusId, prId)
+    .updatePRApprover(apprRemarks, prStatusId, apprUserID, prId)
     .then((result) => {
         if(result.affectedRows == 0){
             res.status(404).send(`Purchase Request #${prId} does not exist!`);

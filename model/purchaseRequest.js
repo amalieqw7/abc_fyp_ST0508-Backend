@@ -131,12 +131,12 @@ const purchaseReqDB = {
     },
 
     // update PR by PR ID (Approver) ------> approver remarks?
-    updatePRStatus: async(prStatusID, prID) => {
-        let sql = `UPDATE purchaseRequest SET prStatusID = ? 
+    updatePRStatus: async(prStatusID, apprUserID, prID) => {
+        let sql = `UPDATE purchaseRequest SET prStatusID = ?, apprUserID = ? 
                     WHERE prID = ?`;
 
         return connection.promise()
-        .query(sql,[prStatusID,prID])
+        .query(sql,[prStatusID, apprUserID, prID])
         .then((result) => {
             if(result[0] == 0){
                 return null;
@@ -152,12 +152,12 @@ const purchaseReqDB = {
     },
 
     // update PR remarks and status by PR ID (Approver)
-    updatePRApprover: async(apprRemarks, prStatusID, prID) => {
-        let sql = `UPDATE purchaseRequest SET apprRemarks = ? , prStatusID = ? 
+    updatePRApprover: async(apprRemarks, prStatusID, apprUserID, prID) => {
+        let sql = `UPDATE purchaseRequest SET apprRemarks = ? , prStatusID = ?, apprUserID = ? 
                     WHERE prID = ?`;
 
         return connection.promise()
-        .query(sql,[apprRemarks, prStatusID,prID])
+        .query(sql,[apprRemarks, prStatusID, apprUserID, prID])
         .then((result) => {
             if(result[0] == 0){
                 return null;

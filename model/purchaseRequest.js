@@ -4,11 +4,11 @@ const purchaseReqDB = {
     // ===============================
     // PR
     // add PR
-    addPR: async(targetDeliveryDate, userID, supplierID, paymentModeID, remarks) => {
-        let sql = `INSERT INTO purchaseRequest(targetDeliveryDate, userID, supplierID, paymentModeID, remarks) VALUES (?,?,?,?,?)`;
+    addPR: async(purchaseTypeID,targetDeliveryDate, userID, supplierID, paymentModeID, remarks) => {
+        let sql = `INSERT INTO purchaseRequest(purchaseTypeID,targetDeliveryDate, userID, supplierID, paymentModeID, remarks) VALUES (?,?,?,?,?,?)`;
 
         return connection.promise()
-        .query(sql, [targetDeliveryDate, userID, supplierID, paymentModeID, remarks])
+        .query(sql, [purchaseTypeID,targetDeliveryDate, userID, supplierID, paymentModeID, remarks])
         .catch((err) => {
             console.log(err);
             throw err;

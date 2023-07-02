@@ -4,6 +4,7 @@ const purchaseRequestModel = require('../model/purchaseRequest');
 // PR
 // add PR
 module.exports.addPR = async(req, res, next) => {
+    let purchaseTypeID = req.body.purchaseTypeID;
     let targetDeliveryDate = req.body.targetDeliveryDate;
     let userId = req.body.userID;
     let supplierId = req.body.supplierID;
@@ -11,7 +12,7 @@ module.exports.addPR = async(req, res, next) => {
     let remarks = req.body.remarks;
 
     return purchaseRequestModel
-    .addPR(targetDeliveryDate, userId, supplierId, paymentModeId, remarks)
+    .addPR(purchaseTypeID,targetDeliveryDate, userId, supplierId, paymentModeId, remarks)
     .then(() => {
         return res.status(201).send(`Purchase Request Created!`);
     })

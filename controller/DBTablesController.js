@@ -68,6 +68,19 @@ module.exports.prStatusTable = async(req, res, next) => {
         });
 };
 
+// Purchase Type Table
+module.exports.purchaseTypeTable = async(req, res, next) => {
+    return DBTablesModel
+        .initPurchaseTypeTable()
+        .then(() => {
+            return res.status(201).send(`Purchase Type Table Created!`);
+        })
+        .catch((err) =>{
+            console.log(err);
+            return res.status(500).send(`Table Creation Failed`);
+        });
+};
+
 // Purchase Request Table
 module.exports.purchaseRequestTable = async(req, res, next) => {
     return DBTablesModel

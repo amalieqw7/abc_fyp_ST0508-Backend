@@ -88,19 +88,37 @@ const DBTables = {
             })
     },
 
+    // Purchase Type Table
+    initPurchaseTypeTable: async() => {
+        const sql = 
+        `CREATE TABLE purchaseType (
+            purchaseTypeID INT auto_increment,
+            purchaseType VARCHAR(100) NOT NULL UNIQUE,
+            PRIMARY KEY (purchaseTypeID)
+        )`;
+        return connection.promise()
+            .query(sql)
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            })
+    },
+
     // Purchase Request Table
     initPurchaseRequestTable: async() => {
         const sql = 
-        `CREATE TABLE purchaseReq (
+        `CREATE TABLE purchaseRequest (
             prID INT auto_increment,
+            purchaseTypeID INT NOT NULL,
             requestDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             userID INT NOT NULL,
-            supplierID INT NOT NULL,
-            paymentModeID INT NOT NULL,
-            targetDeliveryDate TIMESTAMP NOT NULL,
+            supplierID INT,
+            paymentModeID INT,
+            targetDeliveryDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             remarks VARCHAR(500),
             apprRemarks VARCHAR(500),
-            prStatusID INT DEFAULT(1),
+            apprUserID INT,
+            prStatusID INT NOT NULL DEFAULT(1),
             PRIMARY KEY (prID)
         )`;
         return connection.promise()
@@ -281,7 +299,7 @@ const DBTables = {
         });
     },
 
-    // Payament Status Table
+    // Payment Status Table
     initpaymentStatusTable: () => {
         const sql = `CREATE TABLE paymentStatus (
             paymentStatusID INT auto_increment,

@@ -17,6 +17,8 @@ router.get('/PR/:id', purchaseReqController.getPRByPRID);
 router.get('/latestPRID/:id', purchaseReqController.getLatestPRIDByUserID);
 router.put('/PR/:id', purchaseReqController.updatePRApprover);
 router.delete('/PR/:id', purchaseReqController.deletePRById);
+router.get('/adhoc/purchases', purchaseReqController.getAllAdHoc);
+router.get('/adhoc/:id', purchaseReqController.getAdHocByUserID);
 
 // Line Item
 router.post('/lineItem', purchaseReqController.addLineItem);

@@ -97,7 +97,7 @@ module.exports.getAllItem = async(req, res, next) => {
     .getAllItem()
     .then((result) => {
         if (result == null){
-            res.send(404).send(`There are no Purchase Requests Available`);
+            res.status(404).send(`There are no Purchase Requests Available`);
         }
         else{
             res.status(200).send(result);

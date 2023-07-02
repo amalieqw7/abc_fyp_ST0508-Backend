@@ -18,6 +18,7 @@ router.post('/user', DBTablesController.userTable);
 router.post('/paymentMode', DBTablesController.paymentModeTable);
 router.post('/branch', DBTablesController.branchTable);
 router.post('/prStatus', DBTablesController.prStatusTable);
+router.post('/purchaseType', DBTablesController.purchaseTypeTable);
 router.post('/purchaseReq', DBTablesController.purchaseRequestTable);
 router.post('/deliveryLocation', DBTablesController.deliveryLocationTable);
 router.post('/item', DBTablesController.itemTable);

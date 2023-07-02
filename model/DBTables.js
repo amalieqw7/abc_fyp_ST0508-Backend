@@ -88,11 +88,28 @@ const DBTables = {
             })
     },
 
+    // Purchase Type Table
+    initPurchaseTypeTable: async() => {
+        const sql = 
+        `CREATE TABLE purchaseType (
+            purchaseTypeID INT auto_increment,
+            purchaseType VARCHAR(100) NOT NULL UNIQUE,
+            PRIMARY KEY (purchaseTypeID)
+        )`;
+        return connection.promise()
+            .query(sql)
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            })
+    },
+
     // Purchase Request Table
     initPurchaseRequestTable: async() => {
         const sql = 
         `CREATE TABLE purchaseReq (
             prID INT auto_increment,
+            purchaseTypeID INT NOT NULL,
             requestDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             userID INT NOT NULL,
             supplierID INT NOT NULL,

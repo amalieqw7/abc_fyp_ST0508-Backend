@@ -100,6 +100,7 @@ const DBTables = {
             targetDeliveryDate TIMESTAMP NOT NULL,
             remarks VARCHAR(500),
             apprRemarks VARCHAR(500),
+            apprUserID INT,
             prStatusID INT DEFAULT(1),
             PRIMARY KEY (prID)
         )`;
@@ -264,7 +265,7 @@ const DBTables = {
         });
     },
 
-    // Payament Status Table
+    // Payment Status Table
     initpaymentStatusTable: () => {
         const sql = `CREATE TABLE paymentStatus (
             paymentStatusID INT auto_increment,

@@ -107,18 +107,18 @@ const DBTables = {
     // Purchase Request Table
     initPurchaseRequestTable: async() => {
         const sql = 
-        `CREATE TABLE purchaseReq (
+        `CREATE TABLE purchaseRequest (
             prID INT auto_increment,
             purchaseTypeID INT NOT NULL,
             requestDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             userID INT NOT NULL,
-            supplierID INT NOT NULL,
+            supplierID INT,
             paymentModeID INT NOT NULL,
             targetDeliveryDate TIMESTAMP NOT NULL,
             remarks VARCHAR(500),
             apprRemarks VARCHAR(500),
             apprUserID INT,
-            prStatusID INT DEFAULT(1),
+            prStatusID INT NOT NULL DEFAULT(1),
             PRIMARY KEY (prID)
         )`;
         return connection.promise()

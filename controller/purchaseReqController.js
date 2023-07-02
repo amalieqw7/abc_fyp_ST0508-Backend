@@ -213,6 +213,31 @@ module.exports.getAllAdHoc = async(req, res, next) => {
     });
 };
 
+// get ad hoc purchases by userid
+module.exports.getAdHocByUserID = async(req, res, next) => {
+    let userId = parseInt(req.params.id);
+
+    if(isNaN(userId)){
+        res.status(400).send(`UserId provided is not a number!`);
+        return;
+    }
+
+    return purchaseRequestModel
+    .getAdHocByUserID(userId)
+    .then((result) => {
+        if(result == null){
+            res.status(404).send(`User ID #${userId}has not made any Ad-Hoc Purchases!`);
+        }
+        else{
+            res.status(200).send(result);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown Error`);
+    });
+};
+
 // ===============================
 // Line Items
 // add line item

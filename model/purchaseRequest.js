@@ -29,9 +29,10 @@ const purchaseReqDB = {
 
     // get all PR
     getAllPR: async() => {
-        let sql = `SELECT PR.requestDate, PR.prID, U.name, PR.targetDeliveryDate, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PR.prStatusID, PRS.prStatus, PR.apprRemarks
-                    FROM purchaseRequest PR, user U, branch B, deliveryLocation DL, supplier S, prStatus PRS
+        let sql = `SELECT PR.purchaseTypeID, PT.purchaseType, PR.requestDate, PR.prID, U.name, PR.targetDeliveryDate, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PR.prStatusID, PRS.prStatus, PR.apprRemarks
+                    FROM purchaseRequest PR, user U, branch B, deliveryLocation DL, supplier S, prStatus PRS, purchaseType PT
                     WHERE PR.userID = U.userID
+                    AND PR.purchaseTypeID = PT.purchaseTypeID
                     AND PR.prID = DL.prID
                     AND DL.branchID = B.branchID
                     AND PR.supplierID = S.supplierID
@@ -210,16 +211,43 @@ const purchaseReqDB = {
 
     // get All Ad Hoc Purchases
     getAllAdHoc: async() => {
-        let sql = `SELECT PR.requestDate, PR.prID, U.name, PR.targetDeliveryDate, PR.remarks, PR.prStatusID, PRS.prStatus, PR.apprRemarks
-                    FROM purchaseRequest PR, user U, prStatus PRS
+        let sql = `SELECT PR.purchaseTypeID, PT.purchaseType, PR.requestDate, PR.prID, U.name, PR.targetDeliveryDate, PR.remarks, PR.prStatusID, PRS.prStatus, PR.apprRemarks
+                    FROM purchaseRequest PR, user U, prStatus PRS, purchaseType PT
                     WHERE PR.userID = U.userID
+                    AND PR.purchaseTypeID = PT.purchaseTypeID
                     AND PR.prStatusID = PRS.prStatusID
                     AND PR.purchaseTypeID = 2
-                    GROUP BY PR.prID
                     ORDER BY prID asc;`;
 
         return connection.promise()
         .query(sql)
+        .then((result) => {
+            if(result[0] == 0){
+                return null;
+            }
+            else{
+                return result[0];
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            throw err;
+        });
+    },
+
+    // get ad hoc purchases by userid
+    getAdHocByUserID: async(userId) => {
+        let sql = `SELECT PR.purchaseTypeID, PT.purchaseType, PR.requestDate, PR.prID, U.name, PR.targetDeliveryDate, PR.remarks, PR.prStatusID, PRS.prStatus, PR.apprRemarks
+                    FROM purchaseRequest PR, user U, prStatus PRS, purchaseType PT
+                    WHERE PR.userID = U.userID
+                    AND PR.purchaseTypeID = PT.purchaseTypeID
+                    AND PR.prStatusID = PRS.prStatusID
+                    AND PR.purchaseTypeID = 2
+                    AND PR.userID = ?
+                    ORDER BY prID asc;`;
+
+        return connection.promise()
+        .query(sql, [userId])
         .then((result) => {
             if(result[0] == 0){
                 return null;

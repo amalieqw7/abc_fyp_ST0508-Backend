@@ -14,7 +14,13 @@ module.exports.addPR = async(req, res, next) => {
     return purchaseRequestModel
     .addPR(purchaseTypeID,targetDeliveryDate, userId, supplierId, paymentModeId, remarks)
     .then(() => {
-        return res.status(201).send(`Purchase Request Created!`);
+        if(purchaseTypeID === 1){
+            return res.status(201).send(`Purchase Request Created!`);
+        }
+        else if(purchaseTypeID === 2){
+            return res.status(201).send(`Ad-Hoc Purchase Created!`);
+        }
+        
     })
     .catch((err) => {
         console.log(err);
@@ -28,7 +34,7 @@ module.exports.getAllPR = async(req, res, next) => {
     .getAllPR()
     .then((result) => {
         if (result == null){
-            res.send(404).send(`There are no Purchase Requests Available`);
+            res.status(404).send(`There are no Purchase Requests Available`);
         }
         else{
             res.status(200).send(result);
@@ -193,6 +199,20 @@ module.exports.deletePRById = async(req, res, next) => {
     });
 };
 
+// get All Ad Hoc Purchases
+module.exports.getAllAdHoc = async(req, res, next) => {
+    return purchaseRequestModel
+    .getAllAdHoc()
+    .then((result) => {
+        if (result == null){
+            res.status(404).send(`There are no Ad-Hoc Purchases Available`);
+        }
+        else{
+            res.status(200).send(result);
+        }
+    });
+};
+
 // ===============================
 // Line Items
 // add line item
@@ -262,7 +282,7 @@ module.exports.getAllPaymentMode = async(req, res, next) => {
     .getAllPaymentMode()
     .then((result) => {
         if (result == null){
-            res.send(404).send(`There are no Payment Modes Available`);
+            res.status(404).send(`There are no Payment Modes Available`);
         }
         else{
             res.status(200).send(result);
@@ -294,7 +314,7 @@ module.exports.getAllBranch = async(req, res, next) => {
     .getAllBranch()
     .then((result) => {
         if (result == null){
-            res.send(404).send(`There are no Branches Available`);
+            res.status(404).send(`There are no Branches Available`);
         }
         else{
             res.status(200).send(result);
@@ -328,7 +348,7 @@ module.exports.getAllDeliveryLocation = async(req, res, next) => {
     .getAllDeliveryLocation()
     .then((result) => {
         if (result == null){
-            res.send(404).send(`There are no Delivery Locations Available`);
+            res.status(404).send(`There are no Delivery Locations Available`);
         }
         else{
             res.status(200).send(result);
@@ -385,7 +405,7 @@ module.exports.getAllPRStatusType = async(req, res, next) => {
     .getAllPRStatusType()
     .then((result) => {
         if (result == null){
-            res.send(404).send(`There are no Purchase Request Status Types Available`);
+            res.status(404).send(`There are no Purchase Request Status Types Available`);
         }
         else{
             res.status(200).send(result);

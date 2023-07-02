@@ -3,27 +3,40 @@ const connection = require('../db');
 const purchaseReqDB = {
     // ===============================
     // PR
-    // add PR
+    // add PR / Adhoc
     addPR: async(purchaseTypeID,targetDeliveryDate, userID, supplierID, paymentModeID, remarks) => {
-        let sql = `INSERT INTO purchaseRequest(purchaseTypeID,targetDeliveryDate, userID, supplierID, paymentModeID, remarks) VALUES (?,?,?,?,?,?)`;
+        if(purchaseTypeID === 1){
+            let sql = `INSERT INTO purchaseRequest(purchaseTypeID,targetDeliveryDate, userID, supplierID, paymentModeID, remarks) VALUES (?,?,?,?,?,?)`;
 
-        return connection.promise()
-        .query(sql, [purchaseTypeID,targetDeliveryDate, userID, supplierID, paymentModeID, remarks])
-        .catch((err) => {
-            console.log(err);
-            throw err;
-        });
+            return connection.promise()
+            .query(sql, [purchaseTypeID,targetDeliveryDate, userID, supplierID, paymentModeID, remarks])
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            });
+        }
+        else if(purchaseTypeID === 2){
+            let sql = `INSERT INTO purchaseRequest(purchaseTypeID, userID, remarks) VALUES (?,?,?)`;
+
+            return connection.promise()
+            .query(sql, [purchaseTypeID, userID, remarks])
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            });
+        }
     },
 
     // get all PR
     getAllPR: async() => {
-        let sql = `SELECT  PR.requestDate, PR.prID, U.name, PR.targetDeliveryDate, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PR.prStatusID, PRS.prStatus, PR.apprRemarks
+        let sql = `SELECT PR.requestDate, PR.prID, U.name, PR.targetDeliveryDate, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PR.prStatusID, PRS.prStatus, PR.apprRemarks
                     FROM purchaseRequest PR, user U, branch B, deliveryLocation DL, supplier S, prStatus PRS
                     WHERE PR.userID = U.userID
                     AND PR.prID = DL.prID
                     AND DL.branchID = B.branchID
                     AND PR.supplierID = S.supplierID
                     AND PR.prStatusID = PRS.prStatusID
+                    AND PR.purchaseTypeID = 1
                     GROUP BY PR.prID
                     ORDER BY prID asc;`;
 
@@ -52,6 +65,7 @@ const purchaseReqDB = {
                     AND DL.branchID = B.branchID
                     AND PR.supplierID = S.supplierID
                     AND PR.prStatusID = PRS.prStatusID
+                    AND PR.purchaseTypeID = 1
                     AND PR.userID = ?
                     GROUP BY PR.prID
                     ORDER BY prID asc;`;
@@ -82,6 +96,7 @@ const purchaseReqDB = {
                     AND PR.supplierID = S.supplierID
                     AND PR.paymentModeID = PM.paymentModeID
                     AND PR.prStatusID = PRS.prStatusID
+                    AND PR.purchaseTypeID = 1
                     AND PR.prID = ?
                     GROUP BY PR.prID
                     ORDER BY prID asc;`;
@@ -112,6 +127,7 @@ const purchaseReqDB = {
     getLatestPRIDByUserID: async(userID) => {
         let sql = `SELECT MAX(prID) AS prID, userID
                     FROM purchaseRequest
+                    AND PR.purchaseTypeID = 1
                     WHERE userID = ?`;
 
         return connection.promise()
@@ -178,6 +194,32 @@ const purchaseReqDB = {
 
         return connection.promise()
         .query(sql, [prID])
+        .then((result) => {
+            if(result[0] == 0){
+                return null;
+            }
+            else{
+                return result[0];
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            throw err;
+        });
+    },
+
+    // get All Ad Hoc Purchases
+    getAllAdHoc: async() => {
+        let sql = `SELECT PR.requestDate, PR.prID, U.name, PR.targetDeliveryDate, PR.remarks, PR.prStatusID, PRS.prStatus, PR.apprRemarks
+                    FROM purchaseRequest PR, user U, prStatus PRS
+                    WHERE PR.userID = U.userID
+                    AND PR.prStatusID = PRS.prStatusID
+                    AND PR.purchaseTypeID = 2
+                    GROUP BY PR.prID
+                    ORDER BY prID asc;`;
+
+        return connection.promise()
+        .query(sql)
         .then((result) => {
             if(result[0] == 0){
                 return null;

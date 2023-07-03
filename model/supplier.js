@@ -13,6 +13,28 @@ const supplierDB = {
             })
     },
 
+    // retireve all bank names
+    getAllBankNames: async() => {
+        const sql = `SELECT bank.bankID, bank.bankName
+                    FROM bank          
+                    ORDER BY bankID ASC`;
+
+        return connection.promise()
+        .query(sql)
+        .then((result) => {
+            if (result[0] == 0) {
+                return null;
+            }
+            else {
+                return result[0];
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            throw err;
+        })
+    },
+
     // create category
     createCategory: async (categoryName) => {
         const sql = `INSERT INTO category (categoryName) VALUES (?)`;
@@ -25,11 +47,11 @@ const supplierDB = {
     },
 
     // create supplier
-    createSupplier: async (supplierName, email, officeNum, webAddress, contactPersonName, phoneNum, address, bankAccountNum, bankID) => {
-        const sql = `INSERT INTO supplier (supplierName, email, officeNum, webAddress, contactPersonName, phoneNum, address, bankAccountNum, bankID) VALUES (?,?,?,?,?,?,?,?,?)`;
+    createSupplier: async (supplierName, email, officeNum, webAddress, bankAccName, contactPersonName, phoneNum, address, bankAccountNum, bankID) => {
+        const sql = `INSERT INTO supplier (supplierName, email, officeNum, webAddress, bankAccName, contactPersonName, phoneNum, address, bankAccountNum, bankID) VALUES (?,?,?,?,?,?,?,?,?,?)`;
 
         return connection.promise()
-            .query(sql, [supplierName, email, officeNum, webAddress, contactPersonName, phoneNum, address, bankAccountNum, bankID])
+            .query(sql, [supplierName, email, officeNum, webAddress, bankAccName, contactPersonName, phoneNum, address, bankAccountNum, bankID])
             .catch((err) => {
                 throw err;
             })
@@ -59,7 +81,7 @@ const supplierDB = {
 
     // retrieve full supplier details by supplierID
     getFullSupplierDetailsByID: async (supplierID) => {
-        const sql = `SELECT s.supplierName, s.contactPersonName, s.email, s.phoneNum, s.officeNum, s.address, s.webAddress, s.bankAccountNum, b.bankName,
+        const sql = `SELECT s.supplierID, s.supplierName, s.contactPersonName, s.email, s.phoneNum, s.officeNum, s.address, s.webAddress, s.bankAccountNum, b.bankName, s.bankAccName,
                     GROUP_CONCAT(c.categoryName SEPARATOR ', ') AS "Category"
                     FROM supplier s
                     JOIN suppliersCategory sc ON s.supplierID = sc.fkSupplier_id
@@ -84,7 +106,7 @@ const supplierDB = {
             })
     },
 
-    // retrieve all suppliers - id, contact person name & number, supplier name, category
+    // retrieve all suppliers - id, supplier name, contact person name & number, category
     getAllSuppliers: async() => {
         const sql = `SELECT s.supplierID, s.supplierName, s.contactPersonName, s.phoneNum, GROUP_CONCAT(c.categoryName SEPARATOR ', ') AS "Category"
                     FROM supplier s
@@ -132,11 +154,11 @@ const supplierDB = {
     },
 
     // update supplier details
-    updateSupplierDetails: async(supplierName, contactPersonName, email, phoneNum, officeNum, address, webAddress, bankAccountNum, bankID, supplierID) => {
-        const sql = `UPDATE supplier SET supplierName = ?, contactPersonName = ?, email = ?, phoneNum = ?, officeNum = ?, address = ?, webAddress = ?,  bankAccountNum = ?, bankID = ? WHERE supplierID = ?`;
+    updateSupplierDetails: async(supplierName, email, officeNum, webAddress, bankAccName, contactPersonName, phoneNum, address, bankAccountNum, bankID, supplierID) => {
+        const sql = `UPDATE supplier SET supplierName = ?, email = ?, officeNum = ?, webAddress = ?, bankAccName = ?, contactPersonName = ?, phoneNum = ?, address = ?, bankAccountNum = ?, bankID = ? WHERE supplierID = ?`;
 
         return connection.promise()
-            .query(sql, [supplierName, contactPersonName, email, phoneNum, officeNum, address, webAddress, bankAccountNum, bankID, supplierID])
+            .query(sql, [supplierName, email, officeNum, webAddress, bankAccName, contactPersonName, phoneNum, address, bankAccountNum, bankID, supplierID])
             .catch((err) => {
                 throw err;
             })

@@ -198,6 +198,7 @@ const DBTables = {
             webAddress VARCHAR(255) NULL,
             bankAccountNum VARCHAR(255) NOT NULL,
             bankID VARCHAR(255) NOT NULL,
+            bankAccName VARCHAR(255) NOT NULL,
             PRIMARY KEY (supplierID)
         )`;
         return connection.promise()

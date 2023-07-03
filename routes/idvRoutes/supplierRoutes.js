@@ -13,6 +13,9 @@ const supplierController = require('../../controller/supplierController');
 // insert bank name
 router.post('/bank', supplierController.insertBank);
 
+// retrieve all bank names
+router.get('/bank/all', supplierController.getAllBankNames);
+
 // create category
 router.post('/category', supplierController.createCategory);
 

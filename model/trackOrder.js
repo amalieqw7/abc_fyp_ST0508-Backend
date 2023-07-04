@@ -106,7 +106,7 @@ const trackOrderDB = {
 
     // get purchase order details by PO ID
     getPODByPOID: async (poID) => {
-        let sql = `SELECT DATE_FORMAT(PR.requestDate, "%d %M %Y"), U.name, S.supplierName, B.branchName, payM.paymentMode, PR.remarks, PO.purchaseStatusID, PS.purchaseStatus
+        let sql = `SELECT PR.prID, PR.requestDate, U.name, S.supplierName, B.branchName, payM.paymentMode, PR.remarks, PO.purchaseStatusID, PS.purchaseStatus
               FROM purchaseOrder PO, purchaseRequest PR, user U, supplier S, branch B, paymentMode payM, deliveryLocation DL, purchaseStatus PS
               WHERE PR.prID = DL.prID
               AND DL.branchID = B.branchID

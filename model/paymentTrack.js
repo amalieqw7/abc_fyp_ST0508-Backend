@@ -112,11 +112,12 @@ const paymentTrackDB = {
     },
 
     getSupplierInformationByID: async(id) =>{
-        const sql = `SELECT s.supplierName, s.contactPersonName, s.phoneNum, s.email, s.bankAccountNum, s.officeNum, s.address, GROUP_CONCAT(c.categoryName SEPARATOR ', ') as categoryName
+        const sql = `SELECT s.supplierName, s.contactPersonName, s.phoneNum, s.email, s.bankAccountNum, s.officeNum, s.address, b.bankName as bankNamee, GROUP_CONCAT(c.categoryName SEPARATOR ', ') as categoryName
         FROM supplier s
         JOIN suppliersCategory sc ON s.supplierID = sc.fkSupplier_id
         JOIN category c ON sc.fkCategory_id = c.categoryID
-        WHERE s.supplierID = ?
+        JOIN bank b ON s.bankID = b.bankID 
+        WHERE s.supplierID = 2
         GROUP BY s.supplierID`;
 
         return connection.promise()
@@ -172,7 +173,23 @@ const paymentTrackDB = {
             console.log(err)
             return err;
         })
-    }
+    },
+
+
+    saveReceipt: async(prID, pdfData) => {
+        const sql = `UPDATE purchaseOrder SET ptReceipt = ? WHERE prID = ? `;
+
+        return connection.promise()
+        .query(sql, [prID, pdfData])
+        .then(() => {
+            console.log('receipt  saved successfully');
+        })
+        .catch((err) => {
+            console.error('error saving receipt: ', err);
+        })
+    },
+
+
 }
 
 module.exports = paymentTrackDB;

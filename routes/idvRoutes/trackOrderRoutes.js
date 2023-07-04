@@ -20,8 +20,8 @@ router.get('/purchaseStatus/all', trackOrderController.getAllPurchaseStatus);
 router.post('/purchaseOrder', trackOrderController.addPurchaseOrder);
 // get purchase order by ID
 router.get('/purchaseOrder/:id', trackOrderController.getPOByPOID);
-// get purchase order details by ID 
-router.get('/purchaseOrderDetails/:id', trackOrderController.getPODByPOID);
+// get purchase order details by PR ID 
+router.get('/purchaseOrderDetails/:id', trackOrderController.getPODByPRID);
 // get product details by PO ID 
 router.get('/productDetails/:id', trackOrderController.getPDByPOID);
 // update PO status dropdown by PO ID 

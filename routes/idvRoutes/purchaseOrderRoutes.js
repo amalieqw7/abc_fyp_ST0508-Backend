@@ -12,5 +12,8 @@ const purchaseOrderController = require('../../controller/purchaseOrderControlle
 
 router.get('/', purchaseOrderController.getAllPO);
 router.get('/:prID', purchaseOrderController.getPObyID);
+router.put('/:prID', purchaseOrderController.updatePaymentStatus);
+router.put('/remarks/:prID', purchaseOrderController.updateRemarks);
+router.get('/remarks/:prID', purchaseOrderController.getRemarks);
 
 module.exports = router;

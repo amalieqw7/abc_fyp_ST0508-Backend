@@ -300,7 +300,26 @@ const purchaseReqDB = {
         });
     },
 
-    // update qtyReceived
+    // update qtyReceived in lineItems table
+    updateQtyReceived: async(qtyReceived, lineItemID) => {
+        let sql = `UPDATE lineItem SET qtyReceived = ?
+                    WHERE lineItemID = ?`;
+
+        return connection.promise()
+        .query(sql,[qtyReceived, lineItemID])
+        .then((result) => {
+            if(result[0] == 0){
+                return null;
+            }
+            else{
+                return result[0];
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            throw err;
+        })
+    },
 
     // ===============================
     // Payment Mode

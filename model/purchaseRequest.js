@@ -278,7 +278,7 @@ const purchaseReqDB = {
 
     // get line item by PR ID
     getLineItemByPRID: async(prID) => {
-        let sql = `SELECT LI.lineItemID, LI.prID, LI.itemID, I.itemName, LI.quantity, I.unitPrice, LI.totalUnitPrice
+        let sql = `SELECT LI.lineItemID, LI.prID, LI.itemID, I.itemName, LI.quantity, I.unitPrice, LI.totalUnitPrice, LI.qtyReceived
                     FROM lineItem LI, item I
                     WHERE LI.itemID = I.itemID
                     AND LI.prID = ?
@@ -299,6 +299,8 @@ const purchaseReqDB = {
             throw err;
         });
     },
+
+    // update qtyReceived
 
     // ===============================
     // Payment Mode

@@ -105,7 +105,7 @@ const trackOrderDB = {
     },
 
     // get purchase order details by PO ID
-    getPODByPOID: async (poID) => {
+    getPODByPRID: async (prID) => {
         let sql = `SELECT PR.prID, PR.requestDate, U.name, S.supplierName, B.branchName, payM.paymentMode, PR.remarks, PO.purchaseStatusID, PS.purchaseStatus
               FROM purchaseOrder PO, purchaseRequest PR, user U, supplier S, branch B, paymentMode payM, deliveryLocation DL, purchaseStatus PS
               WHERE PR.prID = DL.prID
@@ -116,11 +116,11 @@ const trackOrderDB = {
               AND U.userID = PR.userID
               AND DL.prID = PR.prID
               AND PO.purchaseStatusID = PS.purchaseStatusID
-              AND PO.poID = ?
+              AND PO.prID = ?
               `;
 
         return connection.promise()
-            .query(sql, [poID])
+            .query(sql, [prID])
             .then((result) => {
                 if (result[0] == 0) {
                     return null;

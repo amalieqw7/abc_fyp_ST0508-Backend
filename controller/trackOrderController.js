@@ -89,20 +89,20 @@ module.exports.getPOByPOID = async(req, res, next) => {
     });
 };
 
-// get purchase order details by PO ID
-module.exports.getPODByPOID = async(req, res, next) => {
-    let poId = parseInt(req.params.id);
+// get purchase order details by PR ID
+module.exports.getPODByPRID = async(req, res, next) => {
+    let prId = parseInt(req.params.id);
 
-    if(isNaN(poId)){
+    if(isNaN(prId)){
         res.status(400).send(`Purchase Order ID provided is not a number!`);
         return;
     }
 
     return trackOrderModel
-    .getPODByPOID(poId)
+    .getPODByPRID(prId)
     .then((result) => {
         if(result == null){
-            res.status(404).send(`Purchase Order #${poId} does not exist!`);
+            res.status(404).send(`Purchase Order #${prId} does not exist!`);
         }
         else{
             res.status(200).send(result);

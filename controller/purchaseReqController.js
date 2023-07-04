@@ -284,6 +284,32 @@ module.exports.getLineItemByPRID = async(req, res, next) => {
     });
 };
 
+// update qtyReceived in lineItems table
+module.exports.updateQtyReceived = async(req, res, next) => {
+    let lineItemID = parseInt(req.params.id);
+    let qtyReceived = req.body.qtyReceived;
+
+    if (isNaN(lineItemID)) {
+        res.status(400).send(`Line Item ID provided is not a number!`);
+        return;
+    };
+
+    return purchaseRequestModel
+    .updateQtyReceived(qtyReceived, lineItemID)
+    .then((result) => {
+        if(result.affectedRows == 0){
+            res.status(404).send(`Line Item ID #${prId} does not exist!`);
+        }
+        else{
+            res.status(201).send(`Quantity Received Updated!`);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown error`);
+    });
+};
+
 // ===============================
 // Payment Mode
 // add payment mode

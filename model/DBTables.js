@@ -190,7 +190,8 @@ const DBTables = {
             prID INT NOT NULL,
             itemID INT NOT NULL,
             quantity INT NOT NULL,
-            totalUnitPrice DECIMAL(4,2),
+            totalUnitPrice DECIMAL(4,2) NOT NULL,
+            qtyReceived INT DEFAULT(0),
             PRIMARY KEY (lineItemID)
         )`;
         return connection.promise()
@@ -287,7 +288,6 @@ const DBTables = {
             purchaseStatusID INT NOT NULL DEFAULT(1),
             invoice BLOB,
             deliveryOrder BLOB,
-            qtyReceived INT,
             ptRemarks VARCHAR(255),
             ptReceipt BLOB,
             PRIMARY KEY (poID)

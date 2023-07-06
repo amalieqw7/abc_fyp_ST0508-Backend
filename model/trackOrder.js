@@ -105,8 +105,8 @@ const trackOrderDB = {
     },
 
     // get purchase order details by PO ID
-    getPODByPOID: async (poID) => {
-        let sql = `SELECT DATE_FORMAT(PR.requestDate, "%d %M %Y"), U.name, S.supplierName, B.branchName, payM.paymentMode, PR.remarks, PO.purchaseStatusID, PS.purchaseStatus
+    getPODByPRID: async (prID) => {
+        let sql = `SELECT PR.prID, PR.requestDate, U.name, S.supplierName, B.branchName, payM.paymentMode, PR.remarks, PO.purchaseStatusID, PS.purchaseStatus
               FROM purchaseOrder PO, purchaseRequest PR, user U, supplier S, branch B, paymentMode payM, deliveryLocation DL, purchaseStatus PS
               WHERE PR.prID = DL.prID
               AND DL.branchID = B.branchID
@@ -116,11 +116,11 @@ const trackOrderDB = {
               AND U.userID = PR.userID
               AND DL.prID = PR.prID
               AND PO.purchaseStatusID = PS.purchaseStatusID
-              AND PO.poID = ?
+              AND PO.prID = ?
               `;
 
         return connection.promise()
-            .query(sql, [poID])
+            .query(sql, [prID])
             .then((result) => {
                 if (result[0] == 0) {
                     return null;
@@ -222,6 +222,76 @@ const trackOrderDB = {
 
         return connection.promise()
             .query(sql, [qtyReceived, poID])
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            });
+    },
+
+    // get purchase statuses
+    getPurchaseStatuses: async () => {
+        let sql = `SELECT PS.purchaseStatus, 
+            COUNT(*) AS order_count
+            FROM purchaseOrder PO, purchaseStatus PS
+            WHERE PO.purchaseStatusID = PS.purchaseStatusID
+            GROUP BY PO.purchaseStatusID
+            ORDER BY PS.purchaseStatusID
+            `;
+
+        return connection.promise()
+            .query(sql)
+            .then((result) => {
+                if (result[0] == 0) {
+                    return null;
+                }
+                else {
+                    return result[0];
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            });
+    },
+
+    // get number of PR as of date
+    getPRAmount: async () => {
+        let sql = `SELECT COUNT(*) AS PR_count
+                    FROM purchaseRequest PR
+                    `;
+
+        return connection.promise()
+            .query(sql)
+            .then((result) => {
+                if (result[0] == 0) {
+                    return null;
+                }
+                else {
+                    return result[0];
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            });
+    },
+
+    // get number of PO as of date
+    getPOAmount: async () => {
+        let sql = `SELECT COUNT(*) AS PO_count
+                    FROM purchaseOrder PO
+                    `;
+
+        return connection.promise()
+            .query(sql)
+            .then((result) => {
+                if (result[0] == 0) {
+                    return null;
+                }
+                else {
+                    return result[0];
+                }
+            })
             .catch((err) => {
                 console.log(err);
                 throw err;

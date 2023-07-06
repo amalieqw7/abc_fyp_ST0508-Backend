@@ -266,3 +266,23 @@ module.exports.getPOAmount = async (req, res, next) => {
             }
         });
 };
+
+// searchBar
+module.exports.searchBar = async(req, res, next) => {
+  let searchValue = req.body.searchValue;
+
+  return trackOrderModel
+  .searchBar(searchValue)
+  .then((result) => {
+      if(result == null){
+          res.status(404).send(`Purchase Orders with "${searchValue}" does not exist!`);
+      }
+      else{
+          res.status(200).send(result);
+      }
+  })
+  .catch((err) => {
+      console.log(err);
+      res.status(500).send(`Unknown Error`);
+  });
+};

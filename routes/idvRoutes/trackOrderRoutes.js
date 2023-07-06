@@ -36,4 +36,6 @@ router.get('/purchaseStatuses', trackOrderController.getPurchaseStatuses);
 router.get('/prAmnt', trackOrderController.getPRAmount);
 // get no. of PO as of date 
 router.get('/poAmnt', trackOrderController.getPOAmount);
+// search bar 
+router.post('/POsearch', trackOrderController.searchBar);
 module.exports = router;

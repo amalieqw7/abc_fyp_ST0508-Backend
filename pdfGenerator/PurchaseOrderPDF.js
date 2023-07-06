@@ -185,8 +185,8 @@ function generateTotals(doc, yIndex, totalArr, total){
 	const c1x = 380;
 	const c2x = 450;
 
+	// y = 490
 	const y = yIndex.y;
-	console.log(y, "IN TOTAL SECTION")
 
 	doc.fontSize(14)
 		.text(`Subtotal`, c1x, y+20, { width: 80, align: 'right'})
@@ -203,15 +203,12 @@ function generateTotals(doc, yIndex, totalArr, total){
 
 // remarks section
 function generateRemarks(doc, yIndex, poDetails){
-	console
 	const PO = poDetails.productDetails;
 
 	const remarks = PO.remarks;
 
+	// y = 490
 	const y = yIndex.y;
-
-	console.log(y, "REMARKS SECTION")
-
 
 	doc.fontSize(13)
 		.text(`Remarks`, 55, y+20)

@@ -298,6 +298,29 @@ const trackOrderDB = {
             });
     },
 
+     // search bar
+     searchBar: async (searchValue) => {
+      let sql = `SELECT *
+                  FROM purchaseOrder PO
+                  WHERE prID LIKE '${searchValue}'`;
+
+      return connection.promise()
+          .query(sql)
+          .then((result) => {
+              if (result[0] == 0) {
+                  return null;
+              }
+              else {
+                  return result[0];
+              }
+          })
+          .catch((err) => {
+              console.log(err);
+              throw err;
+          });
+  },
+
+
 };
 
 module.exports = trackOrderDB;

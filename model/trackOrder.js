@@ -228,6 +228,76 @@ const trackOrderDB = {
             });
     },
 
+    // get purchase statuses
+    getPurchaseStatuses: async () => {
+        let sql = `SELECT PS.purchaseStatus, 
+            COUNT(*) AS order_count
+            FROM purchaseOrder PO, purchaseStatus PS
+            WHERE PO.purchaseStatusID = PS.purchaseStatusID
+            GROUP BY PO.purchaseStatusID
+            ORDER BY PS.purchaseStatusID
+            `;
+
+        return connection.promise()
+            .query(sql)
+            .then((result) => {
+                if (result[0] == 0) {
+                    return null;
+                }
+                else {
+                    return result[0];
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            });
+    },
+
+    // get number of PR as of date
+    getPRAmount: async () => {
+        let sql = `SELECT COUNT(*) AS PR_count
+                    FROM purchaseRequest PR
+                    `;
+
+        return connection.promise()
+            .query(sql)
+            .then((result) => {
+                if (result[0] == 0) {
+                    return null;
+                }
+                else {
+                    return result[0];
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            });
+    },
+
+    // get number of PO as of date
+    getPOAmount: async () => {
+        let sql = `SELECT COUNT(*) AS PO_count
+                    FROM purchaseOrder PO
+                    `;
+
+        return connection.promise()
+            .query(sql)
+            .then((result) => {
+                if (result[0] == 0) {
+                    return null;
+                }
+                else {
+                    return result[0];
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            });
+    },
+
 };
 
 module.exports = trackOrderDB;

@@ -30,5 +30,10 @@ router.put('/purchaseOrderStatus/:id', trackOrderController.updatePOByPoId);
 router.get('/purchaseStatus/:id', trackOrderController.getPOstatusbyID);
 // insert quantity received into purchase order table
 router.put('/purchaseOrder/qty/:id', trackOrderController.updateQtyReceived);
-
+// get purchase statuses
+router.get('/purchaseStatuses', trackOrderController.getPurchaseStatuses);
+// get no. of PR as of date 
+router.get('/prAmnt', trackOrderController.getPRAmount);
+// get no. of PO as of date 
+router.get('/poAmnt', trackOrderController.getPOAmount);
 module.exports = router;

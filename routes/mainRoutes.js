@@ -6,6 +6,7 @@ const router = express.Router();
 
 const DBTableRoutes = require('./DBTableRoutes');
 const userRoutes = require('./userRoutes');
+const pdfGenerator = require('./pdfGenerator');
 const purchaseReqRoutes = require('./idvRoutes/purchaseReqRoutes');
 const inventoryRoutes = require('./idvRoutes/inventoryRoutes');
 const purchaseOrderRoutes = require('./idvRoutes/purchaseOrderRoutes');
@@ -27,5 +28,7 @@ router.use('/supplier', supplierRoutes);
 router.use('/paymentTrack', paymentTrackRoutes);
 router.use('/trackOrder', trackOrderRoutes);
 
+// PDF Generator Route
+router.use('/pdf', pdfGenerator);
 
 module.exports = router;

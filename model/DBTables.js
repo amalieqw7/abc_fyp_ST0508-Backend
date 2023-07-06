@@ -88,19 +88,37 @@ const DBTables = {
             })
     },
 
+    // Purchase Type Table
+    initPurchaseTypeTable: async() => {
+        const sql = 
+        `CREATE TABLE purchaseType (
+            purchaseTypeID INT auto_increment,
+            purchaseType VARCHAR(100) NOT NULL UNIQUE,
+            PRIMARY KEY (purchaseTypeID)
+        )`;
+        return connection.promise()
+            .query(sql)
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            })
+    },
+
     // Purchase Request Table
     initPurchaseRequestTable: async() => {
         const sql = 
-        `CREATE TABLE purchaseReq (
+        `CREATE TABLE purchaseRequest (
             prID INT auto_increment,
+            purchaseTypeID INT NOT NULL,
             requestDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             userID INT NOT NULL,
-            supplierID INT NOT NULL,
-            paymentModeID INT NOT NULL,
-            targetDeliveryDate TIMESTAMP NOT NULL,
+            supplierID INT,
+            paymentModeID INT,
+            targetDeliveryDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             remarks VARCHAR(500),
             apprRemarks VARCHAR(500),
-            prStatusID INT DEFAULT(1),
+            apprUserID INT,
+            prStatusID INT NOT NULL DEFAULT(1),
             PRIMARY KEY (prID)
         )`;
         return connection.promise()
@@ -172,7 +190,8 @@ const DBTables = {
             prID INT NOT NULL,
             itemID INT NOT NULL,
             quantity INT NOT NULL,
-            totalUnitPrice DECIMAL(4,2),
+            totalUnitPrice DECIMAL(4,2) NOT NULL,
+            qtyReceived INT DEFAULT(0),
             PRIMARY KEY (lineItemID)
         )`;
         return connection.promise()
@@ -198,6 +217,7 @@ const DBTables = {
             webAddress VARCHAR(255) NULL,
             bankAccountNum VARCHAR(255) NOT NULL,
             bankID VARCHAR(255) NOT NULL,
+            bankAccName VARCHAR(255) NOT NULL,
             PRIMARY KEY (supplierID)
         )`;
         return connection.promise()
@@ -268,7 +288,6 @@ const DBTables = {
             purchaseStatusID INT NOT NULL DEFAULT(1),
             invoice BLOB,
             deliveryOrder BLOB,
-            qtyReceived INT,
             ptRemarks VARCHAR(255),
             ptReceipt BLOB,
             PRIMARY KEY (poID)
@@ -281,7 +300,7 @@ const DBTables = {
         });
     },
 
-    // Payament Status Table
+    // Payment Status Table
     initpaymentStatusTable: () => {
         const sql = `CREATE TABLE paymentStatus (
             paymentStatusID INT auto_increment,

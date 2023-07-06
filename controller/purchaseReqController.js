@@ -4,6 +4,7 @@ const purchaseRequestModel = require('../model/purchaseRequest');
 // PR
 // add PR
 module.exports.addPR = async(req, res, next) => {
+    let purchaseTypeID = req.body.purchaseTypeID;
     let targetDeliveryDate = req.body.targetDeliveryDate;
     let userId = req.body.userID;
     let supplierId = req.body.supplierID;
@@ -11,9 +12,15 @@ module.exports.addPR = async(req, res, next) => {
     let remarks = req.body.remarks;
 
     return purchaseRequestModel
-    .addPR(targetDeliveryDate, userId, supplierId, paymentModeId, remarks)
+    .addPR(purchaseTypeID,targetDeliveryDate, userId, supplierId, paymentModeId, remarks)
     .then(() => {
-        return res.status(201).send(`Purchase Request Created!`);
+        if(purchaseTypeID === 1){
+            return res.status(201).send(`Purchase Request Created!`);
+        }
+        else if(purchaseTypeID === 2){
+            return res.status(201).send(`Ad-Hoc Purchase Created!`);
+        }
+        
     })
     .catch((err) => {
         console.log(err);
@@ -27,7 +34,7 @@ module.exports.getAllPR = async(req, res, next) => {
     .getAllPR()
     .then((result) => {
         if (result == null){
-            res.send(404).send(`There are no Purchase Requests Available`);
+            res.status(404).send(`There are no Purchase Requests Available`);
         }
         else{
             res.status(200).send(result);
@@ -116,6 +123,7 @@ module.exports.getPRByPRID = async(req, res, next) => {
 module.exports.updatePRStatus = async(req, res, next) => {
     let prId = parseInt(req.params.id);
     let prStatusId = req.body.prStatusID;
+    let apprUserID = req.body.apprUserID;
 
     if (isNaN(prId)) {
         res.status(400).send(`Purchase Request ID provided is not a number!`);
@@ -123,7 +131,7 @@ module.exports.updatePRStatus = async(req, res, next) => {
     };
 
     return purchaseRequestModel
-    .updatePRStatus(prStatusId, prId)
+    .updatePRStatus(prStatusId, apprUserID, prId)
     .then((result) => {
         if(result.affectedRows == 0){
             res.status(404).send(`Purchase Request #${prId} does not exist!`);
@@ -143,6 +151,7 @@ module.exports.updatePRApprover = async(req, res, next) => {
     let prId = parseInt(req.params.id);
     let apprRemarks = req.body.comments;
     let prStatusId = req.body.prStatusID;
+    let apprUserID = req.body.apprUserID;
 
     if (isNaN(prId)) {
         res.status(400).send(`Purchase Request ID provided is not a number!`);
@@ -150,7 +159,7 @@ module.exports.updatePRApprover = async(req, res, next) => {
     };
 
     return purchaseRequestModel
-    .updatePRApprover(apprRemarks, prStatusId, prId)
+    .updatePRApprover(apprRemarks, prStatusId, apprUserID, prId)
     .then((result) => {
         if(result.affectedRows == 0){
             res.status(404).send(`Purchase Request #${prId} does not exist!`);
@@ -187,6 +196,45 @@ module.exports.deletePRById = async(req, res, next) => {
     .catch((err) => {
         console.log(err);
         res.status(500).send(`Unknown error`);
+    });
+};
+
+// get All Ad Hoc Purchases
+module.exports.getAllAdHoc = async(req, res, next) => {
+    return purchaseRequestModel
+    .getAllAdHoc()
+    .then((result) => {
+        if (result == null){
+            res.status(404).send(`There are no Ad-Hoc Purchases Available`);
+        }
+        else{
+            res.status(200).send(result);
+        }
+    });
+};
+
+// get ad hoc purchases by userid
+module.exports.getAdHocByUserID = async(req, res, next) => {
+    let userId = parseInt(req.params.id);
+
+    if(isNaN(userId)){
+        res.status(400).send(`UserId provided is not a number!`);
+        return;
+    }
+
+    return purchaseRequestModel
+    .getAdHocByUserID(userId)
+    .then((result) => {
+        if(result == null){
+            res.status(404).send(`User ID #${userId}has not made any Ad-Hoc Purchases!`);
+        }
+        else{
+            res.status(200).send(result);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown Error`);
     });
 };
 
@@ -236,6 +284,32 @@ module.exports.getLineItemByPRID = async(req, res, next) => {
     });
 };
 
+// update qtyReceived in lineItems table
+module.exports.updateQtyReceived = async(req, res, next) => {
+    let lineItemID = parseInt(req.params.id);
+    let qtyReceived = req.body.qtyReceived;
+
+    if (isNaN(lineItemID)) {
+        res.status(400).send(`Line Item ID provided is not a number!`);
+        return;
+    };
+
+    return purchaseRequestModel
+    .updateQtyReceived(qtyReceived, lineItemID)
+    .then((result) => {
+        if(result.affectedRows == 0){
+            res.status(404).send(`Line Item ID #${prId} does not exist!`);
+        }
+        else{
+            res.status(201).send(`Quantity Received Updated!`);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown error`);
+    });
+};
+
 // ===============================
 // Payment Mode
 // add payment mode
@@ -259,7 +333,7 @@ module.exports.getAllPaymentMode = async(req, res, next) => {
     .getAllPaymentMode()
     .then((result) => {
         if (result == null){
-            res.send(404).send(`There are no Payment Modes Available`);
+            res.status(404).send(`There are no Payment Modes Available`);
         }
         else{
             res.status(200).send(result);
@@ -291,7 +365,7 @@ module.exports.getAllBranch = async(req, res, next) => {
     .getAllBranch()
     .then((result) => {
         if (result == null){
-            res.send(404).send(`There are no Branches Available`);
+            res.status(404).send(`There are no Branches Available`);
         }
         else{
             res.status(200).send(result);
@@ -325,7 +399,7 @@ module.exports.getAllDeliveryLocation = async(req, res, next) => {
     .getAllDeliveryLocation()
     .then((result) => {
         if (result == null){
-            res.send(404).send(`There are no Delivery Locations Available`);
+            res.status(404).send(`There are no Delivery Locations Available`);
         }
         else{
             res.status(200).send(result);
@@ -382,7 +456,7 @@ module.exports.getAllPRStatusType = async(req, res, next) => {
     .getAllPRStatusType()
     .then((result) => {
         if (result == null){
-            res.send(404).send(`There are no Purchase Request Status Types Available`);
+            res.status(404).send(`There are no Purchase Request Status Types Available`);
         }
         else{
             res.status(200).send(result);

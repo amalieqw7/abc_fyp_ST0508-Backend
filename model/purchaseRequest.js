@@ -3,27 +3,41 @@ const connection = require('../db');
 const purchaseReqDB = {
     // ===============================
     // PR
-    // add PR
-    addPR: async(targetDeliveryDate, userID, supplierID, paymentModeID, remarks) => {
-        let sql = `INSERT INTO purchaseRequest(targetDeliveryDate, userID, supplierID, paymentModeID, remarks) VALUES (?,?,?,?,?)`;
+    // add PR / Adhoc
+    addPR: async(purchaseTypeID,targetDeliveryDate, userID, supplierID, paymentModeID, remarks) => {
+        if(purchaseTypeID === 1){
+            let sql = `INSERT INTO purchaseRequest(purchaseTypeID,targetDeliveryDate, userID, supplierID, paymentModeID, remarks) VALUES (?,?,?,?,?,?)`;
 
-        return connection.promise()
-        .query(sql, [targetDeliveryDate, userID, supplierID, paymentModeID, remarks])
-        .catch((err) => {
-            console.log(err);
-            throw err;
-        });
+            return connection.promise()
+            .query(sql, [purchaseTypeID,targetDeliveryDate, userID, supplierID, paymentModeID, remarks])
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            });
+        }
+        else if(purchaseTypeID === 2){
+            let sql = `INSERT INTO purchaseRequest(purchaseTypeID, userID, remarks) VALUES (?,?,?)`;
+
+            return connection.promise()
+            .query(sql, [purchaseTypeID, userID, remarks])
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            });
+        }
     },
 
     // get all PR
     getAllPR: async() => {
-        let sql = `SELECT  PR.requestDate, PR.prID, U.name, PR.targetDeliveryDate, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PR.prStatusID, PRS.prStatus, PR.apprRemarks
-                    FROM purchaseRequest PR, user U, branch B, deliveryLocation DL, supplier S, prStatus PRS
+        let sql = `SELECT PR.purchaseTypeID, PT.purchaseType, PR.requestDate, PR.prID, U.name, PR.targetDeliveryDate, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PR.prStatusID, PRS.prStatus, PR.apprRemarks
+                    FROM purchaseRequest PR, user U, branch B, deliveryLocation DL, supplier S, prStatus PRS, purchaseType PT
                     WHERE PR.userID = U.userID
+                    AND PR.purchaseTypeID = PT.purchaseTypeID
                     AND PR.prID = DL.prID
                     AND DL.branchID = B.branchID
                     AND PR.supplierID = S.supplierID
                     AND PR.prStatusID = PRS.prStatusID
+                    AND PR.purchaseTypeID = 1
                     GROUP BY PR.prID
                     ORDER BY prID asc;`;
 
@@ -52,6 +66,7 @@ const purchaseReqDB = {
                     AND DL.branchID = B.branchID
                     AND PR.supplierID = S.supplierID
                     AND PR.prStatusID = PRS.prStatusID
+                    AND PR.purchaseTypeID = 1
                     AND PR.userID = ?
                     GROUP BY PR.prID
                     ORDER BY prID asc;`;
@@ -82,6 +97,7 @@ const purchaseReqDB = {
                     AND PR.supplierID = S.supplierID
                     AND PR.paymentModeID = PM.paymentModeID
                     AND PR.prStatusID = PRS.prStatusID
+                    AND PR.purchaseTypeID = 1
                     AND PR.prID = ?
                     GROUP BY PR.prID
                     ORDER BY prID asc;`;
@@ -112,6 +128,7 @@ const purchaseReqDB = {
     getLatestPRIDByUserID: async(userID) => {
         let sql = `SELECT MAX(prID) AS prID, userID
                     FROM purchaseRequest
+                    AND PR.purchaseTypeID = 1
                     WHERE userID = ?`;
 
         return connection.promise()
@@ -131,12 +148,12 @@ const purchaseReqDB = {
     },
 
     // update PR by PR ID (Approver) ------> approver remarks?
-    updatePRStatus: async(prStatusID, prID) => {
-        let sql = `UPDATE purchaseRequest SET prStatusID = ? 
+    updatePRStatus: async(prStatusID, apprUserID, prID) => {
+        let sql = `UPDATE purchaseRequest SET prStatusID = ?, apprUserID = ? 
                     WHERE prID = ?`;
 
         return connection.promise()
-        .query(sql,[prStatusID,prID])
+        .query(sql,[prStatusID, apprUserID, prID])
         .then((result) => {
             if(result[0] == 0){
                 return null;
@@ -152,12 +169,12 @@ const purchaseReqDB = {
     },
 
     // update PR remarks and status by PR ID (Approver)
-    updatePRApprover: async(apprRemarks, prStatusID, prID) => {
-        let sql = `UPDATE purchaseRequest SET apprRemarks = ? , prStatusID = ? 
+    updatePRApprover: async(apprRemarks, prStatusID, apprUserID, prID) => {
+        let sql = `UPDATE purchaseRequest SET apprRemarks = ? , prStatusID = ?, apprUserID = ? 
                     WHERE prID = ?`;
 
         return connection.promise()
-        .query(sql,[apprRemarks, prStatusID,prID])
+        .query(sql,[apprRemarks, prStatusID, apprUserID, prID])
         .then((result) => {
             if(result[0] == 0){
                 return null;
@@ -192,6 +209,59 @@ const purchaseReqDB = {
         });
     },
 
+    // get All Ad Hoc Purchases
+    getAllAdHoc: async() => {
+        let sql = `SELECT PR.purchaseTypeID, PT.purchaseType, PR.requestDate, PR.prID, U.name, PR.targetDeliveryDate, PR.remarks, PR.prStatusID, PRS.prStatus, PR.apprRemarks
+                    FROM purchaseRequest PR, user U, prStatus PRS, purchaseType PT
+                    WHERE PR.userID = U.userID
+                    AND PR.purchaseTypeID = PT.purchaseTypeID
+                    AND PR.prStatusID = PRS.prStatusID
+                    AND PR.purchaseTypeID = 2
+                    ORDER BY prID asc;`;
+
+        return connection.promise()
+        .query(sql)
+        .then((result) => {
+            if(result[0] == 0){
+                return null;
+            }
+            else{
+                return result[0];
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            throw err;
+        });
+    },
+
+    // get ad hoc purchases by userid
+    getAdHocByUserID: async(userId) => {
+        let sql = `SELECT PR.purchaseTypeID, PT.purchaseType, PR.requestDate, PR.prID, U.name, PR.targetDeliveryDate, PR.remarks, PR.prStatusID, PRS.prStatus, PR.apprRemarks
+                    FROM purchaseRequest PR, user U, prStatus PRS, purchaseType PT
+                    WHERE PR.userID = U.userID
+                    AND PR.purchaseTypeID = PT.purchaseTypeID
+                    AND PR.prStatusID = PRS.prStatusID
+                    AND PR.purchaseTypeID = 2
+                    AND PR.userID = ?
+                    ORDER BY prID asc;`;
+
+        return connection.promise()
+        .query(sql, [userId])
+        .then((result) => {
+            if(result[0] == 0){
+                return null;
+            }
+            else{
+                return result[0];
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            throw err;
+        });
+    },
+
     // ===============================
     // Line Items
     // add line item
@@ -208,7 +278,7 @@ const purchaseReqDB = {
 
     // get line item by PR ID
     getLineItemByPRID: async(prID) => {
-        let sql = `SELECT LI.lineItemID, LI.prID, LI.itemID, I.itemName, LI.quantity, I.unitPrice, LI.totalUnitPrice
+        let sql = `SELECT LI.lineItemID, LI.prID, LI.itemID, I.itemName, LI.quantity, I.unitPrice, LI.totalUnitPrice, LI.qtyReceived
                     FROM lineItem LI, item I
                     WHERE LI.itemID = I.itemID
                     AND LI.prID = ?
@@ -228,6 +298,27 @@ const purchaseReqDB = {
             console.log(err);
             throw err;
         });
+    },
+
+    // update qtyReceived in lineItems table
+    updateQtyReceived: async(qtyReceived, lineItemID) => {
+        let sql = `UPDATE lineItem SET qtyReceived = ?
+                    WHERE lineItemID = ?`;
+
+        return connection.promise()
+        .query(sql,[qtyReceived, lineItemID])
+        .then((result) => {
+            if(result[0] == 0){
+                return null;
+            }
+            else{
+                return result[0];
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            throw err;
+        })
     },
 
     // ===============================

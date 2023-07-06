@@ -89,7 +89,7 @@ const purchaseReqDB = {
 
     // get PR by PR ID
     getPRByPRID: async(prID) => {
-        let sql = `SELECT PR.prID, PR.requestDate, PR.targetDeliveryDate, PR.userID, U.name, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PM.paymentMode, PR.remarks, PR.prStatusID, PRS.prStatus, PR.apprRemarks
+        let sql = `SELECT PR.prID, PR.requestDate, PR.targetDeliveryDate, PR.userID, U.name, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PM.paymentMode, PR.remarks, PR.prStatusID, PRS.prStatus, PR.apprRemarks, S.contactPersonName AS SPerson, S.email AS SEmail, S.phoneNum AS SPhoneNum, S.officeNum AS SOfficeNum, S.address AS SAddress, GROUP_CONCAT(B.address) AS branchAddress, GROUP_CONCAT(B.unitNum) AS branchUnitNum, GROUP_CONCAT(B.postalCode) AS branchPostalCode, GROUP_CONCAT(B.officeNum) AS branchContact, GROUP_CONCAT(B.officeEmail) AS branchEmail, U.email AS UEmail
                     FROM purchaseRequest PR, user U, branch B, deliveryLocation DL, supplier S, paymentMode PM, prStatus PRS
                     WHERE PR.userID = U.userID
                     AND PR.prID = DL.prID
@@ -101,12 +101,6 @@ const purchaseReqDB = {
                     AND PR.prID = ?
                     GROUP BY PR.prID
                     ORDER BY prID asc;`;
-
-                    // SELECT PR.prID, I.itemName, LI.quantity, I.unitPrice, LI.totalUnitPrice
-                    // FROM purchaseRequest PR, item I, lineItem LI
-                    // WHERE PR.prID = LI.prID
-                    // AND LI.itemID = I.itemID
-                    // ORDER BY LI.prID;
 
         return connection.promise()
         .query(sql, [prID])
@@ -359,11 +353,11 @@ const purchaseReqDB = {
     // ===============================
     // Branch
     // add branch
-    addBranch: async(branchName, address) => {
-        let sql = `INSERT INTO branch(branchName, address) VALUES (?,?)`;
+    addBranch: async(branchName, address, officeNum, officeEmail) => {
+        let sql = `INSERT INTO branch(branchName, address, officeNum, officeEmail) VALUES (?,?,?,?)`;
 
         return connection.promise()
-        .query(sql, [branchName, address])
+        .query(sql, [branchName, address, officeNum, officeEmail])
         .catch((err) => {
             console.log(err);
             throw err;

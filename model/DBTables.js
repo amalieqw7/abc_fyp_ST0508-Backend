@@ -62,6 +62,10 @@ const DBTables = {
             branchID INT auto_increment,
             branchName VARCHAR(255) NOT NULL UNIQUE,
             address VARCHAR(255) NOT NULL UNIQUE,
+            unitNum VARCHAR(45) NOT NULL,
+            postalCode VARCHAR(45) NOT NULL,
+            officeNum VARCHAR(255) NOT NULL,
+            officeEmail  VARCHAR(255) NOT NULL,
             PRIMARY KEY (branchID)
         )`;
         return connection.promise()

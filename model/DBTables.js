@@ -58,10 +58,12 @@ const DBTables = {
     // Branch Table
     initBranchTable: async() => {
         const sql = 
-        `CREATE TABLE branch (
+        `CREATE TABLE branch2 (
             branchID INT auto_increment,
             branchName VARCHAR(255) NOT NULL UNIQUE,
             address VARCHAR(255) NOT NULL UNIQUE,
+            officeNum VARCHAR(255) NOT NULL,
+            officeEmail  VARCHAR(255) NOT NULL,
             PRIMARY KEY (branchID)
         )`;
         return connection.promise()

@@ -359,11 +359,11 @@ const purchaseReqDB = {
     // ===============================
     // Branch
     // add branch
-    addBranch: async(branchName, address) => {
-        let sql = `INSERT INTO branch(branchName, address) VALUES (?,?)`;
+    addBranch: async(branchName, address, officeNum, officeEmail) => {
+        let sql = `INSERT INTO branch(branchName, address, officeNum, officeEmail) VALUES (?,?,?,?)`;
 
         return connection.promise()
-        .query(sql, [branchName, address])
+        .query(sql, [branchName, address, officeNum, officeEmail])
         .catch((err) => {
             console.log(err);
             throw err;

@@ -89,7 +89,7 @@ const purchaseReqDB = {
 
     // get PR by PR ID
     getPRByPRID: async(prID) => {
-        let sql = `SELECT PR.prID, PR.requestDate, PR.targetDeliveryDate, PR.userID, U.name, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PM.paymentMode, PR.remarks, PR.prStatusID, PRS.prStatus, PR.apprRemarks, S.contactPersonName AS SPerson, S.email AS SEmail, S.phoneNum AS SPhoneNum, S.officeNum AS SOfficeNum, S.address AS SAddress
+        let sql = `SELECT PR.prID, PR.requestDate, PR.targetDeliveryDate, PR.userID, U.name, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PM.paymentMode, PR.remarks, PR.prStatusID, PRS.prStatus, PR.apprRemarks, S.contactPersonName AS SPerson, S.email AS SEmail, S.phoneNum AS SPhoneNum, S.officeNum AS SOfficeNum, S.address AS SAddress,  GROUP_CONCAT(B.officeNum) AS branchContact, GROUP_CONCAT(B.officeEmail) AS branchEmail, U.email AS UEmail
                     FROM purchaseRequest PR, user U, branch B, deliveryLocation DL, supplier S, paymentMode PM, prStatus PRS
                     WHERE PR.userID = U.userID
                     AND PR.prID = DL.prID
@@ -101,12 +101,6 @@ const purchaseReqDB = {
                     AND PR.prID = ?
                     GROUP BY PR.prID
                     ORDER BY prID asc;`;
-
-                    // SELECT PR.prID, I.itemName, LI.quantity, I.unitPrice, LI.totalUnitPrice
-                    // FROM purchaseRequest PR, item I, lineItem LI
-                    // WHERE PR.prID = LI.prID
-                    // AND LI.itemID = I.itemID
-                    // ORDER BY LI.prID;
 
         return connection.promise()
         .query(sql, [prID])

@@ -89,7 +89,7 @@ const purchaseReqDB = {
 
     // get PR by PR ID
     getPRByPRID: async(prID) => {
-        let sql = `SELECT PR.prID, PR.requestDate, PR.targetDeliveryDate, PR.userID, U.name, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PM.paymentMode, PR.remarks, PR.prStatusID, PRS.prStatus, PR.apprRemarks, S.contactPersonName AS SPerson, S.email AS SEmail, S.phoneNum AS SPhoneNum, S.officeNum AS SOfficeNum, S.address AS SAddress, GROUP_CONCAT(B.address) AS branchAddress, GROUP_CONCAT(B.unitNum) AS branchUnitNum, GROUP_CONCAT(B.postalCode) AS branchPostalCode, GROUP_CONCAT(B.officeNum) AS branchContact, GROUP_CONCAT(B.officeEmail) AS branchEmail, U.email AS UEmail
+        let sql = `SELECT PR.prID, PR.requestDate, PR.targetDeliveryDate, PR.userID, U.name, GROUP_CONCAT(B.branchID) AS branchIDs, GROUP_CONCAT(B.branchName) AS branchName, PR.supplierID, S.supplierName, PR.paymentModeID, PM.paymentMode, PR.remarks, PR.prStatusID, PRS.prStatus, PR.apprRemarks, S.contactPersonName AS SPerson, S.email AS SEmail, S.phoneNum AS SPhoneNum, S.officeNum AS SOfficeNum, S.address AS SAddress, GROUP_CONCAT(B.address) AS branchAddress, GROUP_CONCAT(B.unitNum) AS branchUnitNum, GROUP_CONCAT(B.postalCode) AS branchPostalCode, GROUP_CONCAT(B.officeNum) AS branchContact, GROUP_CONCAT(B.officeEmail) AS branchEmail, U.email AS UEmail
                     FROM purchaseRequest PR, user U, branch B, deliveryLocation DL, supplier S, paymentMode PM, prStatus PRS
                     WHERE PR.userID = U.userID
                     AND PR.prID = DL.prID
@@ -122,8 +122,8 @@ const purchaseReqDB = {
     getLatestPRIDByUserID: async(userID) => {
         let sql = `SELECT MAX(prID) AS prID, userID
                     FROM purchaseRequest
-                    AND PR.purchaseTypeID = 1
-                    WHERE userID = ?`;
+                    WHERE purchaseTypeID = 1
+                    AND userID = ?`;
 
         return connection.promise()
         .query(sql, [userID])

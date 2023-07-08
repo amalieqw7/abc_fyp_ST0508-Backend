@@ -174,6 +174,32 @@ module.exports.updatePRApprover = async(req, res, next) => {
     });
 };
 
+// update approver comments
+module.exports.updateApprComments = async(req, res, next) => {
+    let prId = parseInt(req.params.id);
+    let apprRemarks = req.body.comments;
+
+    if (isNaN(prId)) {
+        res.status(400).send(`Purchase Request ID provided is not a number!`);
+        return;
+    };
+
+    return purchaseRequestModel
+    .updateApprComments(apprRemarks, prId)
+    .then((result) => {
+        if(result.affectedRows == 0){
+            res.status(404).send(`Purchase Request #${prId} does not exist!`);
+        }
+        else{
+            res.status(201).send(`Purchase Request Status Updated!`);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown error`);
+    });
+};
+
 // delete PR
 module.exports.deletePRById = async(req, res, next) => {
     let prId = parseInt(req.params.id);

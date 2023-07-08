@@ -183,6 +183,27 @@ const purchaseReqDB = {
         })
     },
 
+    // update approver comments
+    updateApprComments: async(apprRemarks, prID) => {
+        let sql = `UPDATE purchaseRequest SET apprRemarks = ?
+                    WHERE prID = ?`;
+
+        return connection.promise()
+        .query(sql,[apprRemarks, prID])
+        .then((result) => {
+            if(result[0] == 0){
+                return null;
+            }
+            else{
+                return result[0];
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            throw err;
+        })
+    },
+
     // delete PR
     deletePR: async(prID) => {
         let sql = 'DELETE FROM purchaseRequest WHERE prID = ?';

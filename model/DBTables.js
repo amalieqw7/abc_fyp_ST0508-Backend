@@ -217,6 +217,7 @@ const DBTables = {
             bankAccountNum VARCHAR(255) NOT NULL,
             bankID VARCHAR(255) NOT NULL,
             bankAccName VARCHAR(255) NOT NULL,
+            isDeleted INT NOT NULL,
             PRIMARY KEY (supplierID)
         )`;
         return connection.promise()
@@ -250,6 +251,7 @@ const DBTables = {
             id INT auto_increment,
             fkSupplier_id INT NOT NULL,
             fkCategory_id INT NOT NULL,
+            isDeleted INT NOT NULL,
             PRIMARY KEY (id)
         )`;
         return connection.promise()

@@ -600,6 +600,104 @@ const purchaseReqDB = {
             throw err;
         });
     },
+
+    // Dynamic search 
+    searchPRDynamic: async(searchValue, ByUserID, UserID, PurchaseType, PTID, ByUserName, ByReqDate, ByTargetDate, ByBranchName, BySupplierName, ByPaymentMode, ByRemarks, ByPRStatus) => {
+
+        let selectSQL = ``;
+
+        if (PTID === 1){
+            selectSQL += `SELECT PR.prID, PR.purchaseTypeID, PT.purchaseType, PR.requestDate, U.name, PR.targetDeliveryDate, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PM.paymentMode, PR.prStatusID, PRS.prStatus
+                            FROM purchaseRequest PR, purchaseType PT, user U, branch B, deliveryLocation DL, supplier S, prStatus PRS, paymentMode PM
+                            WHERE PR.prID = DL.prID
+                            AND PR.purchaseTypeID = PT.purchaseTypeID
+                            AND DL.branchID = B.branchID
+                            AND PR.userID = U.userID
+                            AND PR.supplierID = S.supplierID
+                            AND PR.paymentModeID = PM.paymentModeID
+                            AND PR.prStatusID = PRS.prStatusID`;
+        }
+        else if(PTID === 2){
+            selectSQL += `SELECT PR.prID, PR.purchaseTypeID, PT.purchaseType, PR.requestDate, U.name, PR.targetDeliveryDate, PR.remarks, PR.prStatusID, PRS.prStatus
+                            FROM purchaseRequest PR, purchaseType PT, user U, prStatus PRS
+                            WHERE PR.purchaseTypeID = PT.purchaseTypeID
+                            AND PR.userID = U.userID
+                            AND PR.prStatusID = PRS.prStatusID`;
+        };
+
+        if(ByUserID === true){
+            selectSQL += ` \n AND PR.userID = ${UserID}`;
+        };
+
+        if(PurchaseType === true){
+            selectSQL += ` \n AND PR.purchaseTypeID = ${PTID}`;
+        };
+        
+        selectSQL += ` \n GROUP BY PR.prID;`;
+
+        // Check if temp table exists
+        const checkPRTempTableQuery = `DROP TABLE IF EXISTS pr_temp_table;`;
+        connection.promise().query(checkPRTempTableQuery);
+
+        // QL to create temp table
+        const createTempTableQuery = `CREATE TEMPORARY TABLE pr_temp_table AS ${selectSQL}`;
+        connection.promise().query(createTempTableQuery);
+
+        // SQL to search
+        let searchQuery = `SELECT * FROM pr_temp_table 
+                                WHERE prID LIKE '%${searchValue}%'`;
+
+        if(ByUserName === true){
+            searchQuery += ` \n OR name LIKE '%${searchValue}%'`;
+        };
+
+        if(ByReqDate === true){
+            searchQuery += ` \n OR requestDate LIKE '%${searchValue}%'`;
+        };
+
+        if(ByTargetDate === true){
+            searchQuery += ` \n OR targetDeliveryDate LIKE '%${searchValue}%'`;
+        };
+
+        if(ByBranchName === true){
+            searchQuery += ` \n OR branchName LIKE '%${searchValue}%'`;
+        };
+
+        if(BySupplierName === true){
+            searchQuery += ` \n OR supplierName LIKE '%${searchValue}%'`;
+        };
+
+        if(ByPaymentMode === true){
+            searchQuery += ` \n OR paymentMode LIKE '%${searchValue}%'`;
+        };
+
+        if(ByPRStatus === true){
+            searchQuery += ` \n OR prStatus LIKE '%${searchValue}%'`;
+        };
+
+        if(ByRemarks === true){
+            searchQuery += ` \n OR remarks LIKE '%${searchValue}%'`;
+        };
+        
+        searchQuery += ` \n ORDER BY prID asc;`;
+
+        console.log(searchQuery)
+
+        return connection.promise()
+        .query(searchQuery, [searchValue])
+        .then((result) => {
+            if(result[0] == 0){
+                return null;
+            }
+            else{
+                return result[0];
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            throw err;
+        });
+    },
 };
 
 module.exports = purchaseReqDB;

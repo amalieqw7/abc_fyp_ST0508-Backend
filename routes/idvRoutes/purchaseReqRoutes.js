@@ -46,5 +46,6 @@ router.get('/PRStatus/all', purchaseReqController.getAllPRStatusType);
 // Search
 router.post('/search', purchaseReqController.searchPRAll);
 router.post('/search/:id', purchaseReqController.searchPRByUserID);
+router.post('/DynamicSearch', purchaseReqController.searchPRDynamic);
 
 module.exports = router;

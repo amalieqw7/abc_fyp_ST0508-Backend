@@ -47,4 +47,29 @@ module.exports.userLogin = async(req,res,next) => {
         console.log(err);
         res.status(500).send("Unknown error");
     })
-}
+};
+
+// get User details by id
+module.exports.getUserDetailsByID = async(req, res, next) => {
+    let userId = parseInt(req.params.id);
+
+    if(isNaN(userId)){
+        res.status(400).send(`User ID provided is not a number!`);
+        return;
+    }
+
+    return userModel
+    .getUserDetailsByID(userId)
+    .then((result) => {
+        if(result == null){
+            res.status(404).send(`User #${userId} does not exist!`);
+        }
+        else{
+            res.status(200).send(result);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown Error`);
+    });
+};

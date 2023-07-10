@@ -107,13 +107,15 @@ module.exports.createSupplier = async (req, res, next) => {
 
 // create suppliers category
 module.exports.createSuppliersCategory = async (req, res, next) => {
-    let fkSupplier_id = req.body.fkSupplier_id;
-    let fkCategory_id = req.body.fkCategory_id;
+    let {fkSupplier_id, categoryIDs} = req.body;
+
+    // split categoryIDs into an array
+    let categoryIDArray = categoryIDs.split(','); 
 
     return supplierModel
-        .createSuppliersCategory(fkSupplier_id, fkCategory_id)
+        .createSuppliersCategory(fkSupplier_id, categoryIDArray)
         .then((result) => {
-            return res.status(201).send(`Suppliers Category created`);
+            return res.status(201).send(`Suppliers Category for Supplier ${fkSupplier_id} Created!`);
         })
         .catch((err) => {
             if (err.code === "ER_DUP_ENTRY") {
@@ -126,31 +128,39 @@ module.exports.createSuppliersCategory = async (req, res, next) => {
         })
 }
 
-// update supplier category
-// module.exports.updateSupplierCategory = async (req, res, next) => {
-//     let supplierID = parseInt(req.params.fkSupplier_id);
-//     let fkSupplierID = req.body.fkSupplier_id;
-//     let categoryID = req.body.fkCategory_id;
+// update suppliers category
+module.exports.editSuppliersCategory = async(req, res, next) => {
+    const fkSupplier_id = parseInt(req.params.fkSupplier_id);
+    const categoryIDs = req.body.categoryIDs;
+    const categoryIDArray = categoryIDs.split(',');
 
-//     if (isNaN(supplierID)) {
-//         res.status(400).send(`Enter numbers only!`);
-//         return;
-//     };
+    try {
+        await supplierModel.editSuppliersCategory(fkSupplier_id, categoryIDArray);
+        res.status(200).send(`Supplier ${fkSupplier_id} Category Successfully Updated!`);
+    }
+    catch (err) {
+        console.log(err);
+        return res.sendStatus(500);
+    }
+}
 
-//     return supplierModel
-//         .updateSupplierCategory(categoryID, fkSupplierID, supplierID)
-//         .then((result) => {
-//             if (result === null) {
-//                 return res.send(`Supplier category does not exist`);
-//             }
-//             else {
-//                 return res.status(200).send(`Supplier category updated!`);
-//             }
-//         })
-//         .catch((err) => {
-//             return res.sendStatus(500);
-//         })
-// }
+// retrieve the latest supplierID and name
+module.exports.getLatestSupplierID = async(req, res, next) => {
+    return supplierModel
+    .getLatestSupplierID()
+    .then((result) => {
+        if (result === null) {
+          return res.send("Sorry, supplierID does not exist");
+        }
+        else {
+          return res.status(200).send(result);
+        }  
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.sendStatus(500);
+    })
+}
 
 // retrieve full supplier details by supplierID
 module.exports.getFullSupplierDetailsByID = async (req, res, next) => {
@@ -229,7 +239,7 @@ module.exports.updateSupplierDetails = async (req, res, next) => {
         })
 }
 
-// delete supplier
+// hard delete supplier
 module.exports.deleteSupplier = async (req, res, next) => {
     let supplierID = parseInt(req.params.supplierID);
 
@@ -247,6 +257,34 @@ module.exports.deleteSupplier = async (req, res, next) => {
             else {
                 return res.status(200).send(`Supplier ${supplierID} Deleted`);
             }
+        })
+        .catch((err) => {
+            return res.sendStatus(500);
+        })
+}
+
+// soft delete supplier
+module.exports.testDeleteSupplier = async (req, res, next) => {
+    let supplierID = parseInt(req.params.supplierID);
+
+    return supplierModel
+        .testDeleteSupplier(supplierID)
+        .then((result) => {
+            return res.status(200).send(`Supplier ${supplierID} Deleted`);
+        })
+        .catch((err) => {
+            return res.sendStatus(500);
+        })
+}
+
+// soft delete suppliers category
+module.exports.deleteSuppliersCategory = async (req, res, next) => {
+    let fkSupplier_id = parseInt(req.params.fkSupplier_id);
+
+    return supplierModel
+        .deleteSuppliersCategory(fkSupplier_id)
+        .then((result) => {
+            return res.status(200).send(`Supplier ${fkSupplier_id}'s Category Deleted`);
         })
         .catch((err) => {
             return res.sendStatus(500);

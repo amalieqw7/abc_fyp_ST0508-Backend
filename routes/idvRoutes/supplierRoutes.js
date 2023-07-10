@@ -25,11 +25,14 @@ router.get('/category/all', supplierController.getAllCategories);
 // create supplier
 router.post('/', supplierController.createSupplier);
 
-// create supplierscategory
+// create supplier category
 router.post('/suppliersCategory', supplierController.createSuppliersCategory);
 
-// update supplier category
-//router.put('/suppliersCategory/:supplierID', supplierController.updateSupplierDetails);
+// update suppliers category
+router.put('/suppliersCategory/:fkSupplier_id', supplierController.editSuppliersCategory);
+
+// retrieve the latest supplierID and name
+router.get('/supplierid', supplierController.getLatestSupplierID);
 
 // retrieve all suppliers (id, name, contact person & number, categories)
 router.get('/all', supplierController.getAllSuppliers);
@@ -42,5 +45,11 @@ router.put('/:supplierID', supplierController.updateSupplierDetails);
 
 // delete supplier
 router.delete('/:supplierID', supplierController.deleteSupplier);
+
+// -------------- TEST delete supplier
+router.put('/delete/:supplierID', supplierController.testDeleteSupplier);
+
+// -------------- TEST delete suppliers category
+router.put('/delete/:fkSupplier_id', supplierController.deleteSuppliersCategory);
 
 module.exports = router;

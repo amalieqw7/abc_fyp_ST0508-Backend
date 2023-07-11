@@ -121,17 +121,6 @@ const supplierDB = {
             })
     },
 
-    // update suppliers category
-    // updateSupplierCategory: async(fkCategory_id, fkSupplier_id) => {
-    //     const sql = `UPDATE supplier SET fkCategory_id = ? WHERE fkSupplier_id = ?`;
-
-    //     return connection.promise()
-    //         .query(sql, [fkCategory_id, fkSupplier_id])
-    //         .catch((err) => {
-    //             throw err;
-    //         })
-    // },
-
     // retrieve full supplier details by supplierID
     getFullSupplierDetailsByID: async (supplierID) => {
         const sql = `SELECT s.supplierID, s.supplierName, s.contactPersonName, s.email, s.phoneNum, s.officeNum, s.address, s.webAddress, s.bankAccountNum, s.bankID, b.bankName, s.bankAccName,
@@ -165,7 +154,8 @@ const supplierDB = {
         const sql = `SELECT s.supplierID, s.supplierName, s.contactPersonName, s.phoneNum, GROUP_CONCAT(c.categoryName SEPARATOR ', ') AS "Category"
                     FROM supplier s
                     JOIN suppliersCategory sc ON s.supplierID = sc.fkSupplier_id
-                    JOIN category c ON sc.fkCategory_id = c.categoryID       
+                    JOIN category c ON sc.fkCategory_id = c.categoryID 
+                    WHERE s.isDeleted = 0      
                     GROUP BY supplierID
                     ORDER BY supplierID ASC`;
 
@@ -245,6 +235,43 @@ const supplierDB = {
                 throw err;
             })
     },
+
+    /*
+    const sql = `UPDATE supplier SET isDeleted = 1 WHERE supplierID = ?`;
+
+        return connection.promise()
+            .query(sql, [supplierID])
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            })
+    */
+
+    /*
+    return new Promise((resolve, reject) => {
+            // update supplier first then update suppliers category
+            const sqlDelete1 = `UPDATE supplier SET isDeleted = 1 WHERE supplierID = ?`;
+            const id = [supplierID];
+
+            connection.query(sqlDelete1, id, (err) => {
+                if (err) {
+                    console.log(err);
+                    reject(err);
+                } else {
+                    const sqlDelete2 = `UPDATE supplier SET isDeleted = 1 WHERE fkSupplier_id = ?`;
+  
+                    connection.query(sqlInsert, [values], (err) => {
+                        if (err) {
+                            console.log(err);
+                            reject(err);
+                        } else {
+                            resolve();
+                        }
+                    })
+                }
+            })
+        })
+    */
 
     // soft delete suppliers category
     deleteSuppliersCategory: async (fkSupplier_id) => {

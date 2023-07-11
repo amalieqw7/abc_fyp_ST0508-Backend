@@ -89,7 +89,7 @@ const purchaseReqDB = {
 
     // get PR by PR ID
     getPRByPRID: async(prID) => {
-        let sql = `SELECT PR.prID, PR.requestDate, PR.targetDeliveryDate, PR.userID, U.name, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PM.paymentMode, PR.remarks, PR.prStatusID, PRS.prStatus, PR.apprRemarks, S.contactPersonName AS SPerson, S.email AS SEmail, S.phoneNum AS SPhoneNum, S.officeNum AS SOfficeNum, S.address AS SAddress, GROUP_CONCAT(B.address) AS branchAddress, GROUP_CONCAT(B.unitNum) AS branchUnitNum, GROUP_CONCAT(B.postalCode) AS branchPostalCode, GROUP_CONCAT(B.officeNum) AS branchContact, GROUP_CONCAT(B.officeEmail) AS branchEmail, U.email AS UEmail
+        let sql = `SELECT PR.prID, PR.requestDate, PR.targetDeliveryDate, PR.userID, U.name, GROUP_CONCAT(B.branchID) AS branchIDs, GROUP_CONCAT(B.branchName) AS branchName, PR.supplierID, S.supplierName, PR.paymentModeID, PM.paymentMode, PR.remarks, PR.prStatusID, PRS.prStatus, PR.apprRemarks, S.contactPersonName AS SPerson, S.email AS SEmail, S.phoneNum AS SPhoneNum, S.officeNum AS SOfficeNum, S.address AS SAddress, GROUP_CONCAT(B.address) AS branchAddress, GROUP_CONCAT(B.unitNum) AS branchUnitNum, GROUP_CONCAT(B.postalCode) AS branchPostalCode, GROUP_CONCAT(B.officeNum) AS branchContact, GROUP_CONCAT(B.officeEmail) AS branchEmail, U.email AS UEmail
                     FROM purchaseRequest PR, user U, branch B, deliveryLocation DL, supplier S, paymentMode PM, prStatus PRS
                     WHERE PR.userID = U.userID
                     AND PR.prID = DL.prID
@@ -122,8 +122,8 @@ const purchaseReqDB = {
     getLatestPRIDByUserID: async(userID) => {
         let sql = `SELECT MAX(prID) AS prID, userID
                     FROM purchaseRequest
-                    AND PR.purchaseTypeID = 1
-                    WHERE userID = ?`;
+                    WHERE purchaseTypeID = 1
+                    AND userID = ?`;
 
         return connection.promise()
         .query(sql, [userID])
@@ -169,6 +169,27 @@ const purchaseReqDB = {
 
         return connection.promise()
         .query(sql,[apprRemarks, prStatusID, apprUserID, prID])
+        .then((result) => {
+            if(result[0] == 0){
+                return null;
+            }
+            else{
+                return result[0];
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            throw err;
+        })
+    },
+
+    // update approver comments
+    updateApprComments: async(apprRemarks, prID) => {
+        let sql = `UPDATE purchaseRequest SET apprRemarks = ?
+                    WHERE prID = ?`;
+
+        return connection.promise()
+        .query(sql,[apprRemarks, prID])
         .then((result) => {
             if(result[0] == 0){
                 return null;
@@ -563,6 +584,104 @@ const purchaseReqDB = {
                                 OR supplierName LIKE '%${searchValue}%'
                                 OR prStatus LIKE '%${searchValue}%'
                                 ORDER BY prID asc;`;
+
+        return connection.promise()
+        .query(searchQuery, [searchValue])
+        .then((result) => {
+            if(result[0] == 0){
+                return null;
+            }
+            else{
+                return result[0];
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            throw err;
+        });
+    },
+
+    // Dynamic search 
+    searchPRDynamic: async(searchValue, ByUserID, UserID, PurchaseType, PTID, ByUserName, ByReqDate, ByTargetDate, ByBranchName, BySupplierName, ByPaymentMode, ByRemarks, ByPRStatus) => {
+
+        let selectSQL = ``;
+
+        if (PTID === 1){
+            selectSQL += `SELECT PR.prID, PR.purchaseTypeID, PT.purchaseType, PR.requestDate, U.name, PR.targetDeliveryDate, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PM.paymentMode, PR.prStatusID, PRS.prStatus
+                            FROM purchaseRequest PR, purchaseType PT, user U, branch B, deliveryLocation DL, supplier S, prStatus PRS, paymentMode PM
+                            WHERE PR.prID = DL.prID
+                            AND PR.purchaseTypeID = PT.purchaseTypeID
+                            AND DL.branchID = B.branchID
+                            AND PR.userID = U.userID
+                            AND PR.supplierID = S.supplierID
+                            AND PR.paymentModeID = PM.paymentModeID
+                            AND PR.prStatusID = PRS.prStatusID`;
+        }
+        else if(PTID === 2){
+            selectSQL += `SELECT PR.prID, PR.purchaseTypeID, PT.purchaseType, PR.requestDate, U.name, PR.targetDeliveryDate, PR.remarks, PR.prStatusID, PRS.prStatus
+                            FROM purchaseRequest PR, purchaseType PT, user U, prStatus PRS
+                            WHERE PR.purchaseTypeID = PT.purchaseTypeID
+                            AND PR.userID = U.userID
+                            AND PR.prStatusID = PRS.prStatusID`;
+        };
+
+        if(ByUserID === true){
+            selectSQL += ` \n AND PR.userID = ${UserID}`;
+        };
+
+        if(PurchaseType === true){
+            selectSQL += ` \n AND PR.purchaseTypeID = ${PTID}`;
+        };
+        
+        selectSQL += ` \n GROUP BY PR.prID;`;
+
+        // Check if temp table exists
+        const checkPRTempTableQuery = `DROP TABLE IF EXISTS pr_temp_table;`;
+        connection.promise().query(checkPRTempTableQuery);
+
+        // QL to create temp table
+        const createTempTableQuery = `CREATE TEMPORARY TABLE pr_temp_table AS ${selectSQL}`;
+        connection.promise().query(createTempTableQuery);
+
+        // SQL to search
+        let searchQuery = `SELECT * FROM pr_temp_table 
+                                WHERE prID LIKE '%${searchValue}%'`;
+
+        if(ByUserName === true){
+            searchQuery += ` \n OR name LIKE '%${searchValue}%'`;
+        };
+
+        if(ByReqDate === true){
+            searchQuery += ` \n OR requestDate LIKE '%${searchValue}%'`;
+        };
+
+        if(ByTargetDate === true){
+            searchQuery += ` \n OR targetDeliveryDate LIKE '%${searchValue}%'`;
+        };
+
+        if(ByBranchName === true){
+            searchQuery += ` \n OR branchName LIKE '%${searchValue}%'`;
+        };
+
+        if(BySupplierName === true){
+            searchQuery += ` \n OR supplierName LIKE '%${searchValue}%'`;
+        };
+
+        if(ByPaymentMode === true){
+            searchQuery += ` \n OR paymentMode LIKE '%${searchValue}%'`;
+        };
+
+        if(ByPRStatus === true){
+            searchQuery += ` \n OR prStatus LIKE '%${searchValue}%'`;
+        };
+
+        if(ByRemarks === true){
+            searchQuery += ` \n OR remarks LIKE '%${searchValue}%'`;
+        };
+        
+        searchQuery += ` \n ORDER BY prID asc;`;
+
+        console.log(searchQuery)
 
         return connection.promise()
         .query(searchQuery, [searchValue])

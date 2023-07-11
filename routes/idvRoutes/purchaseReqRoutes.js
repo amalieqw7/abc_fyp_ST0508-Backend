@@ -16,6 +16,7 @@ router.get('/:id', purchaseReqController.getPRByUserID);
 router.get('/PR/:id', purchaseReqController.getPRByPRID);
 router.get('/latestPRID/:id', purchaseReqController.getLatestPRIDByUserID);
 router.put('/PR/:id', purchaseReqController.updatePRApprover);
+router.put('/PR/ApprComment/:id', purchaseReqController.updateApprComments);
 router.delete('/PR/:id', purchaseReqController.deletePRById);
 router.get('/adhoc/purchases', purchaseReqController.getAllAdHoc);
 router.get('/adhoc/:id', purchaseReqController.getAdHocByUserID);
@@ -45,5 +46,6 @@ router.get('/PRStatus/all', purchaseReqController.getAllPRStatusType);
 // Search
 router.post('/search', purchaseReqController.searchPRAll);
 router.post('/search/:id', purchaseReqController.searchPRByUserID);
+router.post('/DynamicSearch', purchaseReqController.searchPRDynamic);
 
 module.exports = router;

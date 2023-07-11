@@ -174,6 +174,32 @@ module.exports.updatePRApprover = async(req, res, next) => {
     });
 };
 
+// update approver comments
+module.exports.updateApprComments = async(req, res, next) => {
+    let prId = parseInt(req.params.id);
+    let apprRemarks = req.body.comments;
+
+    if (isNaN(prId)) {
+        res.status(400).send(`Purchase Request ID provided is not a number!`);
+        return;
+    };
+
+    return purchaseRequestModel
+    .updateApprComments(apprRemarks, prId)
+    .then((result) => {
+        if(result.affectedRows == 0){
+            res.status(404).send(`Purchase Request #${prId} does not exist!`);
+        }
+        else{
+            res.status(201).send(`Purchase Request Status Updated!`);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown error`);
+    });
+};
+
 // delete PR
 module.exports.deletePRById = async(req, res, next) => {
     let prId = parseInt(req.params.id);
@@ -504,6 +530,39 @@ module.exports.searchPRByUserID = async(req, res, next) => {
     .searchPRByUserID(searchValue, userId)
     .then((result) => {
         if(result == null){
+            res.status(404).send(`Purchase Requests with "${searchValue}" Do not exist!`);
+        }
+        else{
+            res.status(200).send(result);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown Error`);
+    });
+};
+
+// Dynamic Search
+module.exports.searchPRDynamic = async(req, res, next) => {
+    let searchValue = req.body.searchValue;
+    let ByUserID =  req.body.ByUserID;
+    let UserID = req.body.UserID;
+    let PurchaseType = req.body.PurchaseType;
+    let PTID = req.body.PTID;
+    let ByUserName = req.body.ByUserName;
+    let ByReqDate = req.body.ByReqDate;
+    let ByTargetDate = req.body.ByTargetDate;
+    let ByBranchName = req.body.ByBranchName;
+    let BySupplierName = req.body.BySupplierName;
+    let ByPaymentMode = req.body.ByPaymentMode;
+    let ByPRStatus = req.body.ByPRStatus;
+    let ByRemarks = req.body.ByRemarks;
+
+    return purchaseRequestModel
+    .searchPRDynamic(searchValue, ByUserID, UserID, PurchaseType, PTID, ByUserName, ByReqDate, ByTargetDate, ByBranchName, BySupplierName, ByPaymentMode, ByRemarks, ByPRStatus)
+    .then((result) => {
+        if(result == null){
+            console.log(result)
             res.status(404).send(`Purchase Requests with "${searchValue}" Do not exist!`);
         }
         else{

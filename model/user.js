@@ -22,7 +22,30 @@ const userDB = {
             console.log(err);
             return err;
         })
-    }
+    },
+
+    // get User details by id
+    getUserDetailsByID: async(userID) => {
+        let sql = `SELECT R.role, U.name, U.email 
+                    FROM user U, role R
+                    WHERE U.roleID = R.roleID
+                    AND userID = ?;`;
+
+        return connection.promise()
+        .query(sql, [userID])
+        .then((result) => {
+            if(result[0] == 0){
+                return null;
+            }
+            else{
+                return result[0];
+            };
+        })
+        .catch((err) => {
+        console.log(err);
+        throw err;
+        });
+    },
 };
 
 module.exports = userDB;

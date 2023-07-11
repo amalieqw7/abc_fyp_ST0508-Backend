@@ -41,6 +41,7 @@ router.post('/paymentStatus', DBTablesController.paymentStatusTable);
 
 // PURCHASE PLANNER
 // Planner Table
+router.post('/purchasePlanning', DBTablesController.purchasePlanningTable);
 
 // Plan view Access Table
 

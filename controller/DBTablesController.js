@@ -242,5 +242,16 @@ module.exports.purchaseStatusTable = (req, res, next) => {
 
 // PURCHASE PLANNER
 // Planner Table
+module.exports.purchasePlanningTable = (req, res, next) => {
+  return DBTablesModel
+  .initplannerTable()
+  .then(() => {
+      return res.status(201).send(`Purchase Planning Table Created!`);
+  })
+  .catch((err) => {
+      console.log(err);
+      return res.status(500).send(`Failed to create Purchase Planning Table`);
+  })
+}
 
 // Plan view Access Table

@@ -16,13 +16,15 @@ module.exports.getAllEvents = async (req, res, next) => {
 
 // insert new event
 module.exports.addEvent = async(req, res, next) => {
+  let userID = req.body.userID;
   let title = req.body.title;
   let start_datetime = req.body.start_datetime;
   let end_datetime = req.body.end_datetime;
   let description = req.body.description;
+  let viewAccessID = req.body.viewAccessID;
 
   return purchasePlanModel
-  .addEvent(title, start_datetime, end_datetime, description)
+  .addEvent(userID, title, start_datetime, end_datetime, description, viewAccessID)
   .then(() => {
       return res.status(201).send(`Event Created!`);
   })
@@ -34,21 +36,21 @@ module.exports.addEvent = async(req, res, next) => {
 
 // delete event
 module.exports.deleteEvent = async (req, res, next) => {
-  let eventID = parseInt(req.params.id);
+  let planID = parseInt(req.params.id);
 
-  if (isNaN(eventID)) {
+  if (isNaN(planID)) {
       res.status(400).send(`please input a number`);
       return;
   }
 
   return purchasePlanModel
-    .deleteEvent(eventID)
+    .deleteEvent(planID)
     .then((result) => {
         if(result.affectedRows == 0){
-            res.status(404).send(`Event #${eventID} does not exist!`);
+            res.status(404).send(`Event #${planID} does not exist!`);
         }
         else{
-            res.status(201).send(`Event #${eventID} has been deleted!`);
+            res.status(201).send(`Event #${planID} has been deleted!`);
         }
     })
     .catch((err) => {
@@ -56,5 +58,6 @@ module.exports.deleteEvent = async (req, res, next) => {
         res.status(500).send(`Unknown error`);
     });
 };
+
 
 

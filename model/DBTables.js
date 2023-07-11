@@ -333,10 +333,26 @@ const DBTables = {
           console.log(error)
           throw error;
       });
-  }
+  },
 
     // PURCHASE PLANNER
     // Planner Table
+    initplannerTable: () => {
+      const sql = `CREATE TABLE purchasePlanning (
+        eventID INT auto_increment,
+        title VARCHAR(255) NOT NULL,
+        start_datetime DATETIME NOT NULL,
+        end_datetime DATETIME NOT NULL,
+        description VARCHAR(500),
+        PRIMARY KEY (eventID)
+      )`;
+      return connection.promise()
+      .query(sql)
+      .catch((error) => {
+          console.log(error)
+          throw error;
+      });
+  }
 
     // Plan view Access Table
 

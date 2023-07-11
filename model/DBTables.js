@@ -336,12 +336,15 @@ const DBTables = {
     // PURCHASE PLANNER
     // Planner Table
     initplannerTable: () => {
-      const sql = `CREATE TABLE purchasePlanning (
-        eventID INT auto_increment,
+      const sql = `CREATE TABLE planner (
+        planID INT auto_increment,
+        userID INT NOT NULL,
         title VARCHAR(255) NOT NULL,
         start_datetime DATETIME NOT NULL,
         end_datetime DATETIME NOT NULL,
         description VARCHAR(500),
+        viewAccessID INT NOT NULL,
+        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (eventID)
       )`;
       return connection.promise()

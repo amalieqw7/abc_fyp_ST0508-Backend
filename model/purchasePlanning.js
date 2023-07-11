@@ -4,7 +4,7 @@ const purchasePlanningDB = {
   // get all events 
   getAllEvents: async () => {
       let sql = `SELECT *
-            FROM purchasePlanning`;
+            FROM planner`;
 
       return connection.promise()
           .query(sql)
@@ -24,11 +24,11 @@ const purchasePlanningDB = {
   },
 
   // insert new event
-  addEvent: async(title, start_datetime, end_datetime, description) => {
-    let sql = `INSERT INTO purchasePlanning(title, start_datetime, end_datetime, description) VALUES (?,?,?,?)`;
+  addEvent: async(userID, title, start_datetime, end_datetime, description, viewAccessID) => {
+    let sql = `INSERT INTO planner(userID, title, start_datetime, end_datetime, description, viewAccessID) VALUES (?,?,?,?,?,?)`;
 
     return connection.promise()
-    .query(sql, [title, start_datetime, end_datetime, description])
+    .query(sql, [userID, title, start_datetime, end_datetime, description, viewAccessID])
     .catch((err) => {
         console.log(err);
         throw err;
@@ -36,11 +36,11 @@ const purchasePlanningDB = {
 },
 
   // delete event
-  deleteEvent: async(eventID) => {
-    let sql = 'DELETE FROM purchasePlanning WHERE eventID = ?';
+  deleteEvent: async(planID) => {
+    let sql = 'DELETE FROM planner WHERE planID = ?';
 
     return connection.promise()
-    .query(sql, [eventID])
+    .query(sql, [planID])
     .then((result) => {
         if(result[0] == 0){
             return null;

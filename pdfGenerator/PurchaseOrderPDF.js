@@ -17,8 +17,12 @@ function buildPDF(data, dataCallback, endCallback){
 };
 
 function generateHeader(doc, poDetails) {
-	const date = moment(poDetails.productDetails.requestDate).format('DD/MM/YYYY');
-	const poID = poDetails.productDetails.prID;
+	const PO = poDetails.productDetails;
+
+	const date = moment(PO.requestDate).format('DD/MM/YYYY');
+	const IdDate = moment(PO.requestDate).format('YYMMDD');
+	const BranchPrefix = PO.branchPrefix.substring(0, PO.branchPrefix.indexOf(','))
+	const poID = PO.prID.toString().padStart(5,'0');
 
     // file path from server file
 	doc.image('pdfGenerator/client_logo.png', 50, 50, { width: 120})
@@ -28,7 +32,7 @@ function generateHeader(doc, poDetails) {
 		.text(`Date`, 370, 95, {align: 'left'})
 		.text(`${date}`, 440, 95, {align: 'left'})
 		.text(`P.O. Number`, 370, 110, {align: 'left'})
-		.text(`#${poID}`, 440, 110, {align: 'left'});
+		.text(`#${BranchPrefix}${IdDate}${poID}`, 440, 110, {align: 'left'});
 };
 
 // Payer & Payee Details
@@ -218,10 +222,11 @@ function generateRemarks(doc, yIndex, poDetails){
 
 function generateFooter(doc, poDetails) {
 	const contact = BranchTest(poDetails.productDetails.branchContact);
+	const email = poDetails.productDetails.UEmail;
 
 	doc.fontSize(10)
 		.text(
-		`If you have any questions about the purchase order, please contact  ${contact}`,
+		`If you have any questions about the purchase order, please email ${email}`,
 		50,
 		780,
 		{ align: 'center', width: 500 },

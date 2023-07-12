@@ -372,12 +372,15 @@ module.exports.getAllPaymentMode = async(req, res, next) => {
 // add branch
 module.exports.addBranch = async(req, res, next) => {
     let branchName = req.body.branchName;
+    let branchPrefix = req.body.branchPrefix;
     let address = req.body.address;
+    let unitNum = req.body.unitNum;
+    let postalCode = req.body.postalCode;
     let officeNum = req.body.officeNum;
     let officeEmail = req.body.officeEmail;
 
     return purchaseRequestModel
-    .addBranch(branchName, address, officeNum, officeEmail)
+    .addBranch(branchName, branchPrefix, address, unitNum, postalCode, officeNum, officeEmail)
     .then(() => {
         return res.status(201).send(`Branch Created!`);
     })

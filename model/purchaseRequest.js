@@ -89,7 +89,7 @@ const purchaseReqDB = {
 
     // get PR by PR ID
     getPRByPRID: async(prID) => {
-        let sql = `SELECT PR.prID, PR.requestDate, PR.targetDeliveryDate, PR.userID, U.name, GROUP_CONCAT(B.branchID) AS branchIDs, GROUP_CONCAT(B.branchName) AS branchName, PR.supplierID, S.supplierName, PR.paymentModeID, PM.paymentMode, PR.remarks, PR.prStatusID, PRS.prStatus, PR.apprRemarks, S.contactPersonName AS SPerson, S.email AS SEmail, S.phoneNum AS SPhoneNum, S.officeNum AS SOfficeNum, S.address AS SAddress, GROUP_CONCAT(B.address) AS branchAddress, GROUP_CONCAT(B.unitNum) AS branchUnitNum, GROUP_CONCAT(B.postalCode) AS branchPostalCode, GROUP_CONCAT(B.officeNum) AS branchContact, GROUP_CONCAT(B.officeEmail) AS branchEmail, U.email AS UEmail
+        let sql = `SELECT PR.prID, PR.requestDate, PR.targetDeliveryDate, PR.userID, U.name, GROUP_CONCAT(B.branchID) AS branchIDs, GROUP_CONCAT(B.branchName) AS branchName, PR.supplierID, S.supplierName, PR.paymentModeID, PM.paymentMode, PR.remarks, PR.prStatusID, PRS.prStatus, PR.apprRemarks, S.contactPersonName AS SPerson, S.email AS SEmail, S.phoneNum AS SPhoneNum, S.officeNum AS SOfficeNum, S.address AS SAddress, GROUP_CONCAT(B.address) AS branchAddress, GROUP_CONCAT(B.branchPrefix) AS branchPrefix, GROUP_CONCAT(B.unitNum) AS branchUnitNum, GROUP_CONCAT(B.postalCode) AS branchPostalCode, GROUP_CONCAT(B.officeNum) AS branchContact, GROUP_CONCAT(B.officeEmail) AS branchEmail, U.email AS UEmail
                     FROM purchaseRequest PR, user U, branch B, deliveryLocation DL, supplier S, paymentMode PM, prStatus PRS
                     WHERE PR.userID = U.userID
                     AND PR.prID = DL.prID
@@ -374,11 +374,11 @@ const purchaseReqDB = {
     // ===============================
     // Branch
     // add branch
-    addBranch: async(branchName, address, officeNum, officeEmail) => {
-        let sql = `INSERT INTO branch(branchName, address, officeNum, officeEmail) VALUES (?,?,?,?)`;
+    addBranch: async(branchName, branchPrefix, address, unitNum, postalCode, officeNum, officeEmail) => {
+        let sql = `INSERT INTO branch(branchName, branchPrefix, address, unitNum, postalCode, officeNum, officeEmail) VALUES (?,?,?,?,?,?,?)`;
 
         return connection.promise()
-        .query(sql, [branchName, address, officeNum, officeEmail])
+        .query(sql, [branchName, branchPrefix, address, unitNum, postalCode, officeNum, officeEmail])
         .catch((err) => {
             console.log(err);
             throw err;

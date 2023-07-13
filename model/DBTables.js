@@ -207,6 +207,24 @@ const DBTables = {
             })
     },
 
+    // GST Table
+    initGSTTable: async() => {
+        const sql = 
+        `CREATE TABLE gst (
+            id INT auto_increment,
+            gst INT NOT NULL,
+            startDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            endDate TIMESTAMP,
+            PRIMARY KEY (id)
+        )`;
+        return connection.promise()
+            .query(sql)
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            })
+    },
+
     // SUPPLIER DETAILS
     // Supplier
     initSupplierTable: async() => {
@@ -321,6 +339,7 @@ const DBTables = {
             throw error;
         });
     },
+
     // Purchase Status Table
     initpurchaseStatusTable: () => {
       const sql = `CREATE TABLE purchaseStatus (

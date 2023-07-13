@@ -144,7 +144,20 @@ module.exports.lineItemTable = async(req, res, next) => {
             console.log(err);
             return res.status(500).send(`Table Creation Failed`);
         });
-}
+};
+
+// GST Table
+module.exports.gstTable = async(req, res, next) => {
+    return DBTablesModel
+        .initGSTTable()
+        .then(() => {
+            return res.status(201).send(`GST Table Created!`);
+        })
+        .catch((err) =>{
+            console.log(err);
+            return res.status(500).send(`Table Creation Failed`);
+        });
+};
 
 // SUPPLIER DETAILS
 // Suppliers

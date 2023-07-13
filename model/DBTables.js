@@ -5,9 +5,9 @@ const DBTables = {
 
     // MAIN
     // Role Table
-    initRoleTable: async() => {
-        const sql = 
-        `CREATE TABLE role (
+    initRoleTable: async () => {
+        const sql =
+            `CREATE TABLE role (
             roleID INT auto_increment,
             role VARCHAR(100) NOT NULL,
             PRIMARY KEY (roleID)
@@ -21,9 +21,9 @@ const DBTables = {
     },
 
     // User Table
-    initUserTable: async() => {
-        const sql = 
-        `CREATE TABLE user (
+    initUserTable: async () => {
+        const sql =
+            `CREATE TABLE user (
             userID INT auto_increment,
             roleID INT NOT NULL,
             name VARCHAR(255) NOT NULL,
@@ -40,9 +40,9 @@ const DBTables = {
 
     // PURCHASE REQUESTS
     // Payment Mode Table
-    initPaymentModeTable: async() => {
-        const sql = 
-        `CREATE TABLE paymentMode (
+    initPaymentModeTable: async () => {
+        const sql =
+            `CREATE TABLE paymentMode (
             paymentModeID INT auto_increment,
             paymentMode VARCHAR(100) NOT NULL UNIQUE,
             PRIMARY KEY (paymentModeID)
@@ -56,9 +56,9 @@ const DBTables = {
     },
 
     // Branch Table
-    initBranchTable: async() => {
-        const sql = 
-        `CREATE TABLE branch (
+    initBranchTable: async () => {
+        const sql =
+            `CREATE TABLE branch (
             branchID INT auto_increment,
             branchName VARCHAR(255) NOT NULL UNIQUE,
             branchPrefix VARCHAR(10) NOT NULL UNIQUE,
@@ -76,11 +76,11 @@ const DBTables = {
                 throw err;
             })
     },
-    
+
     // PR Status Table
-    initPRStatusTable: async() => {
-        const sql = 
-        `CREATE TABLE prStatus (
+    initPRStatusTable: async () => {
+        const sql =
+            `CREATE TABLE prStatus (
             prStatusID INT auto_increment,
             prStatus VARCHAR(100) NOT NULL UNIQUE,
             PRIMARY KEY (prStatusID)
@@ -94,9 +94,9 @@ const DBTables = {
     },
 
     // Purchase Type Table
-    initPurchaseTypeTable: async() => {
-        const sql = 
-        `CREATE TABLE purchaseType (
+    initPurchaseTypeTable: async () => {
+        const sql =
+            `CREATE TABLE purchaseType (
             purchaseTypeID INT auto_increment,
             purchaseType VARCHAR(100) NOT NULL UNIQUE,
             PRIMARY KEY (purchaseTypeID)
@@ -110,9 +110,9 @@ const DBTables = {
     },
 
     // Purchase Request Table
-    initPurchaseRequestTable: async() => {
-        const sql = 
-        `CREATE TABLE purchaseRequest (
+    initPurchaseRequestTable: async () => {
+        const sql =
+            `CREATE TABLE purchaseRequest (
             prID INT auto_increment,
             purchaseTypeID INT NOT NULL,
             requestDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -135,9 +135,9 @@ const DBTables = {
     },
 
     // Delivery Location Table
-    initDeliveryLocationTable: async() => {
-        const sql = 
-        `CREATE TABLE deliveryLocation (
+    initDeliveryLocationTable: async () => {
+        const sql =
+            `CREATE TABLE deliveryLocation (
             deliveryLocationID INT auto_increment,
             prID INT NOT NULL,
             branchID INT NOT NULL,
@@ -152,9 +152,9 @@ const DBTables = {
     },
 
     // Item Table
-    initItemTable: async() => {
-        const sql = 
-        `CREATE TABLE item (
+    initItemTable: async () => {
+        const sql =
+            `CREATE TABLE item (
             itemID INT auto_increment,
             itemName VARCHAR(255) NOT NULL,
             description VARCHAR(500),
@@ -171,9 +171,9 @@ const DBTables = {
     },
 
     // Inventory Table
-    initInventoryTable: async() => {
-        const sql = 
-        `CREATE TABLE inventory (
+    initInventoryTable: async () => {
+        const sql =
+            `CREATE TABLE inventory (
             inventoryID INT auto_increment,
             itemID INT NOT NULL,
             inventoryQTY INT DEFAULT(0) NOT NULL,
@@ -188,9 +188,9 @@ const DBTables = {
     },
 
     // Line Item Table
-    initlineItemTable: async() => {
-        const sql = 
-        `CREATE TABLE lineItem (
+    initlineItemTable: async () => {
+        const sql =
+            `CREATE TABLE lineItem (
             lineItemID INT auto_increment,
             prID INT NOT NULL,
             itemID INT NOT NULL,
@@ -208,9 +208,9 @@ const DBTables = {
     },
 
     // GST Table
-    initGSTTable: async() => {
-        const sql = 
-        `CREATE TABLE gst (
+    initGSTTable: async () => {
+        const sql =
+            `CREATE TABLE gst2 (
             id INT auto_increment,
             gst INT NOT NULL,
             startDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -227,9 +227,9 @@ const DBTables = {
 
     // SUPPLIER DETAILS
     // Supplier
-    initSupplierTable: async() => {
-        const sql = 
-        `CREATE TABLE supplier (
+    initSupplierTable: async () => {
+        const sql =
+            `CREATE TABLE supplier (
             supplierID INT auto_increment,
             supplierName VARCHAR(255) NOT NULL,
             contactPersonName VARCHAR(255) NOT NULL,
@@ -251,11 +251,11 @@ const DBTables = {
                 throw error;
             });
     },
-  
+
     // Category
-    initCategoryTable: async() => {
-        const sql = 
-        `CREATE TABLE category (
+    initCategoryTable: async () => {
+        const sql =
+            `CREATE TABLE category (
             categoryID INT auto_increment,
             categoryName VARCHAR(255) NOT NULL,
             PRIMARY KEY (categoryID)
@@ -269,9 +269,9 @@ const DBTables = {
     },
 
     // Suppliers Category
-    initSuppliersCategoryTable: async() => {
-        const sql = 
-        `CREATE TABLE suppliersCategory (
+    initSuppliersCategoryTable: async () => {
+        const sql =
+            `CREATE TABLE suppliersCategory (
             id INT auto_increment,
             fkSupplier_id INT NOT NULL,
             fkCategory_id INT NOT NULL,
@@ -287,9 +287,9 @@ const DBTables = {
     },
 
     // Bank
-    initBankTable: async() => {
-        const sql = 
-        `CREATE TABLE bank (
+    initBankTable: async () => {
+        const sql =
+            `CREATE TABLE bank (
             bankID INT auto_increment,
             bankName VARCHAR(255) NOT NULL,
             PRIMARY KEY (bankID)
@@ -304,9 +304,9 @@ const DBTables = {
 
     // PURCHASE ORDERING
     // Purchase Order Table
-    initPurchaseOrderTable: async() => {
-        const sql = 
-        `CREATE TABLE purchaseOrder(
+    initPurchaseOrderTable: async () => {
+        const sql =
+            `CREATE TABLE purchaseOrder(
             poID INT auto_increment,
             prID INT UNIQUE NOT NULL,
             paymentStatusID INT NOT NULL DEFAULT(1),
@@ -318,11 +318,11 @@ const DBTables = {
             PRIMARY KEY (poID)
         )`;
         return connection.promise()
-        .query(sql)
-        .catch((error) => {
-            console.log(error)
-            throw error;
-        });
+            .query(sql)
+            .catch((error) => {
+                console.log(error)
+                throw error;
+            });
     },
 
     // Payment Status Table
@@ -333,32 +333,32 @@ const DBTables = {
             PRIMARY KEY (paymentStatusID)
         )`;
         return connection.promise()
-        .query(sql)
-        .catch((error) => {
-            console.log(error)
-            throw error;
-        });
+            .query(sql)
+            .catch((error) => {
+                console.log(error)
+                throw error;
+            });
     },
 
     // Purchase Status Table
     initpurchaseStatusTable: () => {
-      const sql = `CREATE TABLE purchaseStatus (
+        const sql = `CREATE TABLE purchaseStatus (
           purchaseStatusID INT auto_increment,
           purchaseStatus VARCHAR(255) NOT NULL UNIQUE,
           PRIMARY KEY (purchaseStatusID)
       )`;
-      return connection.promise()
-      .query(sql)
-      .catch((error) => {
-          console.log(error)
-          throw error;
-      });
-  },
+        return connection.promise()
+            .query(sql)
+            .catch((error) => {
+                console.log(error)
+                throw error;
+            });
+    },
 
     // PURCHASE PLANNER
     // Planner Table
     initplannerTable: () => {
-      const sql = `CREATE TABLE planner (
+        const sql = `CREATE TABLE planner (
         planID INT auto_increment,
         userID INT NOT NULL,
         title VARCHAR(255) NOT NULL,
@@ -369,13 +369,13 @@ const DBTables = {
         created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (eventID)
       )`;
-      return connection.promise()
-      .query(sql)
-      .catch((error) => {
-          console.log(error)
-          throw error;
-      });
-  }
+        return connection.promise()
+            .query(sql)
+            .catch((error) => {
+                console.log(error)
+                throw error;
+            });
+    }
 
     // Plan view Access Table
 

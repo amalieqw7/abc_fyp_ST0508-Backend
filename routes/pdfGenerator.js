@@ -6,42 +6,45 @@ const pdfService = require('../pdfGenerator/PurchaseOrderPDF');
 
 const purchaseRequestModel = require('../model/purchaseRequest');
 
-router.get('/PurchaseOrder/:id', async(req, res, next) => {
+router.get('/PurchaseOrder/:id', async (req, res, next) => {
     const prID = parseInt(req.params.id);
 
     const POData = {};
 
-    try{
+    try {
         // get pr details
         await purchaseRequestModel.getPRByPRID(prID)
-        .then((result) => {
-            POData.productDetails = result[0];
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).send(`Unknown Error`);
-        });
+            .then((result) => {
+                POData.productDetails = result[0];
+            })
+            .catch((err) => {
+                console.log(err);
+                res.status(500).send(`Unknown Error`);
+            });
 
         // get pr product lines
         await purchaseRequestModel.getLineItemByPRID(prID)
-        .then((result) => {
-            POData.itemLines = result;
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).send(`Unknown Error`);
-        });
+            .then((result) => {
+                POData.itemLines = result;
+            })
+            .catch((err) => {
+                console.log(err);
+                res.status(500).send(`Unknown Error`);
+            });
+
+        const reqDate = moment(POData.productDetails.requestDate).format();
 
         // get gst
-        await purchaseRequestModel.getGSTByID(1)
-        .then((result) => {
-            POData.GST = result[0].gst;
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).send(`Unknown Error`);
-        });
-    }catch(err){
+        await purchaseRequestModel.getPRGST(reqDate)
+            .then((result) => {
+                POData.GST = result[0].gst;
+            })
+            .catch((err) => {
+                console.log(err);
+                res.status(500).send(`Unknown Error`);
+            });
+
+    } catch (err) {
         console.log(err);
         res.status(500).send(`Unknown Error`);
     };
@@ -60,45 +63,45 @@ router.get('/PurchaseOrder/:id', async(req, res, next) => {
 
 });
 
-router.get('/PurchaseOrder/view/:id', async(req, res, next) => {
+router.get('/PurchaseOrder/view/:id', async (req, res, next) => {
     const prID = parseInt(req.params.id);
 
     const POData = {};
 
-    try{
+    try {
         // get pr details
         await purchaseRequestModel.getPRByPRID(prID)
-        .then((result) => {
-            POData.productDetails = result[0];
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).send(`Unknown Error`);
-        });
+            .then((result) => {
+                POData.productDetails = result[0];
+            })
+            .catch((err) => {
+                console.log(err);
+                res.status(500).send(`Unknown Error`);
+            });
 
         // get pr product lines
         await purchaseRequestModel.getLineItemByPRID(prID)
-        .then((result) => {
-            POData.itemLines = result;
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).send(`Unknown Error`);
-        });
+            .then((result) => {
+                POData.itemLines = result;
+            })
+            .catch((err) => {
+                console.log(err);
+                res.status(500).send(`Unknown Error`);
+            });
 
         const reqDate = moment(POData.productDetails.requestDate).format();
 
         // get gst
         await purchaseRequestModel.getPRGST(reqDate)
-        .then((result) => {
-            POData.GST = result[0].gst;
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).send(`Unknown Error`);
-        });
+            .then((result) => {
+                POData.GST = result[0].gst;
+            })
+            .catch((err) => {
+                console.log(err);
+                res.status(500).send(`Unknown Error`);
+            });
 
-    }catch(err){
+    } catch (err) {
         console.log(err);
         res.status(500).send(`Unknown Error`);
     };

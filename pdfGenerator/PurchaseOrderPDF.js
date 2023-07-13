@@ -222,7 +222,8 @@ function generateRemarks(doc, yIndex, poDetails){
 
 function generateFooter(doc, poDetails) {
 	const contact = BranchTest(poDetails.productDetails.branchContact);
-	const email = poDetails.productDetails.UEmail;
+	// const email = poDetails.productDetails.UEmail;
+	const email = `accounts@abc-cooking.com.sg`
 
 	doc.fontSize(10)
 		.text(

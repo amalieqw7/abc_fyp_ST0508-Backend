@@ -72,7 +72,7 @@ module.exports.getPRByUserID = async (req, res, next) => {
 
 // get PR by PR ID
 module.exports.getPRByPRID = async (req, res, next) => {
-    let data = {};
+    let data = [];
 
     let prId = parseInt(req.params.id);
 
@@ -88,7 +88,8 @@ module.exports.getPRByPRID = async (req, res, next) => {
                 return res.status(404).send(`Purchase Request #${prId} does not exist!`);
             }
             else {
-                data.PRDetails = result[0];
+                // data.PRDetails = result[0];
+                data.push(result[0]);
             }
         })
         .catch((err) => {
@@ -98,12 +99,15 @@ module.exports.getPRByPRID = async (req, res, next) => {
 
     // check if have PR details result
     if (Object.keys(data).length === 1) {
-        const reqDate = moment(data.PRDetails.requestDate).format();
+        // const reqDate = moment(data.PRDetails.requestDate).format();
+        const reqDate = moment(data[0].requestDate).format();
 
         await purchaseRequestModel
             .getPRGST(reqDate)
             .then((result) => {
-                data.GST = result[0];
+                // data.GST = result[0];
+                // data.push(result[0]);
+                data[0].GST = result[0];
             })
             .catch((err) => {
                 console.log(err);

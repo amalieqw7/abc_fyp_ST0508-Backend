@@ -106,6 +106,7 @@ function generateTableRow(doc, y, c1, c2, c3, c4, c5) {
 function generateProductLinesTable(doc, poDetails) {
 	// array of product lines
 	const PO = poDetails.itemLines;
+	const gstPercent = poDetails.GST;
 
 	const totalPrices = [];
 	const yIndex = {};
@@ -158,7 +159,7 @@ function generateProductLinesTable(doc, poDetails) {
         
     // Calculate GST
     function GSTFinder(amt){
-        const gst = (8/100)*amt;
+        const gst = (gstPercent/100)*amt;
         return gst;
     };
                 
@@ -177,12 +178,12 @@ function generateProductLinesTable(doc, poDetails) {
     const total = CalculateTotal(totalArr).toFixed(2);
 
 	// Generate Total & Remarks Section
-	generateTotals(doc, yIndex, totalArr, total);
+	generateTotals(doc, yIndex, totalArr, total, gstPercent);
 	generateRemarks(doc, yIndex, poDetails);
 };
 
 // total section
-function generateTotals(doc, yIndex, totalArr, total){
+function generateTotals(doc, yIndex, totalArr, total, gstPercent){
 	const subtotal = totalArr[0];
 	const gst = totalArr[1];
 
@@ -195,7 +196,7 @@ function generateTotals(doc, yIndex, totalArr, total){
 	doc.fontSize(14)
 		.text(`Subtotal`, c1x, y+20, { width: 80, align: 'right'})
 		.text(`Discount(%)`, c1x, y+45, { width: 80, align: 'right'})
-		.text(`GST 8%`, c1x, y+70, { width: 80, align: 'right'})
+		.text(`GST ${gstPercent}%`, c1x, y+70, { width: 80, align: 'right'})
 		.text(`Total`, c1x, y+95, { width: 80, align: 'right'});
 
 	doc. fontSize(12)

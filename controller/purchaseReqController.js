@@ -337,6 +337,68 @@ module.exports.updateQtyReceived = async(req, res, next) => {
 };
 
 // ===============================
+// GST
+// add gst
+module.exports.addGST = async(req, res, next) => {
+    let gst = req.body.GST;
+
+    return purchaseRequestModel
+    .addGST(gst)
+    .then(() => {
+        return res.status(201).send(`GST Created!`);
+    })
+    .catch((err) => {
+        console.log(err);
+        return res.status(500).send(`Unknown Error`);
+    });
+};
+
+// get gst by pr created date
+module.exports.getPRGST = async(req, res, next) => {
+    let date = req.body.requestDate;
+
+    return purchaseRequestModel
+    .getPRGST(date)
+    .then((result) => {
+        if(result == null){
+            res.status(404).send(`GST does not exist for Purchase Request!`);
+        }
+        else{
+            res.status(200).send(result);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown Error`);
+    });
+};
+
+// get PR by PR ID
+module.exports.getGSTByID = async(req, res, next) => {
+    let id = parseInt(req.params.id);
+
+    if(isNaN(id)){
+        res.status(400).send(`GST ID provided is not a number!`);
+        return;
+    }
+
+    return purchaseRequestModel
+    .getGSTByID(id)
+    .then((result) => {
+        if(result == null){
+            res.status(404).send(`GST does not exist in Purchase Request #${prId}!`);
+        }
+        else{
+            res.status(200).send(result);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown Error`);
+    });
+};
+
+// ===============================
 // Payment Mode
 // add payment mode
 module.exports.addPaymentMode = async(req, res, next) => {

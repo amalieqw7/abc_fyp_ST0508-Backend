@@ -337,6 +337,65 @@ const purchaseReqDB = {
     },
 
     // ===============================
+    // GST
+    // add gst
+    addGST: async(gst) => {
+        let sql = `INSERT INTO gst(gst) VALUES (?)`;
+
+        return connection.promise()
+        .query(sql, [gst])
+        .catch((err) => {
+            console.log(err);
+            throw err;
+        })
+    },
+
+    // get gst by pr created date
+    getPRGST: async(date) => {
+        let sql = `SELECT *
+                    FROM gst
+                    WHERE '${date}' >= startDate
+                    AND ('${date}' <= endDate OR endDate IS NULL);`;
+    
+        return connection.promise()
+            .query(sql)
+            .then((result) => {
+                if (result[0] == 0){
+                    return null;
+                }
+                else{
+                    return result[0];
+                };
+            })
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            });
+    },
+
+    // get gst by ID
+    getGSTByID: async(id) => {
+        let sql = `SELECT *
+                    FROM gst
+                    WHERE id = ?`;
+    
+        return connection.promise()
+            .query(sql, [id])
+            .then((result) => {
+                if (result[0] == 0){
+                    return null;
+                }
+                else{
+                    return result[0];
+                };
+            })
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            });
+    },
+
+    // ===============================
     // Payment Mode
     // add payment mode
     addPaymentMode: async(paymentMode) => {

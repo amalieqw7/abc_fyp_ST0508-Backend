@@ -1,3 +1,4 @@
+const moment = require('moment');
 const purchaseRequestModel = require('../model/purchaseRequest');
 
 // ===============================
@@ -71,6 +72,8 @@ module.exports.getPRByUserID = async (req, res, next) => {
 
 // get PR by PR ID
 module.exports.getPRByPRID = async (req, res, next) => {
+    let data = {};
+
     let prId = parseInt(req.params.id);
 
     if (isNaN(prId)) {
@@ -78,20 +81,39 @@ module.exports.getPRByPRID = async (req, res, next) => {
         return;
     }
 
-    return purchaseRequestModel
+    await purchaseRequestModel
         .getPRByPRID(prId)
         .then((result) => {
             if (result == null) {
-                res.status(404).send(`Purchase Request #${prId} does not exist!`);
+                return res.status(404).send(`Purchase Request #${prId} does not exist!`);
             }
             else {
-                res.status(200).send(result);
+                data.PRDetails = result[0];
             }
         })
         .catch((err) => {
             console.log(err);
-            res.status(500).send(`Unknown Error`);
+            return res.status(500).send(`Unknown Error`);
         });
+
+    // check if have PR details result
+    if (Object.keys(data).length === 1) {
+        const reqDate = moment(data.PRDetails.requestDate).format();
+
+        await purchaseRequestModel
+            .getPRGST(reqDate)
+            .then((result) => {
+                data.GST = result[0];
+            })
+            .catch((err) => {
+                console.log(err);
+                return res.status(500).send(`Unknown Error`);
+            });
+
+        // return final data(PR details + GST)
+        return res.status(200).send(data);
+    };
+
 };
 
 // get latest PR ID created

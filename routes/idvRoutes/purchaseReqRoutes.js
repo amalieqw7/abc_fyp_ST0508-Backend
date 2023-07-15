@@ -26,6 +26,11 @@ router.post('/lineItem', purchaseReqController.addLineItem);
 router.get('/lineItem/:id', purchaseReqController.getLineItemByPRID);
 router.put('/lineItem/:id', purchaseReqController.updateQtyReceived);
 
+// GST
+router.post('/gst', purchaseReqController.addGST);
+router.post('/gst/filter', purchaseReqController.getPRGST);
+router.get('/gst/:id', purchaseReqController.getGSTByID);
+
 // Payment Mode
 router.post('/paymentMode', purchaseReqController.addPaymentMode);
 router.get('/paymentMode/all', purchaseReqController.getAllPaymentMode);

@@ -24,6 +24,7 @@ router.post('/deliveryLocation', DBTablesController.deliveryLocationTable);
 router.post('/item', DBTablesController.itemTable);
 router.post('/inventory', DBTablesController.inventoryTable);
 router.post('/lineItem',DBTablesController.lineItemTable);
+router.post('/gst',DBTablesController.gstTable);
 
 // SUPPLIER DETAILS
 // category, suppliers, supplierCategory

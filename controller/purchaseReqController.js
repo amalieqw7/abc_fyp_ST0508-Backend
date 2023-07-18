@@ -290,6 +290,31 @@ module.exports.getAdHocByUserID = async (req, res, next) => {
         });
 };
 
+// get ad hoc purchases by PR ID
+module.exports.getAdHocByPRID = async (req, res, next) => {
+    let prId = parseInt(req.params.id);
+
+    if (isNaN(prId)) {
+        res.status(400).send(`Ad Hoc ID provided is not a number!`);
+        return;
+    };
+
+    await purchaseRequestModel
+        .getAdHocByPRID(prId)
+        .then((result) => {
+            if (result == null) {
+                return res.status(404).send(`Ad Hoc Purchase #${prId} does not exist!`);
+            }
+            else {
+                return res.status(200).send(result);
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            return res.status(500).send(`Unknown Error`);
+        });
+};
+
 // ===============================
 // Line Items
 // add line item

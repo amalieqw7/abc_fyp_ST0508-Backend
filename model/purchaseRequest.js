@@ -122,8 +122,7 @@ const purchaseReqDB = {
     getLatestPRIDByUserID: async (userID) => {
         let sql = `SELECT MAX(prID) AS prID, userID
                     FROM purchaseRequest
-                    WHERE purchaseTypeID = 1
-                    AND userID = ?`;
+                    WHERE userID = ?`;
 
         return connection.promise()
             .query(sql, [userID])
@@ -263,6 +262,30 @@ const purchaseReqDB = {
 
         return connection.promise()
             .query(sql, [userId])
+            .then((result) => {
+                if (result[0] == 0) {
+                    return null;
+                }
+                else {
+                    return result[0];
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            });
+    },
+
+    // get ad hoc purchases by PR ID
+    getAdHocByPRID: async (prID) => {
+        let sql = `SELECT PR.prID, PR.requestDate, PR.targetDeliveryDate, PR.userID, U.name, PR.remarks, PR.prStatusID, PRS.prStatus
+                    FROM purchaseRequest PR, user U, prStatus PRS
+                    WHERE PR.userID = U.userID
+                    AND PR.prStatusID = PRS.prStatusID
+                    AND PR.prID = ?`;
+
+        return connection.promise()
+            .query(sql, [prID])
             .then((result) => {
                 if (result[0] == 0) {
                     return null;

@@ -315,6 +315,56 @@ module.exports.getAdHocByPRID = async (req, res, next) => {
         });
 };
 
+// get both PR and adHoc Purchases together
+module.exports.getAllPRnAH = async (req, res, next) => {
+    const allPurchases = [];
+
+    await purchaseRequestModel
+        .getAllPR()
+        .then((result) => {
+            console.log(result);
+            if (result == null) {
+                throw res.status(404).send(`There are no Purchase Requests Available`);
+            }
+            else {
+                // res.status(200).send(result);
+                // allPurchases.push(result);
+                result.forEach((item, index) => {
+                    allPurchases.push(item);
+                })
+                console.log("pushed", allPurchases);
+            }
+        });
+
+    await purchaseRequestModel
+        .getAllAdHoc()
+        .then((result) => {
+            console.log("adhoc results", result);
+            if (result == null) {
+                throw res.status(404).send(`There are no Ad-Hoc Purchases Available`);
+            }
+            else {
+                // res.status(200).send(result);
+                // allPurchases.push(result);
+                result.forEach((item, index) => {
+                    allPurchases.push(item);
+                })
+                console.log("pushed AH", allPurchases);
+            }
+        });
+
+        allPurchases.sort(dynamicSort('prID')).sort(dynamicSort('prStatusID'))
+
+    // return Promise.resolve(allPurchases);
+    return res.status(200).send(allPurchases);
+};
+
+function dynamicSort(property) {
+    return function(a, b) {
+        return (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+    }
+}
+
 // ===============================
 // Line Items
 // add line item

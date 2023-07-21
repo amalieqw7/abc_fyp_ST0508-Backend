@@ -2,6 +2,24 @@ const userModel = require('../model/user');
 // const jwt         = require("jsonwebtoken");
 // const JWT_SECRET  = require("../../config");
 
+// Create User
+module.exports.createUser = async (req, res, next) => {
+    let roleID = req.body.roleID;
+    let name = req.body.name;
+    let email = req.body.email;
+
+    return userModel
+        .createUser(roleID, name, email)
+        .then(() => {
+            return res.status(201).send(`User Created!`);
+        })
+        .catch((err) => {
+            console.log(err);
+            return res.status(500).send(`Unknown Error`);
+        });
+
+};
+
 //login
 module.exports.userLogin = async (req, res, next) => {
     let email = req.body.email;

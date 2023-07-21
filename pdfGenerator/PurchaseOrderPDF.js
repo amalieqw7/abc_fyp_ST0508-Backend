@@ -21,8 +21,14 @@ function generateHeader(doc, poDetails) {
 
 	const date = moment(PO.requestDate).format('DD/MM/YYYY');
 	const IdDate = moment(PO.requestDate).format('YYMMDD');
-	const BranchPrefix = PO.branchPrefix.substring(0, PO.branchPrefix.indexOf(','))
 	const poID = PO.prID.toString().padStart(5, '0');
+
+	const BranchPrefix = []
+	if (PO.branchPrefix.match(",") === null) {
+		BranchPrefix.push(PO.branchPrefix);
+	}else {
+		BranchPrefix.push(PO.branchPrefix.substring(0, PO.branchPrefix.indexOf(',')));
+	};
 
 	// file path from server file
 	doc.image('pdfGenerator/client_logo.png', 50, 50, { width: 120 })

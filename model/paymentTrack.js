@@ -39,7 +39,7 @@ const paymentTrackDB = {
         return connection.promise()
         .query(sql)
         .then((result) => {
-            console.log("gets all statuses");
+            // console.log("gets all statuses");
 
             if (result.length == 0) {
                 return null;

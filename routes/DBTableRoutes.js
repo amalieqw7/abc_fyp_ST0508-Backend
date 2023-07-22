@@ -23,8 +23,8 @@ router.post('/purchaseReq', DBTablesController.purchaseRequestTable);
 router.post('/deliveryLocation', DBTablesController.deliveryLocationTable);
 router.post('/item', DBTablesController.itemTable);
 router.post('/inventory', DBTablesController.inventoryTable);
-router.post('/lineItem',DBTablesController.lineItemTable);
-router.post('/gst',DBTablesController.gstTable);
+router.post('/lineItem', DBTablesController.lineItemTable);
+router.post('/gst', DBTablesController.gstTable);
 
 // SUPPLIER DETAILS
 // category, suppliers, supplierCategory
@@ -45,5 +45,10 @@ router.post('/paymentStatus', DBTablesController.paymentStatusTable);
 router.post('/purchasePlanning', DBTablesController.purchasePlanningTable);
 
 // Plan view Access Table
+
+
+// AUDIT LOGS
+router.post('/auditLog', DBTablesController.auditLogTable);
+router.post('/actionType', DBTablesController.actionTypeTable);
 
 module.exports = router;

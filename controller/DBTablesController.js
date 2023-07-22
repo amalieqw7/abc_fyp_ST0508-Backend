@@ -268,3 +268,31 @@ module.exports.purchasePlanningTable = (req, res, next) => {
 }
 
 // Plan view Access Table
+
+
+// AUDIT LOGS
+// Audit Trail Table
+module.exports.auditLogTable = async (req, res, next) => {
+    return DBTablesModel
+        .initAuditLogTable()
+        .then(() => {
+            return res.status(201).send(`Audit Log Table Created!`);
+        })
+        .catch((err) => {
+            console.log(err);
+            return res.status(500).send(`Table Creation Failed`);
+        });
+};
+
+// Action Type Table
+module.exports.actionTypeTable = async (req, res, next) => {
+    return DBTablesModel
+        .initActionTypeTable()
+        .then(() => {
+            return res.status(201).send(`Action Type Table Created!`);
+        })
+        .catch((err) => {
+            console.log(err);
+            return res.status(500).send(`Table Creation Failed`);
+        });
+};

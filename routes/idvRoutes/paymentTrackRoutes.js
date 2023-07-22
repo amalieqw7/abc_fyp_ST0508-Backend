@@ -1,6 +1,10 @@
 const express = require('express');
-
 const router = express.Router();
+
+const multer = require('multer')
+const upload = multer({
+    storage: multer.memoryStorage()
+});
 
 const paymentTrackController = require('../../controller/paymentTrackController');
 
@@ -29,4 +33,8 @@ router.get('/supplier/info/:supplierID', paymentTrackController.getSupplierInfor
 router.get('/supplier/pr/:prID', paymentTrackController.getSIDbyPRID)
 //get id by status
 router.get('/status/:paymentStatus', paymentTrackController.getIDbyStatus)
+// //saving receipt 
+router.put('/productDetails/:prID/receipt', upload.single('file'), paymentTrackController.saveReceipt)
+router.get('/productDetails/:prID/receipt', paymentTrackController.getFile);
 module.exports = router;
+

@@ -385,7 +385,7 @@ const DBTables = {
         const sql =
             `CREATE TABLE auditLog (
             id INT auto_increment,
-            date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            timestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             userID INT NOT NULL,
             actionTypeID INT NOT NULL,
             itemId INT NOT NULL,

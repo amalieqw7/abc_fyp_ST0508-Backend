@@ -210,7 +210,7 @@ const DBTables = {
     // GST Table
     initGSTTable: async () => {
         const sql =
-            `CREATE TABLE gst2 (
+            `CREATE TABLE gst (
             id INT auto_increment,
             gst INT NOT NULL,
             startDate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -375,10 +375,48 @@ const DBTables = {
                 console.log(error)
                 throw error;
             });
-    }
+    },
 
     // Plan view Access Table
 
+    // AUDIT LOGS
+    // Audit Trail Table
+    initAuditLogTable: async () => {
+        const sql =
+            `CREATE TABLE auditLog (
+            id INT auto_increment,
+            date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            userID INT NOT NULL,
+            actionTypeID INT NOT NULL,
+            fieldName VARCHAR(50) NOT NULL,
+            newValue VARCHAR(100) NOT NULL,
+            oldValue VARCHAR(100) NOT NULL,
+            PRIMARY KEY (id)
+        );`;
+        return connection.promise()
+            .query(sql)
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            })
+    },
+
+    // Action Type Table
+    initActionTypeTable: async () => {
+        const sql =
+            `CREATE TABLE actionType (
+            id INT auto_increment,
+            actionType VARCHAR(255) NOT NULL,
+            isActive INT DEFAULT(1) NOT NULL,
+            PRIMARY KEY (id)
+        );`;
+        return connection.promise()
+            .query(sql)
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            })
+    },
 };
 
 module.exports = DBTables;

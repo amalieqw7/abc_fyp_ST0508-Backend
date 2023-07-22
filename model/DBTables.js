@@ -388,7 +388,7 @@ const DBTables = {
             date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             userID INT NOT NULL,
             actionTypeID INT NOT NULL,
-            fieldName VARCHAR(50) NOT NULL,
+            itemId INT NOT NULL,
             newValue VARCHAR(100) NOT NULL,
             oldValue VARCHAR(100) NOT NULL,
             PRIMARY KEY (id)
@@ -407,6 +407,8 @@ const DBTables = {
             `CREATE TABLE actionType (
             id INT auto_increment,
             actionType VARCHAR(255) NOT NULL,
+            tableName VARCHAR(100) NOT NULL,
+            fieldName VARCHAR(50) NOT NULL,
             isActive INT DEFAULT(1) NOT NULL,
             PRIMARY KEY (id)
         );`;

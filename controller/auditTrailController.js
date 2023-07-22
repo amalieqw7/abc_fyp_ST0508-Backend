@@ -4,6 +4,7 @@ const auditTrailModel = require('../model/auditTrail');
 // Audit Log Table
 // create Audit log
 module.exports.createAuditLog = async (req, res, next) => {
+    let timestamp = req.body.timestamp;
     let userID = req.body.userID;
     let actionTypeID = req.body.actionTypeID;
     let itemId = req.body.itemId;
@@ -11,7 +12,7 @@ module.exports.createAuditLog = async (req, res, next) => {
     let oldValue = req.body.oldValue;
 
     return auditTrailModel
-        .createAuditLog(userID, actionTypeID, itemId, newValue, oldValue)
+        .createAuditLog(timestamp, userID, actionTypeID, itemId, newValue, oldValue)
         .then(() => {
             return res.status(201).send(`Audit Log Created!`);
         })

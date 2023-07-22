@@ -4,11 +4,11 @@ const auditTrailDB = {
     // ===============================
     // Audit Log Table
     // create Audit log
-    createAuditLog: async (userID, actionTypeID, itemId, newValue, oldValue) => {
-        let sql = `INSERT INTO auditLog(userID, actionTypeID, itemId, newValue, oldValue) VALUES (?,?,?,?,?)`;
+    createAuditLog: async (timestamp, userID, actionTypeID, itemId, newValue, oldValue) => {
+        let sql = `INSERT INTO auditLog(timestamp, userID, actionTypeID, itemId, newValue, oldValue) VALUES (?,?,?,?,?,?)`;
 
         return connection.promise()
-            .query(sql, [userID, actionTypeID, itemId, newValue, oldValue])
+            .query(sql, [timestamp, userID, actionTypeID, itemId, newValue, oldValue])
             .catch((err) => {
                 console.log(err);
                 throw err;

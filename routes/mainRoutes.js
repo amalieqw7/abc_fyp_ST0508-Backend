@@ -14,6 +14,7 @@ const supplierRoutes = require('./idvRoutes/supplierRoutes');
 const paymentTrackRoutes = require('./idvRoutes/paymentTrackRoutes');
 const trackOrderRoutes = require('./idvRoutes/trackOrderRoutes');
 const purchasePlanRoutes = require('./idvRoutes/purchasePlanRoutes');
+const auditTrailRoutes = require('./idvRoutes/auditTrailRoutes');
 
 // Database Route
 router.use('/DBTable', DBTableRoutes);
@@ -29,6 +30,7 @@ router.use('/supplier', supplierRoutes);
 router.use('/paymentTrack', paymentTrackRoutes);
 router.use('/trackOrder', trackOrderRoutes);
 router.use('/purchasePlan', purchasePlanRoutes);
+router.use('/auditTrail', auditTrailRoutes);
 
 // PDF Generator Route
 router.use('/pdf', pdfGenerator);

@@ -43,7 +43,9 @@ module.exports.userLogin = async (req, res, next) => {
                 };
 
                 const data = {
+                    id: result[0].userID,
                     username: result[0].name,
+                    roleID: result[0].roleID,
                     role: result[0].role,
                     token: jwt.sign(
                         payload,

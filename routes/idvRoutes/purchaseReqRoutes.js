@@ -14,19 +14,21 @@ const purchaseReqController = require('../../controller/purchaseReqController');
 router.post('/', checkUser.verifyUserToken, purchaseReqController.addPR);
 router.get('/', checkUser.verifyUserToken, purchaseReqController.getAllPR);
 router.get('/:id', checkUser.verifyUserToken, checkUser.getClientUserId, checkUser.verifyRole(['Admin', 'User']), purchaseReqController.getPRByUserID);
-router.get('/PR/:id', checkUser.verifyUserToken, purchaseReqController.getPRByPRID);
+router.get('/PR/:id', purchaseReqController.getPRByPRID); //? fetch
 router.get('/latestPRID/:id', checkUser.verifyUserToken, checkUser.getClientUserId, purchaseReqController.getLatestPRIDByUserID);
 router.put('/PR/:id', checkUser.verifyUserToken, purchaseReqController.updatePRApprover);
 router.put('/PR/ApprComment/:id', checkUser.verifyUserToken, purchaseReqController.updateApprComments);
 router.delete('/PR/:id', checkUser.verifyUserToken, purchaseReqController.deletePRById);
+
+// Ad Hoc
 router.get('/adhoc/purchases', checkUser.verifyUserToken, purchaseReqController.getAllAdHoc);
 router.get('/adhoc/:id', checkUser.verifyUserToken, checkUser.getClientUserId, purchaseReqController.getAdHocByUserID);
-router.get('/adhoc/viewBy/:id', checkUser.verifyUserToken, purchaseReqController.getAdHocByPRID);
+router.get('/adhoc/viewBy/:id', purchaseReqController.getAdHocByPRID); //? fetch
 router.get('/PR/AH/all', checkUser.verifyUserToken, purchaseReqController.getAllPRnAH);
 
 // Line Item
 router.post('/lineItem', purchaseReqController.addLineItem);
-router.get('/lineItem/:id', purchaseReqController.getLineItemByPRID);
+router.get('/lineItem/:id', purchaseReqController.getLineItemByPRID); //? fetch
 router.put('/lineItem/:id', purchaseReqController.updateQtyReceived);
 
 // GST
@@ -36,11 +38,11 @@ router.get('/gst/:id', purchaseReqController.getGSTByID);
 
 // Payment Mode
 router.post('/paymentMode', purchaseReqController.addPaymentMode);
-router.get('/paymentMode/all', purchaseReqController.getAllPaymentMode);
+router.get('/paymentMode/all', purchaseReqController.getAllPaymentMode); //? fetch
 
 // Branch
 router.post('/branch', purchaseReqController.addBranch);
-router.get('/branch/all', purchaseReqController.getAllBranch);
+router.get('/branch/all', purchaseReqController.getAllBranch); //? fetch
 
 // Delivery Location
 router.post('/deliveryLocation', purchaseReqController.addDeliveryLocation);

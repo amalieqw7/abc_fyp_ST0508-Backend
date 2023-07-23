@@ -1,6 +1,7 @@
 const connection = require('../db');
 
 const userDB = {
+    // create user account within database
     createUser: async(roleID, name, email) =>{
         let sql = `INSERT INTO user(roleID, name, email) VALUES (?,?,?)`;
 
@@ -12,6 +13,7 @@ const userDB = {
             });
     },
 
+    // user login
     userLogin: async (email) => {
         let sql = `SELECT user.userID,user.name, user.email, user.roleID, role.role
                     FROM user, role 
@@ -21,7 +23,7 @@ const userDB = {
         return connection.promise()
             .query(sql, [email])
             .then((result) => {
-                // console.log(result[0]);
+                console.log(result[0]);
                 if (result[0].length == 0) {
                     return null;
                 }

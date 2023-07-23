@@ -1,8 +1,8 @@
 const userModel = require('../model/user');
-// const jwt         = require("jsonwebtoken");
-// const JWT_SECRET  = require("../../config");
+const jwt = require("jsonwebtoken");
+const JWT_SECRET = require("../config");
 
-// Create User
+// create user account within database
 module.exports.createUser = async (req, res, next) => {
     let roleID = req.body.roleID;
     let name = req.body.name;
@@ -20,45 +20,42 @@ module.exports.createUser = async (req, res, next) => {
 
 };
 
-//login
+// user login
 module.exports.userLogin = async (req, res, next) => {
     let email = req.body.email;
-    // let password = req.body.password;
 
     return userModel
         .userLogin(email)
         .then((result) => {
             if ((result == null)) {
-                res.status(404).send(`Account does not exist!`);
+                return res.status(404).send(`Account does not exist!`);
             }
             else {
-                return res.status(200).send(result);
-                // if (password === result[0].password){
+                // return res.status(200).send(result);
 
-                //     const payload = {
-                //         "user_Id": result[0].user_id,
-                //         "role_id": result[0].fk_role_id,
-                //         "role": result[0].role_name
-                //     }
+                console.log(result[0])
 
-                //     const data = {
-                //         user_id: result[0].user_id,
-                //         role: result[0].role_name,
-                //         token: jwt.sign(
-                //             payload,
-                //             JWT_SECRET,
-                //             { 
-                //                 algorithm: "HS256",
-                //                 expiresIn: 86400 //Expires in 24 hrs
-                //             }
-                //         )
-                //     }
+                const payload = {
+                    "userID": result[0].userID,
+                    "email": result[0].email,
+                    "roleID": result[0].roleID,
+                    "role": result[0].role
+                };
 
-                //     return res.status(200).send(data);
-                // }
-                // else{
-                //     res.status(403).send(`Login failed: Your password is incorrect!`);
-                // }
+                const data = {
+                    username: result[0].name,
+                    role: result[0].role,
+                    token: jwt.sign(
+                        payload,
+                        JWT_SECRET,
+                        {
+                            algorithm: "HS256",
+                            expiresIn: 86400 //Expires in 24 hrs
+                        }
+                    )
+                };
+
+                return res.status(200).send(data);
             }
         })
         .catch((err) => {

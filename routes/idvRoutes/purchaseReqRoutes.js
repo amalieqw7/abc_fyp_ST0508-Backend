@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
+const checkUser = require('../../auth/checkUser');
 const purchaseReqController = require('../../controller/purchaseReqController');
 
 //  to test in postman 
@@ -10,18 +11,18 @@ const purchaseReqController = require('../../controller/purchaseReqController');
 //  ---> example2: http://localhost:3000/api/user/:id
 
 // PR
-router.post('/', purchaseReqController.addPR);
-router.get('/', purchaseReqController.getAllPR);
-router.get('/:id', purchaseReqController.getPRByUserID);
-router.get('/PR/:id', purchaseReqController.getPRByPRID);
-router.get('/latestPRID/:id', purchaseReqController.getLatestPRIDByUserID);
-router.put('/PR/:id', purchaseReqController.updatePRApprover);
-router.put('/PR/ApprComment/:id', purchaseReqController.updateApprComments);
-router.delete('/PR/:id', purchaseReqController.deletePRById);
-router.get('/adhoc/purchases', purchaseReqController.getAllAdHoc);
-router.get('/adhoc/:id', purchaseReqController.getAdHocByUserID);
-router.get('/adhoc/viewBy/:id', purchaseReqController.getAdHocByPRID);
-router.get('/PR/AH/all', purchaseReqController.getAllPRnAH);
+router.post('/', checkUser.verifyUserToken, purchaseReqController.addPR);
+router.get('/', checkUser.verifyUserToken, purchaseReqController.getAllPR);
+router.get('/:id', checkUser.verifyUserToken, checkUser.getClientUserId, checkUser.verifyRole(['Admin', 'User']), purchaseReqController.getPRByUserID);
+router.get('/PR/:id', checkUser.verifyUserToken, purchaseReqController.getPRByPRID);
+router.get('/latestPRID/:id', checkUser.verifyUserToken, checkUser.getClientUserId, purchaseReqController.getLatestPRIDByUserID);
+router.put('/PR/:id', checkUser.verifyUserToken, purchaseReqController.updatePRApprover);
+router.put('/PR/ApprComment/:id', checkUser.verifyUserToken, purchaseReqController.updateApprComments);
+router.delete('/PR/:id', checkUser.verifyUserToken, purchaseReqController.deletePRById);
+router.get('/adhoc/purchases', checkUser.verifyUserToken, purchaseReqController.getAllAdHoc);
+router.get('/adhoc/:id', checkUser.verifyUserToken, checkUser.getClientUserId, purchaseReqController.getAdHocByUserID);
+router.get('/adhoc/viewBy/:id', checkUser.verifyUserToken, purchaseReqController.getAdHocByPRID);
+router.get('/PR/AH/all', checkUser.verifyUserToken, purchaseReqController.getAllPRnAH);
 
 // Line Item
 router.post('/lineItem', purchaseReqController.addLineItem);
@@ -51,8 +52,8 @@ router.post('/PRStatus', purchaseReqController.addPRStatusType);
 router.get('/PRStatus/all', purchaseReqController.getAllPRStatusType);
 
 // Search
-router.post('/search', purchaseReqController.searchPRAll);
-router.post('/search/:id', purchaseReqController.searchPRByUserID);
-router.post('/DynamicSearch', purchaseReqController.searchPRDynamic);
+router.post('/search', checkUser.verifyUserToken, purchaseReqController.searchPRAll);
+router.post('/search/:id', checkUser.verifyUserToken, checkUser.getClientUserId, purchaseReqController.searchPRByUserID);
+router.post('/DynamicSearch', checkUser.verifyUserToken, purchaseReqController.searchPRDynamic);
 
 module.exports = router;

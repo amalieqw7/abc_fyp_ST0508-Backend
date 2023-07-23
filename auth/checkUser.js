@@ -3,7 +3,7 @@ const JWT_SECRET = require("../config");
 
 // checked if user is logged in
 const verifyUserToken = (req, res, next) => {
-    console.log("Request to view restricted content");
+    // console.log("Request to view restricted content");
     const authHeader = req.headers.authorization;
 
     //check for token
@@ -30,8 +30,7 @@ const verifyUserToken = (req, res, next) => {
 
             req.decodedToken = decodedToken; //payload
 
-            console.log(req.decodedToken);
-
+            // console.log(req.decodedToken);
             // {
             //     userID: 2,
             //     email: 'johnWatt@purchaser.com',

@@ -24,10 +24,12 @@ router.delete('/PR/:id', checkUser.verifyUserToken, purchaseReqController.delete
 router.get('/adhoc/purchases', checkUser.verifyUserToken, purchaseReqController.getAllAdHoc);
 router.get('/adhoc/:id', checkUser.verifyUserToken, checkUser.getClientUserId, purchaseReqController.getAdHocByUserID);
 router.get('/adhoc/viewBy/:id', purchaseReqController.getAdHocByPRID); //? fetch
+
+// get both PR & adhoc sorted by status & prid
 router.get('/PR/AH/all', checkUser.verifyUserToken, purchaseReqController.getAllPRnAH);
 
 // Line Item
-router.post('/lineItem', purchaseReqController.addLineItem);
+router.post('/lineItem', checkUser.verifyUserToken, purchaseReqController.addLineItem);
 router.get('/lineItem/:id', purchaseReqController.getLineItemByPRID); //? fetch
 router.put('/lineItem/:id', purchaseReqController.updateQtyReceived);
 
@@ -45,7 +47,7 @@ router.post('/branch', purchaseReqController.addBranch);
 router.get('/branch/all', purchaseReqController.getAllBranch); //? fetch
 
 // Delivery Location
-router.post('/deliveryLocation', purchaseReqController.addDeliveryLocation);
+router.post('/deliveryLocation', checkUser.verifyUserToken, purchaseReqController.addDeliveryLocation);
 router.get('/deliveryLocation/show/all', purchaseReqController.getAllDeliveryLocation);
 router.get('/deliveryLocation/:id', purchaseReqController.getDeliveryLocationByPRID);
 

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
+const checkUser = require('../../auth/checkUser');
 const inventoryController = require('../../controller/inventoryController');
 
 //  to test in postman 
@@ -11,12 +12,12 @@ const inventoryController = require('../../controller/inventoryController');
 
 // Inventory
 router.post('/', inventoryController.addInventory);
-router.get('/:id', inventoryController.getInventoryByItemID);
+router.get('/:id', checkUser.verifyUserToken, inventoryController.getInventoryByItemID);
 router.put('/:id', inventoryController.updateInventoryByItemID);
 
 // Item
 router.post('/item', inventoryController.addItem);
-router.get('/item/all', inventoryController.getAllItem);
+router.get('/item/all', inventoryController.getAllItem);  //? fetch
 router.get('/item/:id', inventoryController.getItemByItemID);
 router.put('/item/:id', inventoryController.updateItemByItemID);
 

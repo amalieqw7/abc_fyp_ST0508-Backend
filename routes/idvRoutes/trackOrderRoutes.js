@@ -18,7 +18,7 @@ router.post('/purchaseStatus', trackOrderController.addPurchaseStatus);
 // get all purchase status
 router.get('/purchaseStatus/all', trackOrderController.getAllPurchaseStatus);
 // insert data into purchase order table
-router.post('/purchaseOrder', checkUser.verifyUserToken, trackOrderController.addPurchaseOrder); //!
+router.post('/purchaseOrder', checkUser.verifyUserToken, trackOrderController.addPurchaseOrder);
 // get purchase order by ID
 router.get('/purchaseOrder/:id', trackOrderController.getPOByPOID);
 // get purchase order details by PR ID 

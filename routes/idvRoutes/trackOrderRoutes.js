@@ -2,6 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
+const checkUser = require('../../auth/checkUser');
 const trackOrderController = require('../../controller/trackOrderController');
 
 //  to test in postman 
@@ -17,11 +18,11 @@ router.post('/purchaseStatus', trackOrderController.addPurchaseStatus);
 // get all purchase status
 router.get('/purchaseStatus/all', trackOrderController.getAllPurchaseStatus);
 // insert data into purchase order table
-router.post('/purchaseOrder', trackOrderController.addPurchaseOrder);
+router.post('/purchaseOrder', checkUser.verifyUserToken, trackOrderController.addPurchaseOrder); //!
 // get purchase order by ID
 router.get('/purchaseOrder/:id', trackOrderController.getPOByPOID);
 // get purchase order details by PR ID 
-router.get('/purchaseOrderDetails/:id', trackOrderController.getPODByPRID);
+router.get('/purchaseOrderDetails/:id', trackOrderController.getPODByPRID);  //? fetch
 // get product details by PO ID 
 router.get('/productDetails/:id', trackOrderController.getPDByPOID);
 // update PO status dropdown by PO ID 

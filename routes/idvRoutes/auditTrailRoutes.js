@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
+const checkUser = require('../../auth/checkUser');
 const auditTrailController = require('../../controller/auditTrailController');
 
 //  to test in postman 
@@ -10,8 +11,8 @@ const auditTrailController = require('../../controller/auditTrailController');
 //  ---> example2: http://localhost:3000/api/user/:id
 
 // Audit Log
-router.post('/', auditTrailController.createAuditLog);
-router.get('/', auditTrailController.getAuditLogs);
+router.post('/', checkUser.verifyUserToken, auditTrailController.createAuditLog);
+router.get('/', checkUser.verifyUserToken, auditTrailController.getAuditLogs);
 
 // Action Type
 router.post('/actionType', auditTrailController.createActionType);

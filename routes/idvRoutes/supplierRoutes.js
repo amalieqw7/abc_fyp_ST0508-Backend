@@ -2,6 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
+const checkUser = require('../../auth/checkUser');
 const supplierController = require('../../controller/supplierController');
 
 //  to test in postman 
@@ -35,7 +36,7 @@ router.put('/suppliersCategory/:fkSupplier_id', supplierController.editSuppliers
 router.get('/supplierid', supplierController.getLatestSupplierID);
 
 // retrieve all suppliers (id, name, contact person & number, categories)
-router.get('/all', supplierController.getAllSuppliers);
+router.get('/all', supplierController.getAllSuppliers);  //? fetch
 
 // retrieve full supplier details by supplierID
 router.get('/:supplierID', supplierController.getFullSupplierDetailsByID);

@@ -22,7 +22,7 @@ router.delete('/PR/:id', checkUser.verifyUserToken, purchaseReqController.delete
 
 // Ad Hoc
 router.get('/adhoc/purchases', checkUser.verifyUserToken, purchaseReqController.getAllAdHoc);
-router.get('/adhoc/:id', checkUser.verifyUserToken, checkUser.getClientUserId, purchaseReqController.getAdHocByUserID);
+router.get('/adhoc/:id', purchaseReqController.getAdHocByUserID);
 router.get('/adhoc/viewBy/:id', purchaseReqController.getAdHocByPRID); //? fetch
 
 // get both PR & adhoc sorted by status & prid

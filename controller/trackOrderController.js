@@ -286,3 +286,52 @@ module.exports.searchBar = async(req, res, next) => {
       res.status(500).send(`Unknown Error`);
   });
 };
+
+//saving invoice pdf
+module.exports.saveInvoice = async (req, res, next) => {
+    const prID = req.params.prID;
+    const fileBuffer = req.file.buffer;
+
+    return trackOrderModel
+        .saveInvoice(fileBuffer, prID)
+        .then(() => {
+            res.status(200).send('Invoice saved successfully');
+        })
+        .catch((err) => {
+            res.status(500).send('Failed to save invoice');
+        })
+};
+
+//saving DO pdf
+module.exports.saveDOrder = async (req, res, next) => {
+    const prID = req.params.prID;
+    const fileBuffer = req.file.buffer;
+
+    return trackOrderModel
+        .saveDOrder(fileBuffer, prID)
+        .then(() => {
+            res.status(200).send('Delivery Order saved successfully');
+        })
+        .catch((err) => {
+            res.status(500).send('Failed to save delivery Order');
+        })
+}
+
+//get invoice 
+module.exports.getInvoice = async (req, res, next) => {
+    let prID = req.params.prID;
+  
+    return trackOrderModel
+      .getInvoice(prID)
+      .then((result) => {
+        if (!result) {
+          return res.status(404).send('Invoice not found');
+        }
+        res.set('Content-Type', 'application/pdf');
+        res.send(result);
+      })
+      .catch((err) => {
+        console.error('Error fetching invoice:', err);
+        res.status(500).send('Failed to fetch invoice');
+      });
+  };

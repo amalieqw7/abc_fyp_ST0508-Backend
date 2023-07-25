@@ -299,27 +299,72 @@ const trackOrderDB = {
             });
     },
 
-     // search bar
-     searchBar: async (searchValue) => {
-      let sql = `SELECT *
+    // search bar
+    searchBar: async (searchValue) => {
+        let sql = `SELECT *
                   FROM purchaseOrder PO
                   WHERE prID LIKE '${searchValue}'`;
 
-      return connection.promise()
-          .query(sql)
-          .then((result) => {
-              if (result[0] == 0) {
-                  return null;
-              }
-              else {
-                  return result[0];
-              }
-          })
-          .catch((err) => {
-              console.log(err);
-              throw err;
-          });
-  },
+        return connection.promise()
+            .query(sql)
+            .then((result) => {
+                if (result[0] == 0) {
+                    return null;
+                }
+                else {
+                    return result[0];
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            });
+    },
+    //saving invoice
+    saveInvoice: async (fileBuffer, prID) => {
+        const sql = `UPDATE purchaseOrder SET invoice = ? WHERE prID = ?`;
+
+        return connection.promise()
+            .query(sql, [fileBuffer, prID])
+            .then(() => {
+                console.log('Invoice saved successfully');
+            })
+            .catch((err) => {
+                console.error('Error saving invoice:', err);
+            });
+    },
+
+    //saving DO
+    saveDOrder: async (fileBuffer, prID) => {
+        const sql = `UPDATE purchaseOrder SET deliveryOrder = ? WHERE prID = ?`;
+
+        return connection.promise()
+            .query(sql, [fileBuffer, prID])
+            .then(() => {
+                console.log('Delivery Order saved successfully');
+            })
+            .catch((err) => {
+                console.error('Error saving Delivery Order:', err);
+            });
+    },
+
+    //fetch invoice 
+    getInvoice: async (prID) => {
+        const sql = `SELECT invoice FROM purchaseOrder WHERE prID = ?`;
+
+        return connection.promise()
+            .query(sql, [prID])
+            .then(([rows]) => {
+                if (rows.length === 0) {
+                    return null;
+                }
+                return rows[0].invoice;
+            })
+            .catch((err) => {
+                console.error('error fetching invoice', err);
+                throw err;
+            });
+    }
 
 
 };

@@ -202,18 +202,34 @@ module.exports.saveReceipt = async (req, res, next) => {
 
 module.exports.getFile = async (req, res, next) => {
     let prID = req.params.prID;
-  
+
     return paymentTrackModel
-      .getFile(prID)
-      .then((result) => {
-        if (!result) {
-          return res.status(404).send('Receipt not found');
-        }
-        res.set('Content-Type', 'application/pdf');
-        res.send(result);
-      })
-      .catch((err) => {
-        console.error('Error fetching receipt:', err);
-        res.status(500).send('Failed to fetch receipt');
-      });
-  };
+        .getFile(prID)
+        .then((result) => {
+            if (!result) {
+                return res.status(404).send('Receipt not found');
+            }
+            res.set('Content-Type', 'application/pdf');
+            res.send(result);
+        })
+        .catch((err) => {
+            console.error('Error fetching receipt:', err);
+            res.status(500).send('Failed to fetch receipt');
+        });
+};
+
+module.exports.getAllSupplier = async (req, res, next) => {
+    return paymentTrackModel
+        .getAllSupplier()
+        .then((result) => {
+            if (result[0] == null) {
+                res.send(`There are no suppliers currently`)
+            } else {
+                return res.status(200).send(result);
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send(`Failed to fetch suppliers`)
+        })
+}

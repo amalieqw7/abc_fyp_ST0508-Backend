@@ -4,6 +4,11 @@ const router = express.Router();
 
 const trackOrderController = require('../../controller/trackOrderController');
 
+const multer = require('multer')
+const upload = multer({
+    storage: multer.memoryStorage()
+});
+
 //  to test in postman 
 //  --> http://localhost:3000/api/[refer main route]/[id if have]
 //  --> ensure that individual routes does not have verbs
@@ -38,4 +43,10 @@ router.get('/prAmnt', trackOrderController.getPRAmount);
 router.get('/poAmnt', trackOrderController.getPOAmount);
 // search bar 
 router.post('/POsearch', trackOrderController.searchBar);
+// save invoice 
+router.put('/documents/:prID/invoice', upload.single('file'), trackOrderController.saveInvoice);
+// save DO
+router.put('/documents/:prID/deliveryOrder', upload.single('file'), trackOrderController.saveDOrder);
+// fetch invoice
+router.get('/documents/:prID/invoice', trackOrderController.getInvoice);
 module.exports = router;

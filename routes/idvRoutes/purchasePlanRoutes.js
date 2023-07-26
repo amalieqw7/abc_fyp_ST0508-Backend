@@ -2,6 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
+const checkUser = require('../../auth/checkUser');
 const purchasePLanController = require('../../controller/purchasePlanController');
 
 //  to test in postman 
@@ -11,7 +12,7 @@ const purchasePLanController = require('../../controller/purchasePlanController'
 //  ---> example2: http://localhost:3000/api/user/:id
 
 // get all event
-router.get('/', purchasePLanController.getAllEvents);
+router.get('/', checkUser.verifyUserToken, purchasePLanController.getAllEvents);
 // insert new event
 router.post('/purchasePlan', purchasePLanController.addEvent);
 // delete

@@ -209,23 +209,8 @@ const supplierDB = {
             })
     },
 
-    // hard delete supplier
-    deleteSupplier: async (supplierID) => {
-        const sql = `DELETE supplier, suppliersCategory
-                    FROM supplier
-                    INNER JOIN suppliersCategory ON suppliersCategory.fkSupplier_id = supplier.supplierID
-                    WHERE supplier.supplierID = ?`;
-
-        return connection.promise()
-            .query(sql, [supplierID])
-            .catch((err) => {
-                console.log(err);
-                throw err;
-            })
-    },
-
     // soft delete supplier
-    testDeleteSupplier: async (supplierID) => {
+    deleteSupplier: async (supplierID) => {
         const sql = `UPDATE supplier SET isDeleted = 1 WHERE supplierID = ?`;
 
         return connection.promise()
@@ -235,43 +220,6 @@ const supplierDB = {
                 throw err;
             })
     },
-
-    /*
-    const sql = `UPDATE supplier SET isDeleted = 1 WHERE supplierID = ?`;
-
-        return connection.promise()
-            .query(sql, [supplierID])
-            .catch((err) => {
-                console.log(err);
-                throw err;
-            })
-    */
-
-    /*
-    return new Promise((resolve, reject) => {
-            // update supplier first then update suppliers category
-            const sqlDelete1 = `UPDATE supplier SET isDeleted = 1 WHERE supplierID = ?`;
-            const id = [supplierID];
-
-            connection.query(sqlDelete1, id, (err) => {
-                if (err) {
-                    console.log(err);
-                    reject(err);
-                } else {
-                    const sqlDelete2 = `UPDATE supplier SET isDeleted = 1 WHERE fkSupplier_id = ?`;
-  
-                    connection.query(sqlInsert, [values], (err) => {
-                        if (err) {
-                            console.log(err);
-                            reject(err);
-                        } else {
-                            resolve();
-                        }
-                    })
-                }
-            })
-        })
-    */
 
     // soft delete suppliers category
     deleteSuppliersCategory: async (fkSupplier_id) => {

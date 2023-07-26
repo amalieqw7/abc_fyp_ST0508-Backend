@@ -239,36 +239,12 @@ module.exports.updateSupplierDetails = async (req, res, next) => {
         })
 }
 
-// hard delete supplier
+// soft delete supplier
 module.exports.deleteSupplier = async (req, res, next) => {
     let supplierID = parseInt(req.params.supplierID);
 
-    if (isNaN(supplierID)) {
-        res.status(400).send(`Enter numbers only!`);
-        return;
-    };
-
     return supplierModel
         .deleteSupplier(supplierID)
-        .then((result) => {
-            if (result === null) {
-                return res.send(`Supplier does not exist`);
-            }
-            else {
-                return res.status(200).send(`Supplier ${supplierID} Deleted`);
-            }
-        })
-        .catch((err) => {
-            return res.sendStatus(500);
-        })
-}
-
-// soft delete supplier
-module.exports.testDeleteSupplier = async (req, res, next) => {
-    let supplierID = parseInt(req.params.supplierID);
-
-    return supplierModel
-        .testDeleteSupplier(supplierID)
         .then((result) => {
             return res.status(200).send(`Supplier ${supplierID} Deleted`);
         })

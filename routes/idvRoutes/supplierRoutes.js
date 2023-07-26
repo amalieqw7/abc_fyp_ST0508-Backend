@@ -45,12 +45,9 @@ router.get('/:supplierID', supplierController.getFullSupplierDetailsByID);
 router.put('/:supplierID', supplierController.updateSupplierDetails);
 
 // delete supplier
-router.delete('/:supplierID', supplierController.deleteSupplier);
+router.put('/delete/:supplierID', supplierController.deleteSupplier);
 
-// -------------- TEST delete supplier
-router.put('/delete/:supplierID', supplierController.testDeleteSupplier);
-
-// -------------- TEST delete suppliers category
+// delete suppliers category
 router.put('/delete/:fkSupplier_id', supplierController.deleteSuppliersCategory);
 
 module.exports = router;

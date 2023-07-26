@@ -17,9 +17,9 @@ const upload = multer({
 //  ---> example2: http://localhost:3000/api/user/:id
 
 // get all track orders
-router.get('/', trackOrderController.getAllTrackOrder);
+router.get('/', checkUser.verifyUserToken, trackOrderController.getAllTrackOrder);
 // create purchase status
-router.post('/purchaseStatus', trackOrderController.addPurchaseStatus);
+router.post('/purchaseStatus', checkUser.verifyUserToken, trackOrderController.addPurchaseStatus);
 // get all purchase status
 router.get('/purchaseStatus/all', trackOrderController.getAllPurchaseStatus);
 // insert data into purchase order table

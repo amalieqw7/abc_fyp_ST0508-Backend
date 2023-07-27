@@ -353,17 +353,9 @@ module.exports.getAllPRnAH = async (req, res, next) => {
             }
         });
 
-        allPurchases.sort(dynamicSort('prID')).sort(dynamicSort('prStatusID'))
-
     // return Promise.resolve(allPurchases);
     return res.status(200).send(allPurchases);
 };
-
-function dynamicSort(property) {
-    return function(a, b) {
-        return (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
-    }
-}
 
 // ===============================
 // Line Items

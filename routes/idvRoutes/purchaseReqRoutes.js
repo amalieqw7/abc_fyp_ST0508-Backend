@@ -13,7 +13,7 @@ const purchaseReqController = require('../../controller/purchaseReqController');
 // PR
 router.post('/', checkUser.verifyUserToken, purchaseReqController.addPR);
 router.get('/', checkUser.verifyUserToken, purchaseReqController.getAllPR);
-router.get('/:id', checkUser.verifyUserToken, checkUser.getClientUserId, checkUser.verifyRole(['Admin', 'User']), purchaseReqController.getPRByUserID);
+router.get('/:id', checkUser.verifyUserToken, checkUser.getClientUserId, checkUser.verifyRole(['Approver', 'Purchaser']), purchaseReqController.getPRByUserID);
 router.get('/PR/:id', purchaseReqController.getPRByPRID); //? fetch
 router.get('/latestPRID/:id', checkUser.verifyUserToken, checkUser.getClientUserId, purchaseReqController.getLatestPRIDByUserID);
 router.put('/PR/:id', checkUser.verifyUserToken, purchaseReqController.updatePRApprover);

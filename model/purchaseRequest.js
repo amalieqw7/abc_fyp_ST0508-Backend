@@ -59,9 +59,10 @@ const purchaseReqDB = {
 
     // get PR by userid
     getPRByUserID: async (userID) => {
-        let sql = `SELECT PR.requestDate, PR.prID, PR.userID, U.name, PR.targetDeliveryDate, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PR.prStatusID, PRS.prStatus, PR.apprRemarks
-                    FROM purchaseRequest PR, user U, branch B, deliveryLocation DL, supplier S, prStatus PRS
+        let sql = `SELECT PR.purchaseTypeID, PT.purchaseType, PR.requestDate, PR.prID, PR.userID, U.name, PR.targetDeliveryDate, GROUP_CONCAT(B.branchName) AS branchName, S.supplierName, PR.prStatusID, PRS.prStatus, PR.apprRemarks
+                    FROM purchaseRequest PR, user U, branch B, deliveryLocation DL, supplier S, prStatus PRS, purchaseType PT
                     WHERE PR.userID = U.userID
+                    AND PR.purchaseTypeID = PT.purchaseTypeID
                     AND PR.prID = DL.prID
                     AND DL.branchID = B.branchID
                     AND PR.supplierID = S.supplierID

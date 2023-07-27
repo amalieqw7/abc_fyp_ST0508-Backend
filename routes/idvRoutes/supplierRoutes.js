@@ -24,30 +24,30 @@ router.post('/category', supplierController.createCategory);
 router.get('/category/all', supplierController.getAllCategories);
 
 // create supplier
-router.post('/', supplierController.createSupplier);
+router.post('/', checkUser.verifyUserToken, supplierController.createSupplier);
 
-// create supplier category
+// create suppliers category
 router.post('/suppliersCategory', supplierController.createSuppliersCategory);
 
 // update suppliers category
 router.put('/suppliersCategory/:fkSupplier_id', supplierController.editSuppliersCategory);
 
 // retrieve the latest supplierID and name
-router.get('/supplierid', supplierController.getLatestSupplierID);
+router.get('/supplierid', checkUser.verifyUserToken, supplierController.getLatestSupplierID);
 
 // retrieve all suppliers (id, name, contact person & number, categories)
-router.get('/all', supplierController.getAllSuppliers);  //? fetch
+router.get('/all', supplierController.getAllSuppliers);
 
 // retrieve full supplier details by supplierID
 router.get('/:supplierID', supplierController.getFullSupplierDetailsByID);
 
 // update supplier
-router.put('/:supplierID', supplierController.updateSupplierDetails);
+router.put('/:supplierID', checkUser.verifyUserToken, supplierController.updateSupplierDetails);
 
 // delete supplier
-router.put('/delete/:supplierID', supplierController.deleteSupplier);
+router.put('/delete/:supplierID', checkUser.verifyUserToken, supplierController.deleteSupplier);
 
 // delete suppliers category
-router.put('/delete/:fkSupplier_id', supplierController.deleteSuppliersCategory);
+router.put('/delete/category/:fkSupplier_id', checkUser.verifyUserToken, supplierController.deleteSuppliersCategory);
 
 module.exports = router;

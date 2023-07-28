@@ -408,7 +408,8 @@ const DBTables = {
             id INT auto_increment,
             actionType VARCHAR(255) NOT NULL,
             tableName VARCHAR(100) NOT NULL,
-            fieldName VARCHAR(50) NOT NULL,
+            itemIDType VARCHAR(50) NOT NULL,
+            valueChanged_fieldName VARCHAR(50) NOT NULL,
             isActive INT DEFAULT(1) NOT NULL,
             PRIMARY KEY (id)
         );`;

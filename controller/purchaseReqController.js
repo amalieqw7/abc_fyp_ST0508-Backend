@@ -1,5 +1,7 @@
 const moment = require('moment');
 const purchaseRequestModel = require('../model/purchaseRequest');
+const purchaseOrderModel = require('../model/trackOrder');
+const auditTrailModel = require('../model/auditTrail');
 
 // ===============================
 // PR
@@ -72,52 +74,58 @@ module.exports.getPRByUserID = async (req, res, next) => {
 
 // get PR by PR ID
 module.exports.getPRByPRID = async (req, res, next) => {
-    let data = [];
+    try {
+        const data = [];
 
-    let prId = parseInt(req.params.id);
+        const prId = parseInt(req.params.id);
 
-    if (isNaN(prId)) {
-        res.status(400).send(`Purchase Request ID provided is not a number!`);
-        return;
-    }
+        if (isNaN(prId)) {
+            res.status(400).send(`Purchase Request ID provided is not a number!`);
+            return;
+        };
 
-    await purchaseRequestModel
-        .getPRByPRID(prId)
-        .then((result) => {
-            if (result == null) {
-                return res.status(404).send(`Purchase Request #${prId} does not exist!`);
-            }
-            else {
-                // data.PRDetails = result[0];
-                data.push(result[0]);
-            }
-        })
-        .catch((err) => {
-            console.log(err);
-            return res.status(500).send(`Unknown Error`);
-        });
+        const prResult = await purchaseRequestModel.getPRByPRID(prId);
 
-    // check if have PR details result
-    if (Object.keys(data).length === 1) {
-        // const reqDate = moment(data.PRDetails.requestDate).format();
+        if (prResult == null) {
+            return res.status(404).send(`Purchase Request #${prId} does not exist!`);
+        } else {
+            // data.PRDetails = result[0];
+            data.push(prResult[0]);
+        };
+
+        const poResult = await purchaseOrderModel.getPODByPRID(prId);
         const reqDate = moment(data[0].requestDate).format();
 
-        await purchaseRequestModel
-            .getPRGST(reqDate)
-            .then((result) => {
-                // data.GST = result[0];
-                // data.push(result[0]);
-                data[0].GST = result[0];
-            })
-            .catch((err) => {
-                console.log(err);
-                return res.status(500).send(`Unknown Error`);
-            });
+        if(poResult){
+            const poID = poResult[0].poID;
+            const auditLogCheck = await auditTrailModel.getAuditLogByItemID(3, poID, 3);
 
-        // return final data(PR details + GST)
-        return res.status(200).send(data);
+            if(auditLogCheck){
+                const AL = auditLogCheck[auditLogCheck.length - 1];
+
+                const auditTime = moment(AL.timestamp).format();
+                const getGST = await purchaseRequestModel.getPRGST(auditTime);
+    
+                data[0].GST = getGST[0];
+            } else{
+                const gstResult = await purchaseRequestModel.getPRGST(reqDate);
+    
+                data[0].GST = gstResult[0];
+            };
+        };
+        
+        if(!poResult){
+            const gstResult = await purchaseRequestModel.getPRGST(reqDate);
+    
+            data[0].GST = gstResult[0];
+        };
+        
+        // Return the final data (PR details + GST)
+        return res.status(200).json(data);
+
+    } catch (err) {
+        return res.status(500).send(`Unknown Error`);
     };
-
 };
 
 // get latest PR ID created

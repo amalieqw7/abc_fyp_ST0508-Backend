@@ -311,10 +311,11 @@ const DBTables = {
             prID INT UNIQUE NOT NULL,
             paymentStatusID INT NOT NULL DEFAULT(1),
             purchaseStatusID INT NOT NULL DEFAULT(1),
-            invoice BLOB,
-            deliveryOrder BLOB,
+            invoice LONGBLOB,
+            deliveryOrder LONGBLOB,
             ptRemarks VARCHAR(255),
-            ptReceipt BLOB,
+            ptReceipt LONGBLOB,
+            totalPrice  DECIMAL(4,2) NOT NULL,
             PRIMARY KEY (poID)
         )`;
         return connection.promise()

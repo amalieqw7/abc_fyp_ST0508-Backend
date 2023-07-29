@@ -22,7 +22,6 @@ module.exports.createAuditLog = async (req, res, next) => {
         });
 };
 
-
 // get all audit Log
 module.exports.getAuditLogs = async (req, res, next) => {
     return auditTrailModel
@@ -37,6 +36,33 @@ module.exports.getAuditLogs = async (req, res, next) => {
         });
 };
 
+// get audit log by item ID
+module.exports.getAuditLogByItemID = async (req, res, next) => {
+    let actionTypeID = req.body.actionTypeID;
+    let itemId = req.body.itemId;
+    let newValue = req.body.newValue;
+
+    if (isNaN(itemId)) {
+        res.status(400).send(`Item ID provided is not a number!`);
+        return;
+    };
+
+    return auditTrailModel
+        .getAuditLogByItemID(actionTypeID, itemId, newValue)
+        .then((result) => {
+            if (result == null) {
+                res.status(404).send(`#${itemId} does not have an audit log yet!`);
+            }
+            else {
+                res.status(200).send(result);
+            }
+        })
+        .catch((err) => {
+            console.log(err)
+            res.status(500).send(`Unknown Error`);
+        });
+};
+
 
 // ===============================
 // Action Type Table
@@ -44,10 +70,11 @@ module.exports.getAuditLogs = async (req, res, next) => {
 module.exports.createActionType = async (req, res, next) => {
     let actionType = req.body.actionType;
     let tableName = req.body.tableName;
+    let itemIDType = req.body.itemIDType;
     let fieldName = req.body.fieldName;
 
     return auditTrailModel
-        .createActionType(actionType, tableName, fieldName)
+        .createActionType(actionType, tableName, itemIDType, fieldName)
         .then(() => {
             return res.status(201).send(`Action Type Created!`);
         })

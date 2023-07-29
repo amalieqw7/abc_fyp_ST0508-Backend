@@ -315,7 +315,7 @@ const DBTables = {
             deliveryOrder LONGBLOB,
             ptRemarks VARCHAR(255),
             ptReceipt LONGBLOB,
-            totalPrice  DECIMAL(4,2) NOT NULL,
+            totalPrice  DECIMAL(4,2) NOT NULL DEFAULT(0),
             PRIMARY KEY (poID)
         )`;
         return connection.promise()

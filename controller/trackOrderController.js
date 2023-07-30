@@ -65,6 +65,32 @@ module.exports.addPurchaseOrder = async (req, res, next) => {
         });
 };
 
+// update PO Total Price //? for adhoc purchases
+module.exports.updatePOTotalPrice = async (req, res, next) => {
+    let prID = parseInt(req.params.id);
+    let totalPrice = req.body.totalPrice;
+
+    if (isNaN(prID)) {
+        res.status(400).send(`Purchase Request ID provided is not a number!`);
+        return;
+    };
+
+    return trackOrderModel
+        .updatePOTotalPrice(totalPrice, prID)
+        .then((result) => {
+            if (result.affectedRows == 0) {
+                res.status(404).send(`Purchase Order #${prID} does not exist!`);
+            }
+            else {
+                res.status(201).send(`Total Price Updated!`);
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send(`Unknown error`);
+        });
+};
+
 // get PO by PO ID
 module.exports.getPOByPOID = async (req, res, next) => {
     let poId = parseInt(req.params.id);

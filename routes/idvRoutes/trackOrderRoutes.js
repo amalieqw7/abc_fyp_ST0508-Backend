@@ -24,6 +24,8 @@ router.post('/purchaseStatus', checkUser.verifyUserToken, trackOrderController.a
 router.get('/purchaseStatus/all', trackOrderController.getAllPurchaseStatus);
 // insert data into purchase order table
 router.post('/purchaseOrder', checkUser.verifyUserToken, trackOrderController.addPurchaseOrder);
+// update PO Total Price //? for adhoc purchases
+router.put('/purchaseOrder/totalPrice/:id', trackOrderController.updatePOTotalPrice);
 // get purchase order by ID
 router.get('/purchaseOrder/:id', trackOrderController.getPOByPOID);
 // get purchase order details by PR ID 
@@ -50,4 +52,5 @@ router.put('/documents/:prID/invoice', upload.single('file'), trackOrderControll
 router.put('/documents/:prID/deliveryOrder', upload.single('file'), trackOrderController.saveDOrder);
 // fetch invoice
 router.get('/documents/:prID/invoice', trackOrderController.getInvoice);
+
 module.exports = router;

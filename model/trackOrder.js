@@ -73,6 +73,26 @@ const trackOrderDB = {
             });
     },
 
+    // update PO Total Price //? for adhoc purchases
+    updatePOTotalPrice: async (totalPrice, prID) => {
+        let sql = `UPDATE purchaseOrder SET totalPrice = ? 
+                    WHERE prID = ?`;
+
+        return connection.promise()
+            .query(sql, [totalPrice, prID])
+            .then((result) => {
+                if (result[0] == 0) {
+                    return null;
+                }
+                else {
+                    return result[0];
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            })
+    },
 
     // get PO by PO ID
     getPOByPOID: async (poID) => {
@@ -106,7 +126,7 @@ const trackOrderDB = {
 
     // get purchase order details by PO ID
     getPODByPRID: async (prID) => {
-        let sql = `SELECT PO.poID, PR.prID, PR.requestDate, U.name, S.supplierName, B.branchName, payM.paymentMode, PR.remarks, PO.purchaseStatusID, PS.purchaseStatus, PO.paymentStatusID, PTS.paymentStatus
+        let sql = `SELECT PO.poID, PR.prID, PR.requestDate, U.name, S.supplierName, B.branchName, payM.paymentMode, PR.remarks, PO.purchaseStatusID, PS.purchaseStatus, PO.paymentStatusID, PTS.paymentStatus, PO.totalPrice
               FROM purchaseOrder PO, purchaseRequest PR, user U, supplier S, branch B, paymentMode payM, deliveryLocation DL, purchaseStatus PS, paymentStatus PTS
               WHERE PR.prID = DL.prID
               AND DL.branchID = B.branchID

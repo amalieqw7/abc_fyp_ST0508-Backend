@@ -9,7 +9,7 @@ const DBTables = {
         const sql =
             `CREATE TABLE role (
             roleID INT auto_increment,
-            role VARCHAR(100) NOT NULL,
+            role VARCHAR(100) NOT NULL UNIQUE,
             PRIMARY KEY (roleID)
         )`;
         return connection.promise()

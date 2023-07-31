@@ -66,6 +66,25 @@ module.exports.userLogin = async (req, res, next) => {
         })
 };
 
+// get all users
+module.exports.getAllUsers = async (req, res, next) => {
+
+    return userModel
+        .getAllUsers()
+        .then((result) => {
+            if (result == null) {
+                res.status(404).send(`Users do not exist!`);
+            }
+            else {
+                res.status(200).send(result);
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send(`Unknown Error`);
+        });
+};
+
 // get User details by id
 module.exports.getUserDetailsByID = async (req, res, next) => {
     let userId = parseInt(req.params.id);
@@ -88,5 +107,90 @@ module.exports.getUserDetailsByID = async (req, res, next) => {
         .catch((err) => {
             console.log(err);
             res.status(500).send(`Unknown Error`);
+        });
+};
+
+// create role
+module.exports.createRole = async (req, res, next) => {
+    try{
+        let role = req.body.role;
+
+        const createRole = await userModel.createRole(role);
+
+        if(createRole){
+            const getNewRole = await userModel.getRoleIDByRole(role);
+            if(getNewRole){
+                return res.status(200).json(getNewRole[0]);
+            };
+        };
+
+    } catch(err){
+        return res.status(500).send(`Unknown Error`);
+    }
+};
+
+// get all roles
+module.exports.getAllRoles = async (req, res, next) => {
+
+    return userModel
+        .getAllRoles()
+        .then((result) => {
+            if (result == null) {
+                res.status(404).send(`Roles do not exist!`);
+            }
+            else {
+                res.status(200).send(result);
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send(`Unknown Error`);
+        });
+};
+
+// get role by rolename
+module.exports.getRoleIDByRole = async (req, res, next) => {
+    let role = req.body.role;
+
+    return userModel
+        .getRoleIDByRole(role)
+        .then((result) => {
+            if (result == null) {
+                res.status(404).send(`Role does not exist!`);
+            }
+            else {
+                res.status(200).send(result);
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send(`Unknown Error`);
+        });
+};
+
+
+// update qtyReceived in lineItems table
+module.exports.updateUserRole = async (req, res, next) => {
+    let userID = parseInt(req.params.id);
+    let roleID = req.body.roleID;
+
+    if (isNaN(userID)) {
+        res.status(400).send(`User ID provided is not a number!`);
+        return;
+    };
+
+    return userModel
+        .updateUserRole(roleID, userID)
+        .then((result) => {
+            if (result.affectedRows == 0) {
+                res.status(404).send(`User ID #${userID} does not exist!`);
+            }
+            else {
+                res.status(201).send(`Role Updated!`);
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send(`Unknown error`);
         });
 };

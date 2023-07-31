@@ -25,7 +25,7 @@ router.get('/purchaseStatus/all', trackOrderController.getAllPurchaseStatus);
 // insert data into purchase order table
 router.post('/purchaseOrder', checkUser.verifyUserToken, trackOrderController.addPurchaseOrder);
 // update PO Total Price //? for adhoc purchases
-router.put('/purchaseOrder/totalPrice/:id', trackOrderController.updatePOTotalPrice);
+router.put('/purchaseOrder/totalPrice/:id', checkUser.verifyUserToken, trackOrderController.updatePOTotalPrice);
 // get purchase order by ID
 router.get('/purchaseOrder/:id', trackOrderController.getPOByPOID);
 // get purchase order details by PR ID 

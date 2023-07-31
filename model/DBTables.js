@@ -9,7 +9,7 @@ const DBTables = {
         const sql =
             `CREATE TABLE role (
             roleID INT auto_increment,
-            role VARCHAR(100) NOT NULL,
+            role VARCHAR(100) NOT NULL UNIQUE,
             PRIMARY KEY (roleID)
         )`;
         return connection.promise()
@@ -311,10 +311,11 @@ const DBTables = {
             prID INT UNIQUE NOT NULL,
             paymentStatusID INT NOT NULL DEFAULT(1),
             purchaseStatusID INT NOT NULL DEFAULT(1),
-            invoice BLOB,
-            deliveryOrder BLOB,
+            invoice LONGBLOB,
+            deliveryOrder LONGBLOB,
             ptRemarks VARCHAR(255),
-            ptReceipt BLOB,
+            ptReceipt LONGBLOB,
+            totalPrice  DECIMAL(4,2) NOT NULL DEFAULT(0),
             PRIMARY KEY (poID)
         )`;
         return connection.promise()
@@ -408,7 +409,8 @@ const DBTables = {
             id INT auto_increment,
             actionType VARCHAR(255) NOT NULL,
             tableName VARCHAR(100) NOT NULL,
-            fieldName VARCHAR(50) NOT NULL,
+            itemIDType VARCHAR(50) NOT NULL,
+            valueChanged_fieldName VARCHAR(50) NOT NULL,
             isActive INT DEFAULT(1) NOT NULL,
             PRIMARY KEY (id)
         );`;

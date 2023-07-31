@@ -279,10 +279,11 @@ const purchaseReqDB = {
 
     // get ad hoc purchases by PR ID
     getAdHocByPRID: async (prID) => {
-        let sql = `SELECT PR.prID, PR.requestDate, PR.targetDeliveryDate, PR.userID, U.name, PR.remarks, PR.prStatusID, PRS.prStatus
-                    FROM purchaseRequest PR, user U, prStatus PRS
+        let sql = `SELECT PR.prID, PR.requestDate, PR.targetDeliveryDate, PR.userID, U.name, PR.remarks, PR.prStatusID, PRS.prStatus, PO.totalPrice
+                    FROM purchaseRequest PR, user U, prStatus PRS, purchaseOrder PO
                     WHERE PR.userID = U.userID
                     AND PR.prStatusID = PRS.prStatusID
+                    AND PR.prID = PO.prID
                     AND PR.prID = ?`;
 
         return connection.promise()

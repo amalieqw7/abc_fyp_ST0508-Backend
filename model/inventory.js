@@ -79,7 +79,7 @@ const inventoryDB = {
         let sql = `SELECT I.itemID, I.itemName, I.unitPrice, I.supplierID, S.supplierName
                     FROM item I, supplier S
                     WHERE I.supplierID = S.supplierID
-                    ORDER BY itemID asc`;
+                    ORDER BY itemName asc`;
 
         return connection.promise()
             .query(sql)

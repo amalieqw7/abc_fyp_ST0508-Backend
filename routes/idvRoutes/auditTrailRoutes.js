@@ -13,6 +13,7 @@ const auditTrailController = require('../../controller/auditTrailController');
 // Audit Log
 router.post('/', checkUser.verifyUserToken, auditTrailController.createAuditLog);
 router.get('/', checkUser.verifyUserToken, auditTrailController.getAuditLogs);
+router.get('/ID', auditTrailController.getAuditLogByItemID);
 
 // Action Type
 router.post('/actionType', auditTrailController.createActionType);

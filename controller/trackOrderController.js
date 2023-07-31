@@ -46,9 +46,10 @@ module.exports.getAllPurchaseStatus = async (req, res, next) => {
 // add purchase order
 module.exports.addPurchaseOrder = async (req, res, next) => {
     let prID = req.body.prID;
+    let totalPrice = req.body.totalPrice;
 
     return trackOrderModel
-        .addPurchaseOrder(prID)
+        .addPurchaseOrder(prID, totalPrice)
         .then(() => {
             return res.status(201).send(`Purchase Order Successful!`);
         })
@@ -61,6 +62,32 @@ module.exports.addPurchaseOrder = async (req, res, next) => {
             else {
                 return res.status(500).send(`Unknown Error`);
             }
+        });
+};
+
+// update PO Total Price //? for adhoc purchases
+module.exports.updatePOTotalPrice = async (req, res, next) => {
+    let prID = parseInt(req.params.id);
+    let totalPrice = req.body.totalPrice;
+
+    if (isNaN(prID)) {
+        res.status(400).send(`Purchase Request ID provided is not a number!`);
+        return;
+    };
+
+    return trackOrderModel
+        .updatePOTotalPrice(totalPrice, prID)
+        .then((result) => {
+            if (result.affectedRows == 0) {
+                res.status(404).send(`Purchase Order #${prID} does not exist!`);
+            }
+            else {
+                res.status(201).send(`Total Price Updated!`);
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send(`Unknown error`);
         });
 };
 

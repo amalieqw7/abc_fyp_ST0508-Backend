@@ -159,7 +159,7 @@ const DBTables = {
             itemName VARCHAR(255) NOT NULL,
             description VARCHAR(500),
             supplierID INT NOT NULL,
-            unitPrice DECIMAL(4,2) NOT NULL,
+            unitPrice DECIMAL(6,2) NOT NULL,
             PRIMARY KEY (itemID)
         )`;
         return connection.promise()
@@ -195,7 +195,7 @@ const DBTables = {
             prID INT NOT NULL,
             itemID INT NOT NULL,
             quantity INT NOT NULL,
-            totalUnitPrice DECIMAL(4,2) NOT NULL,
+            totalUnitPrice DECIMAL(6,2) NOT NULL,
             qtyReceived INT DEFAULT(0),
             PRIMARY KEY (lineItemID)
         )`;
@@ -315,7 +315,7 @@ const DBTables = {
             deliveryOrder LONGBLOB,
             ptRemarks VARCHAR(255),
             ptReceipt LONGBLOB,
-            totalPrice  DECIMAL(4,2) NOT NULL DEFAULT(0),
+            totalPrice  DECIMAL(6,2) NOT NULL DEFAULT(0),
             PRIMARY KEY (poID)
         )`;
         return connection.promise()

@@ -17,7 +17,7 @@ const auditTrailDB = {
 
     // get all audit Log
     getAuditLogs: async () => {
-        let sql = `SELECT AL.id, AL.timestamp, AL.userID, U.name,R.role, AL.actionTypeID, AT.actionType, AT.tableName, AT.valueChanged_fieldName, AL.itemId, AL.newValue, AL.oldValue
+        let sql = `SELECT AL.id, AL.timestamp, AL.userID, U.name,R.role, AL.actionTypeID, AT.actionType, AT.tableName, AT.itemIDType, AT.valueChanged_fieldName, AL.itemId, AL.newValue, AL.oldValue
                     FROM auditLog AL, actionType AT, user U, role R
                     WHERE AL.actionTypeID = AT.id
                     AND AL.userID = U.userID
@@ -64,6 +64,7 @@ const auditTrailDB = {
                 throw err;
             });
     },
+
 
     // ===============================
     // Action Type Table

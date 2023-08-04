@@ -154,6 +154,8 @@ const auditTrailDB = {
                         PR.requestDate,
                         PR.targetDeliveryDate,
                         PR.userID,
+                        PR.purchaseTypeID,
+                        PT.purchaseType,
                         U.name,
                         GROUP_CONCAT(B.branchID) AS branchIDs,
                         GROUP_CONCAT(B.branchName) AS branchName,
@@ -167,10 +169,12 @@ const auditTrailDB = {
                         PO.purchaseStatusID,
                         PS.purchaseStatus,
                         PO.paymentStatusID,
-                        PTS.paymentStatus
+                        PTS.paymentStatus,
+                        PO.totalPrice
                     FROM purchaseOrder PO
                     LEFT JOIN purchaseRequest PR ON PO.prID = PR.prID
                     LEFT JOIN user U ON PR.userID = U.userID
+                    LEFT JOIN purchaseType PT ON PR.purchaseTypeID = PT.purchaseTypeID
                     LEFT JOIN deliveryLocation DL ON PR.prID = DL.prID
                     LEFT JOIN branch B ON DL.branchID = B.branchID
                     LEFT JOIN supplier S ON PR.supplierID = S.supplierID
@@ -182,6 +186,8 @@ const auditTrailDB = {
                         PR.requestDate,
                         PR.targetDeliveryDate,
                         PR.userID,
+                        PR.purchaseTypeID,
+                        PT.purchaseType,
                         U.name,
                         PR.supplierID,
                         S.supplierName,
@@ -192,7 +198,8 @@ const auditTrailDB = {
                         PO.purchaseStatusID,
                         PS.purchaseStatus,
                         PO.paymentStatusID,
-                        PTS.paymentStatus
+                        PTS.paymentStatus,
+                        PO.totalPrice
                     ORDER BY PO.prID ASC;`;
 
         return connection.promise()

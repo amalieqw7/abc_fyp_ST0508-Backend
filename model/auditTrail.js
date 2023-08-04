@@ -65,7 +65,6 @@ const auditTrailDB = {
             });
     },
 
-
     // ===============================
     // Action Type Table
     // create Action type
@@ -146,7 +145,71 @@ const auditTrailDB = {
                 console.log(err);
                 throw err;
             })
-    }
+    },
+
+    // ===============================
+    // get transaction data
+    getALLTransactions: async () => {
+        let sql = `SELECT PO.prID,
+                        PR.requestDate,
+                        PR.targetDeliveryDate,
+                        PR.userID,
+                        U.name,
+                        GROUP_CONCAT(B.branchID) AS branchIDs,
+                        GROUP_CONCAT(B.branchName) AS branchName,
+                        GROUP_CONCAT(B.branchPrefix) AS branchPrefix,
+                        PR.supplierID,
+                        S.supplierName,
+                        PR.paymentModeID,
+                        PM.paymentMode,
+                        PR.prStatusID,
+                        PRS.prStatus,
+                        PO.purchaseStatusID,
+                        PS.purchaseStatus,
+                        PO.paymentStatusID,
+                        PTS.paymentStatus
+                    FROM purchaseOrder PO
+                    LEFT JOIN purchaseRequest PR ON PO.prID = PR.prID
+                    LEFT JOIN user U ON PR.userID = U.userID
+                    LEFT JOIN deliveryLocation DL ON PR.prID = DL.prID
+                    LEFT JOIN branch B ON DL.branchID = B.branchID
+                    LEFT JOIN supplier S ON PR.supplierID = S.supplierID
+                    LEFT JOIN paymentMode PM ON PR.paymentModeID = PM.paymentModeID
+                    LEFT JOIN prStatus PRS ON PR.prStatusID = PRS.prStatusID
+                    LEFT JOIN purchaseStatus PS ON PO.purchaseStatusID = PS.purchaseStatusID
+                    LEFT JOIN paymentStatus PTS ON PO.paymentStatusID = PTS.paymentStatusID
+                    GROUP BY PO.prID,
+                        PR.requestDate,
+                        PR.targetDeliveryDate,
+                        PR.userID,
+                        U.name,
+                        PR.supplierID,
+                        S.supplierName,
+                        PR.paymentModeID,
+                        PM.paymentMode,
+                        PR.prStatusID,
+                        PRS.prStatus,
+                        PO.purchaseStatusID,
+                        PS.purchaseStatus,
+                        PO.paymentStatusID,
+                        PTS.paymentStatus
+                    ORDER BY PO.prID ASC;`;
+
+        return connection.promise()
+            .query(sql)
+            .then((result) => {
+                if (result[0] == 0) {
+                    return null;
+                }
+                else {
+                    return result[0];
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            });
+    },
 };
 
 module.exports = auditTrailDB;

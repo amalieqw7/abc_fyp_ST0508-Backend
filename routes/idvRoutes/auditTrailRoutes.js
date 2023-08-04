@@ -18,4 +18,7 @@ router.get('/ID', auditTrailController.getAuditLogByItemID);
 // Action Type
 router.post('/actionType', auditTrailController.createActionType);
 
+// Transactions
+router.get('/Transactions', checkUser.verifyUserToken, auditTrailController.getALLTransactions);
+
 module.exports = router;

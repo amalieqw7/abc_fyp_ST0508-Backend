@@ -63,7 +63,6 @@ module.exports.getAuditLogByItemID = async (req, res, next) => {
         });
 };
 
-
 // ===============================
 // Action Type Table
 // create Action type
@@ -83,4 +82,19 @@ module.exports.createActionType = async (req, res, next) => {
             return res.status(500).send(`Unknown Error`);
         });
 
+};
+
+// ===============================
+// get transaction data
+module.exports.getALLTransactions = async (req, res, next) => {
+    return auditTrailModel
+        .getALLTransactions()
+        .then((result) => {
+            if (result == null) {
+                res.status(404).send(`There are no Transactions Available!`);
+            }
+            else {
+                res.status(200).send(result);
+            }
+        });
 };

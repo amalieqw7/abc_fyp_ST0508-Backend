@@ -46,10 +46,9 @@ module.exports.getAllPurchaseStatus = async (req, res, next) => {
 // add purchase order
 module.exports.addPurchaseOrder = async (req, res, next) => {
     let prID = req.body.prID;
-    let totalPrice = req.body.totalPrice;
 
     return trackOrderModel
-        .addPurchaseOrder(prID, totalPrice)
+        .addPurchaseOrder(prID)
         .then(() => {
             return res.status(201).send(`Purchase Order Successful!`);
         })

@@ -20,5 +20,6 @@ router.post('/actionType', auditTrailController.createActionType);
 
 // Transactions
 router.get('/Transactions', checkUser.verifyUserToken, auditTrailController.getALLTransactions);
+router.get('/Transactions/Date', checkUser.verifyUserToken, auditTrailController.getTransactionsByDate);
 
 module.exports = router;

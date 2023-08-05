@@ -379,6 +379,19 @@ const DBTables = {
     },
 
     // Plan view Access Table
+    initplanViewAccessTable: () => {
+        const sql = `CREATE TABLE planViewAccess (
+            viewAccessID INT auto_increment,
+            viewAccess VARCHAR(45) NOT NULL UNIQUE
+            PRIMARY KEY (viewAccessID)
+        )`;
+        return connection.promise()
+        .query(sql)
+        .catch((error) => {
+            console.log(error)
+            throw error;
+        });
+    },
 
     // AUDIT LOGS
     // Audit Trail Table

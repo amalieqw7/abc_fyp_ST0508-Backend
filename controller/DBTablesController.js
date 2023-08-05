@@ -268,7 +268,17 @@ module.exports.purchasePlanningTable = (req, res, next) => {
 }
 
 // Plan view Access Table
-
+module.exports.planViewAccessTable = (req, res, next) => {
+    return DBTablesModel
+    .initplanViewAccessTable()
+    .then(() => {
+        return res.status(201).send(`planViewAccess Table Created!`);
+    })
+    .catch((err) => {
+        console.log(err);
+        return res.status(500).send(`Failed to create planViewAccess Table`);
+    })
+}
 
 // AUDIT LOGS
 // Audit Trail Table

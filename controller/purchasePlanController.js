@@ -60,4 +60,57 @@ module.exports.deleteEvent = async (req, res, next) => {
 };
 
 
+//create new viewaccess 
+module.exports.createViewAccess = async (req, res, next) => {
+    let access = req.body.viewAccess;
 
+    return purchasePlanModel
+    .createViewAcess(access)
+    .then(() => {
+        return res.status(201).send(`View Access: '${access}' successfully created`);
+    })
+    .catch((err) => {
+        console.log(err);
+        if(err.code === 'ER_DUP_ENTRY') {
+            return res.status(409).send(` ${access} already exists.`);
+        }
+        else {
+            console.log(err)
+            return res.status(500).send(`unknown error`);
+        }
+    })
+}
+
+module.exports.getAllViewAccess = async (req, res, next) => {
+    return purchasePlanModel
+    .getAllViewAccess()
+    .then((result) => {
+        if (result[0] == null) {
+            res.send(`There are no View access currently`)
+        } else {
+            return res.status(200).send(result);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`unknown error`)
+    })
+}
+
+module.exports.getIDbyVAccess = async (req, res, next) => {
+    let access = req.params.viewAccess;
+
+    return purchasePlanModel
+    .getIDbyVAccess(access)
+    .then((result) => {
+        if (result[0] == null) {
+            res.send(`View Access ${access} not found`);
+        } else {
+            res.status(200).send(result);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send('unknown error');
+    })
+}

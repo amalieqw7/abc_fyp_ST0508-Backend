@@ -17,5 +17,10 @@ router.get('/', checkUser.verifyUserToken, purchasePLanController.getAllEvents);
 router.post('/purchasePlan', purchasePLanController.addEvent);
 // delete
 router.delete('/purchasePlan/:id', purchasePLanController.deleteEvent);
-
+// create view access 
+router.post('/viewAccess', checkUser.verifyUserToken, purchasePLanController.createViewAccess);
+// get all view access
+router.get('/viewAccess', purchasePLanController.getAllViewAccess);
+// get id by view access 
+router.get('/access/:viewAccess', checkUser.verifyUserToken, purchasePLanController.getIDbyVAccess);
 module.exports = router;

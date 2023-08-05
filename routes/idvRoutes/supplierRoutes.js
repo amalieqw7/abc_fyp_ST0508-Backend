@@ -50,4 +50,6 @@ router.put('/delete/:supplierID', checkUser.verifyUserToken, supplierController.
 // delete suppliers category
 router.put('/delete/category/:fkSupplier_id', checkUser.verifyUserToken, supplierController.deleteSuppliersCategory);
 
+// get supplier MOQ & DTL
+router.get('/supplierPurchaseInfo/:supplierID', checkUser.verifyUserToken, supplierController.getMOQDTL);
 module.exports = router;

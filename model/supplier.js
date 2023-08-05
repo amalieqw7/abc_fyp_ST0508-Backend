@@ -47,11 +47,11 @@ const supplierDB = {
     },
 
     // create supplier
-    createSupplier: async (supplierName, email, officeNum, webAddress, bankAccName, contactPersonName, phoneNum, address, bankAccountNum, bankID) => {
-        const sql = `INSERT INTO supplier (supplierName, email, officeNum, webAddress, bankAccName, contactPersonName, phoneNum, address, bankAccountNum, bankID) VALUES (?,?,?,?,?,?,?,?,?,?)`;
+    createSupplier: async (supplierName, email, officeNum, webAddress, bankAccName, contactPersonName, phoneNum, address, bankAccountNum, bankID, MOQ, deliveryTimeLine) => {
+        const sql = `INSERT INTO supplier (supplierName, email, officeNum, webAddress, bankAccName, contactPersonName, phoneNum, address, bankAccountNum, bankID, MOQ, deliveryTimeLine) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)`;
 
         return connection.promise()
-            .query(sql, [supplierName, email, officeNum, webAddress, bankAccName, contactPersonName, phoneNum, address, bankAccountNum, bankID])
+            .query(sql, [supplierName, email, officeNum, webAddress, bankAccName, contactPersonName, phoneNum, address, bankAccountNum, bankID, MOQ, deliveryTimeLine])
             .catch((err) => {
                 throw err;
             })
@@ -123,7 +123,7 @@ const supplierDB = {
 
     // retrieve full supplier details by supplierID
     getFullSupplierDetailsByID: async (supplierID) => {
-        const sql = `SELECT s.supplierID, s.supplierName, s.contactPersonName, s.email, s.phoneNum, s.officeNum, s.address, s.webAddress, s.bankAccountNum, s.bankID, b.bankName, s.bankAccName,
+        const sql = `SELECT s.supplierID, s.supplierName, s.contactPersonName, s.email, s.phoneNum, s.officeNum, s.address, s.webAddress, s.bankAccountNum, s.bankID, b.bankName, s.bankAccName, s.MOQ, s.deliveryTimeLine,
                     GROUP_CONCAT(c.categoryName SEPARATOR ', ') AS "Category"
                     FROM supplier s
                     JOIN suppliersCategory sc ON s.supplierID = sc.fkSupplier_id
@@ -198,11 +198,11 @@ const supplierDB = {
     },
 
     // update supplier details
-    updateSupplierDetails: async(supplierName, email, officeNum, webAddress, bankAccName, contactPersonName, phoneNum, address, bankAccountNum, bankID, supplierID) => {
-        const sql = `UPDATE supplier SET supplierName = ?, email = ?, officeNum = ?, webAddress = ?, bankAccName = ?, contactPersonName = ?, phoneNum = ?, address = ?, bankAccountNum = ?, bankID = ? WHERE supplierID = ?`;
+    updateSupplierDetails: async(supplierName, email, officeNum, webAddress, bankAccName, contactPersonName, phoneNum, address, bankAccountNum, bankID, MOQ, deliveryTimeLine, supplierID) => {
+        const sql = `UPDATE supplier SET supplierName = ?, email = ?, officeNum = ?, webAddress = ?, bankAccName = ?, contactPersonName = ?, phoneNum = ?, address = ?, bankAccountNum = ?, bankID = ?, MOQ = ?, deliveryTimeLine = ? WHERE supplierID = ?`;
 
         return connection.promise()
-            .query(sql, [supplierName, email, officeNum, webAddress, bankAccName, contactPersonName, phoneNum, address, bankAccountNum, bankID, supplierID])
+            .query(sql, [supplierName, email, officeNum, webAddress, bankAccName, contactPersonName, phoneNum, address, bankAccountNum, bankID, MOQ, deliveryTimeLine, supplierID])
             .catch((err) => {
                 console.log(err);
                 throw err;
@@ -232,6 +232,26 @@ const supplierDB = {
                 throw err;
             })
     },
+
+    //get supplier MOQ & DTL
+    getMOQDTL: async (supplierID) => {
+        const sql = `SELECT MOQ, deliveryTimeLine FROM supplier WHERE supplierID = ?`;
+
+        return connection.promise()
+        .query(sql, [supplierID])
+        .then((result) => {
+            if (result[0] == 0) {
+                return null;
+            }
+            else {
+                return result[0];
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            throw err;
+        })
+    }
 
 };
 

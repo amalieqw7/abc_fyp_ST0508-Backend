@@ -16,6 +16,9 @@ router.get('/', checkUser.verifyUserToken, userController.getAllUsers);
 // get user details
 router.get('/:id', userController.getUserDetailsByID);
 
+// get user details
+router.get('/:id/role', userController.getUserRoleByID);
+
 // create role
 router.post('/role', userController.createRole);
 

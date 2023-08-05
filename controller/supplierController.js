@@ -88,9 +88,11 @@ module.exports.createSupplier = async (req, res, next) => {
     let address = req.body.address;
     let bankAccountNum = req.body.bankAccountNum;
     let bankID = req.body.bankID;
+    let MOQ = req.body.MOQ;
+    let deliveryTimeLine = req.body.deliveryTimeLine
 
     return supplierModel
-        .createSupplier(supplierName, email, officeNum, webAddress, bankAccName, contactPersonName, phoneNum, address, bankAccountNum, bankID)
+        .createSupplier(supplierName, email, officeNum, webAddress, bankAccName, contactPersonName, phoneNum, address, bankAccountNum, bankID, MOQ, deliveryTimeLine)
         .then((result) => {
             return res.status(201).send(`Supplier ${supplierName} Created!`);
         })
@@ -218,6 +220,8 @@ module.exports.updateSupplierDetails = async (req, res, next) => {
     let address = req.body.address;
     let bankAccountNum = req.body.bankAccountNum;
     let bankID = req.body.bankID;
+    let MOQ = req.body.MOQ;
+    let deliveryTimeLine = req.body.deliveryTimeLine;
 
     if (isNaN(supplierID)) {
         res.status(400).send(`Enter numbers only!`);
@@ -225,7 +229,7 @@ module.exports.updateSupplierDetails = async (req, res, next) => {
     };
 
     return supplierModel
-        .updateSupplierDetails(supplierName, email, officeNum, webAddress, bankAccName, contactPersonName, phoneNum, address, bankAccountNum, bankID, supplierID)
+        .updateSupplierDetails(supplierName, email, officeNum, webAddress, bankAccName, contactPersonName, phoneNum, address, bankAccountNum, bankID, MOQ, deliveryTimeLine, supplierID)
         .then((result) => {
             if (result === null) {
                 return res.send(`Supplier does not exist`);
@@ -265,4 +269,29 @@ module.exports.deleteSuppliersCategory = async (req, res, next) => {
         .catch((err) => {
             return res.sendStatus(500);
         })
+}
+
+module.exports.getMOQDTL = async (req, res, next) => {
+    let supplierID = parseInt(req.params.supplierID);
+
+    if (isNaN(supplierID)) {
+        res.status(400).send(`Enter number only`);
+        return;
+    };
+
+    return supplierModel
+    .getMOQDTL(supplierID)
+    .then((result) => {
+        if (result === null) {
+          return res.send("This supplier does not have MOQ & delivery Time Line. ");
+        }
+        else {
+          return res.status(200).send(result);
+        }  
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.sendStatus(500);
+    })
+    
 }

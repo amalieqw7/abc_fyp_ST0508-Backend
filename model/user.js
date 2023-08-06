@@ -82,6 +82,28 @@ const userDB = {
             });
     },
 
+    // get User role by id
+    getUserRoleByID: async (userID) => {
+        let sql = `SELECT roleID 
+                    FROM user
+                    WHERE userID = ?;`;
+
+        return connection.promise()
+            .query(sql, [userID])
+            .then((result) => {
+                if (result[0] == 0) {
+                    return null;
+                }
+                else {
+                    return result[0];
+                };
+            })
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            });
+    },
+
     // create role
     createRole: async (role) => {
         let sql = `INSERT INTO role(role) VALUES (?)`;

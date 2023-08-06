@@ -1,3 +1,4 @@
+const { end } = require('pdfkit');
 const auditTrailModel = require('../model/auditTrail');
 
 // ===============================
@@ -63,7 +64,6 @@ module.exports.getAuditLogByItemID = async (req, res, next) => {
         });
 };
 
-
 // ===============================
 // Action Type Table
 // create Action type
@@ -83,4 +83,36 @@ module.exports.createActionType = async (req, res, next) => {
             return res.status(500).send(`Unknown Error`);
         });
 
+};
+
+// ===============================
+// get transaction data
+module.exports.getALLTransactions = async (req, res, next) => {
+    return auditTrailModel
+        .getALLTransactions()
+        .then((result) => {
+            if (result == null) {
+                res.status(404).send(`There are no Transactions Available!`);
+            }
+            else {
+                res.status(200).send(result);
+            }
+        });
+};
+
+// get transaction data by date
+module.exports.getTransactionsByDate = async (req, res, next) => {
+    let startDate = req.query.startDate;
+    let endDate = req.query.endDate;
+
+    return auditTrailModel
+        .getTransactionsByDate(startDate, endDate)
+        .then((result) => {
+            if (result == null) {
+                res.status(404).send(`There are no Transactions Available!`);
+            }
+            else {
+                res.status(200).send(result);
+            }
+        });
 };

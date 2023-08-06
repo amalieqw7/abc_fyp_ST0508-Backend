@@ -7,6 +7,7 @@ const router = express.Router();
 const DBTableRoutes = require('./DBTableRoutes');
 const userRoutes = require('./userRoutes');
 const pdfGenerator = require('./pdfGenerator');
+const xlsxGenerator = require('./xlsxGenerator');
 const purchaseReqRoutes = require('./idvRoutes/purchaseReqRoutes');
 const inventoryRoutes = require('./idvRoutes/inventoryRoutes');
 const purchaseOrderRoutes = require('./idvRoutes/purchaseOrderRoutes');
@@ -34,5 +35,8 @@ router.use('/auditTrail', auditTrailRoutes);
 
 // PDF Generator Route
 router.use('/pdf', pdfGenerator);
+
+// XLSX Generator Route
+router.use('/xlsx', xlsxGenerator);
 
 module.exports = router;

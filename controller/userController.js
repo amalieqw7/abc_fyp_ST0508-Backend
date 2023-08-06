@@ -110,6 +110,31 @@ module.exports.getUserDetailsByID = async (req, res, next) => {
         });
 };
 
+// get User role by id
+module.exports.getUserRoleByID = async (req, res, next) => {
+    let userId = parseInt(req.params.id);
+
+    if (isNaN(userId)) {
+        res.status(400).send(`User ID provided is not a number!`);
+        return;
+    }
+
+    return userModel
+        .getUserRoleByID(userId)
+        .then((result) => {
+            if (result == null) {
+                res.status(404).send(`User #${userId} does not exist!`);
+            }
+            else {
+                res.status(200).send(result);
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send(`Unknown Error`);
+        });
+};
+
 // create role
 module.exports.createRole = async (req, res, next) => {
     try{

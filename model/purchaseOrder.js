@@ -71,7 +71,7 @@ const purchaseOrderDB = {
             })
     },
 
-    updatePaymentStatus: async (paymentStatusID,prID) => {
+    updatePaymentStatus: async (paymentStatusID, prID) => {
         let sql = `UPDATE purchaseOrder SET paymentStatusID = ? WHERE prID = ?`;
 
         return connection.promise()
@@ -111,21 +111,21 @@ const purchaseOrderDB = {
         let sql = `SELECT ptRemarks FROM purchaseOrder WHERE prID = ?`
 
         return connection.promise()
-        .query(sql, [prID])
-        .then((result) => {
-            if(result[0] == 0) {
-                return null;
-            }
-            else {
-                return result[0];
-            }
-        })
-        .catch((err) => {
-            console.log(err)
-        })
+            .query(sql, [prID])
+            .then((result) => {
+                if (result[0] == 0) {
+                    return null;
+                }
+                else {
+                    return result[0];
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
 
-    
+
 };
 
 module.exports = purchaseOrderDB;

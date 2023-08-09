@@ -384,7 +384,41 @@ const trackOrderDB = {
                 console.error('error fetching invoice', err);
                 throw err;
             });
-    }
+    },
+    
+     //insert delivery
+     addDDate: async (deliveryDate, prID) => {
+        const sql = `UPDATE purchaseOrder SET deliveryDate = ? WHERE prID = ?`;
+
+        return connection.promise()
+            .query(sql, [deliveryDate, prID])
+            .then(() => {
+                console.log('Delivery date saved successfully');
+            })
+            .catch((err) => {
+                console.error('Error saving Delivery date:', err);
+            });
+    },
+
+    //fetch final delivery date
+    getDDateByID: async (prID) => {
+        const sql = `SELECT DeliveryDate FROM purchaseOrder WHERE prID = ?`;
+
+        return connection.promise()
+        .query(sql, [prID])
+        .then((result) => {
+            if (result[0] == 0) {
+                return null;
+            }
+            else {
+                return result[0];
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            throw err;
+        });
+    },
 
 
 };

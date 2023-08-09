@@ -47,10 +47,13 @@ router.get('/poAmnt', trackOrderController.getPOAmount);
 // search bar 
 router.post('/POsearch', trackOrderController.searchBar);
 // save invoice 
-router.put('/documents/:prID/invoice', upload.single('file'), trackOrderController.saveInvoice);
+router.put('/documents/:prID/invoice',checkUser.verifyUserToken, upload.single('file'), trackOrderController.saveInvoice);
 // save DO
 router.put('/documents/:prID/deliveryOrder', upload.single('file'), trackOrderController.saveDOrder);
 // fetch invoice
 router.get('/documents/:prID/invoice', trackOrderController.getInvoice);
-
+// insert delivery date
+router.put('/purchaseDetails/DeliveryTime/:id', trackOrderController.addDDate);
+// get delivery date
+router.get('/purchaseDetails/DeliveryTime/:prID', trackOrderController.getDDateByID)
 module.exports = router;

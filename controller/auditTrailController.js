@@ -116,3 +116,23 @@ module.exports.getTransactionsByDate = async (req, res, next) => {
             }
         });
 };
+
+// get timestamp by item id/prid
+module.exports.getTimeStampByItemID = async (req, res, next) => {
+    let itemId = req.params.itemId;
+
+    return auditTrailModel
+        .getTimeStampByItemID(itemId)
+        .then((result) => {
+            if (result == null) {
+                res.status(404).send(`#${itemId} not found`);
+            }
+            else {
+                res.status(200).send(result);
+            }
+        })
+        .catch((err) => {
+            console.log(err)
+            res.status(500).send(`Unknown Error`);
+        });
+}

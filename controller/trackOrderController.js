@@ -361,3 +361,37 @@ module.exports.getInvoice = async (req, res, next) => {
         res.status(500).send('Failed to fetch invoice');
       });
   };
+
+//insert deliverydate
+module.exports.addDDate = async (req, res, next) => {
+    let prID = req.params.id;
+    let deliveryDate = req.body.deliveryDate;
+
+    return trackOrderModel
+        .addDDate(deliveryDate, prID)
+        .then(() => {
+            res.status(200).send('Delivery Date saved successfully');
+        })
+        .catch((err) => {
+            res.status(500).send('Failed to save Delivery Date');
+        })
+}
+
+module.exports.getDDateByID = async (req, res, next) => {
+    let prID = req.params.prID;
+
+    return trackOrderModel
+    .getDDateByID(prID)
+    .then((result) => {
+        if (result == null) {
+            res.status(404).send(`Purchase Order #${prID} does not exist!`);
+        }
+        else {
+            res.status(200).send(result);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown Error`);
+    });
+}

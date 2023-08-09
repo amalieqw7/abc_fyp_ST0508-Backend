@@ -289,6 +289,26 @@ const auditTrailDB = {
                 throw err;
             });
     },
+
+    // get timestamp by item id/prid
+    getTimeStampByItemID: async (itemId) => {
+        let sql = `SELECT timestamp FROM auditLog WHERE itemID = ?` ;
+        
+        return connection.promise()
+        .query(sql, [itemId])
+        .then((result) => {
+            if (result[0] == 0) {
+                return null;
+            }
+            else {
+                return result[0];
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            throw err;
+        });
+    }
 };
 
 module.exports = auditTrailDB;

@@ -22,4 +22,7 @@ router.post('/actionType', auditTrailController.createActionType);
 router.get('/Transactions', checkUser.verifyUserToken, auditTrailController.getALLTransactions);
 router.get('/Transactions/Date', checkUser.verifyUserToken, auditTrailController.getTransactionsByDate);
 
+//timestamp 
+router.get('/timestamp/:itemId' , auditTrailController.getTimeStampByItemID);
+
 module.exports = router;

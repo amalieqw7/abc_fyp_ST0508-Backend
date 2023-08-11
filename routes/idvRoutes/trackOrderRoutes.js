@@ -56,4 +56,9 @@ router.get('/documents/:prID/invoice', trackOrderController.getInvoice);
 router.put('/purchaseDetails/DeliveryTime/:id', trackOrderController.addDDate);
 // get delivery date
 router.get('/purchaseDetails/DeliveryTime/:prID', trackOrderController.getDDateByID)
+// get id by purchase status
+router.get('/purchaseStatus/id/:purchaseStatus', trackOrderController.getIDbyPurchaseStatus);
+// delete purchase status
+router.delete('/purchaseStatus/:purchaseStatusID',trackOrderController.deletePurchaseStatusByID);
+
 module.exports = router;

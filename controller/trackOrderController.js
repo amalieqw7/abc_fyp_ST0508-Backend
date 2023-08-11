@@ -395,3 +395,41 @@ module.exports.getDDateByID = async (req, res, next) => {
         res.status(500).send(`Unknown Error`);
     });
 }
+
+module.exports.getIDbyPurchaseStatus = async(req, res, next) => {
+    let status = req.params.purchaseStatus;
+
+    return trackOrderModel
+    .getIDbyPurchaseStatus(status)
+    .then((result) => {
+        if (result[0] == null) {
+            res.send(`Purchase Status ${status} not found`);
+        } else {
+            res.status(200).send(result);
+        }
+    })
+    .catch((err) => {
+        console.log(err);
+        res.status(500).send(`Unknown error`);
+    })
+}
+
+module.exports.deletePurchaseStatusByID = async (req, res, next) => {
+    let statusID = req.params.purchaseStatusID;
+
+    if (isNaN(statusID)) {
+        res.status(400).send(`please input a number`);
+        return;
+    }
+
+    return trackOrderModel
+    .deletePurchaseStatusByID(statusID)
+    .then((result) => {
+        if (result[0] == null) {
+            res.send(` Purchase Status with ID : ${statusID} does not exist `);
+        }
+        else {
+            res.status(200).send(``)
+        }
+    })
+}

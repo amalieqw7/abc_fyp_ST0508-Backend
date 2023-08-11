@@ -420,6 +420,42 @@ const trackOrderDB = {
         });
     },
 
+    getIDbyPurchaseStatus: async (status) => {
+        const sql = `SELECT purchaseStatusID FROM purchaseStatus WHERE purchaseStatus = ?`;
+        return connection.promise()
+            .query(sql, [status])
+            .then((result) => {
+                if (result.length == 0) {
+                    return null;
+                } else {
+                    return result[0]
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+                return err;
+            });
+    },
+
+    deletePurchaseStatusByID: async (statusid) => {
+        let sql = 'DELETE FROM purchaseStatus WHERE purchaseStatusID = ?';
+
+        return connection.promise()
+            .query(sql, [statusid])
+            .then((result) => {
+                if (result.length == 0) {
+                    return null;
+                }
+                else {
+                    return result[0]
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+                return err
+            })
+    }
+
 
 };
 

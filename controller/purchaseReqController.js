@@ -596,6 +596,31 @@ module.exports.getAllPaymentMode = async (req, res, next) => {
         });
 };
 
+// delete payment mode by id
+module.exports.deletePaymentMode = async (req, res, next) => {
+    let paymentModeID = parseInt(req.params.id);
+
+    if (isNaN(paymentModeID)) {
+        res.status(400).send(`Payment Mode ID provided is not a number!`);
+        return;
+    };
+
+    return purchaseRequestModel
+        .deletePaymentMode(paymentModeID)
+        .then((result) => {
+            if (result.affectedRows == 0) {
+                res.status(404).send(`Payment Mode #${paymentModeID} does not exist!`);
+            }
+            else {
+                res.status(201).send(`Payment Mode #${paymentModeID} has been deleted!`);
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send(`Unknown error`);
+        });
+};
+
 // ===============================
 // Branch
 // add branch

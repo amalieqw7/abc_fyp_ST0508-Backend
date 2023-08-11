@@ -364,7 +364,7 @@ const purchaseReqDB = {
     // ===============================
     // GST
     // add gst
-    addGST: async (gst) => {
+    addGST: async (gst, startDate) => {
         let sql = `INSERT INTO gst(gst) VALUES (?)`;
 
         return connection.promise()
@@ -505,6 +505,26 @@ const purchaseReqDB = {
 
         return connection.promise()
             .query(sql)
+            .then((result) => {
+                if (result[0] == 0) {
+                    return null;
+                }
+                else {
+                    return result[0];
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            });
+    },
+
+    // delete payment mode by id
+    deletePaymentMode: async (paymentModeID) => {
+        let sql = 'DELETE FROM paymentMode WHERE paymentModeID = ?';
+
+        return connection.promise()
+            .query(sql, [paymentModeID])
             .then((result) => {
                 if (result[0] == 0) {
                     return null;

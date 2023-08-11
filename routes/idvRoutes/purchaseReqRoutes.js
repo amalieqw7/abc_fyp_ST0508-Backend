@@ -44,6 +44,7 @@ router.put('/gst/EndDate', checkUser.verifyUserToken, checkUser.verifyRole(['Adm
 // Payment Mode
 router.post('/paymentMode', checkUser.verifyUserToken, checkUser.verifyRole(['Admin']), purchaseReqController.addPaymentMode);
 router.get('/paymentMode/all', purchaseReqController.getAllPaymentMode); //? fetch
+router.delete('/paymentMode/:id', checkUser.verifyUserToken, checkUser.verifyRole(['Admin']), purchaseReqController.deletePaymentMode);
 
 // Branch
 router.post('/branch', purchaseReqController.addBranch);

@@ -375,6 +375,26 @@ const purchaseReqDB = {
             })
     },
 
+    // get all gst
+    getAllGST: async () => {
+        let sql = `SELECT * FROM gst;`;
+
+        return connection.promise()
+            .query(sql)
+            .then((result) => {
+                if (result[0] == 0) {
+                    return null;
+                }
+                else {
+                    return result[0];
+                };
+            })
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            });
+    },
+
     // get gst by pr created date
     getPRGST: async (date) => {
         let sql = `SELECT *
@@ -418,6 +438,50 @@ const purchaseReqDB = {
                 console.log(err);
                 throw err;
             });
+    },
+
+    // get latest gst
+    getLatestGST: async () => {
+        let sql = `SELECT * FROM gst
+                    WHERE endDate IS NULL
+                    ORDER BY endDate DESC
+                    LIMIT 1;`;
+
+        return connection.promise()
+            .query(sql)
+            .then((result) => {
+                if (result[0] == 0) {
+                    return null;
+                }
+                else {
+                    return result[0];
+                };
+            })
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            });
+    },
+
+    // update GST end date
+    updateGSTEndDate: async (endDate, id) => {
+        let sql = `UPDATE gst SET endDate = ?
+                        WHERE id = ?`;
+
+        return connection.promise()
+            .query(sql, [endDate, id])
+            .then((result) => {
+                if (result[0] == 0) {
+                    return null;
+                }
+                else {
+                    return result[0];
+                };
+            })
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            })
     },
 
     // ===============================

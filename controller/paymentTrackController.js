@@ -218,18 +218,17 @@ module.exports.getFile = async (req, res, next) => {
         });
 };
 
-module.exports.getAllSupplier = async (req, res, next) => {
+
+module.exports.removeReceipt = async (req, res, next) => {
+    let prID = req.params.prID;
+
     return paymentTrackModel
-        .getAllSupplier()
-        .then((result) => {
-            if (result[0] == null) {
-                res.send(`There are no suppliers currently`)
-            } else {
-                return res.status(200).send(result);
-            }
-        })
-        .catch((err) => {
-            console.log(err);
-            res.status(500).send(`Failed to fetch suppliers`)
-        })
+    .removeReceipt(prID)
+    .then(() => {
+        res.send('Receipt deleted succesfully')
+    })
+    .catch((err) => {
+        console.log(err)
+        res.status(500).send(`Failed to delete Receipt`)
+    })
 }

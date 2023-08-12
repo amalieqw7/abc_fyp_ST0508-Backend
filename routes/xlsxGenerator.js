@@ -58,13 +58,16 @@ router.get('/excel', async (req, res, next) => {
 router.get('/excel/Date', async (req, res, next) => {
     let startDate = req.query.startDate;
     let endDate = req.query.endDate;
-    console.log(startDate)
 
     const SD = DateString(startDate);
     const ED = DateString(endDate);
 
     try {
         const result = await auditTrailModel.getTransactionsByDate(startDate, endDate);  //? returns an array of all data
+
+        if(result === null){
+            return res.status(404).send(`No Transactions Found!`);
+        };
 
         const transactionResult = TransactionData(result);
         const transactionArr = transactionResult.Transactions;
@@ -158,6 +161,10 @@ router.get('/csv/Date', async (req, res, next) => {
 
     try {
         const result = await auditTrailModel.getTransactionsByDate(startDate, endDate);  //? returns an array of all data
+
+        if(result === null){
+            return res.status(404).send(`No Transactions Found!`);
+        };
 
         const transactionResult = TransactionData(result);
         const transactionArr = transactionResult.Transactions;

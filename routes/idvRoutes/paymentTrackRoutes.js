@@ -6,6 +6,7 @@ const upload = multer({
     storage: multer.memoryStorage()
 });
 
+const checkUser = require('../../auth/checkUser');
 const paymentTrackController = require('../../controller/paymentTrackController');
 
 //  to test in postman 
@@ -16,25 +17,26 @@ const paymentTrackController = require('../../controller/paymentTrackController'
 
 
 //create status
-router.post('/', paymentTrackController.createPaymentStatus);
+router.post('/', checkUser.verifyUserToken, checkUser.verifyRole(['Admin', 'Finance']), paymentTrackController.createPaymentStatus);
 //get status by id
 router.get('/:paymentStatusID', paymentTrackController.getPaymentStatusById);
 //get all status 
-router.get('/', paymentTrackController.getAllPaymentStatus);
+router.get('/', checkUser.verifyUserToken, paymentTrackController.getAllPaymentStatus);
 //update status by id
-router.put('/:paymentStatusID', paymentTrackController.updatePaymentStatusByID);
+router.put('/:paymentStatusID', checkUser.verifyUserToken, checkUser.verifyRole(['Admin', 'Finance', 'Supplier']), paymentTrackController.updatePaymentStatusByID);
 //delete status by id
-router.delete('/:paymentStatusID', paymentTrackController.deletePaymentStatusByID);
+router.delete('/:paymentStatusID', checkUser.verifyUserToken, checkUser.verifyRole(['Admin']), paymentTrackController.deletePaymentStatusByID);
 //get supplier info by name
-router.get('/supplier/:supplierName', paymentTrackController.getSupplierInformationByName)
+router.get('/supplier/:supplierName', paymentTrackController.getSupplierInformationByName);
 //get supplier info by id
-router.get('/supplier/info/:supplierID', paymentTrackController.getSupplierInformationByID)
+router.get('/supplier/info/:supplierID', paymentTrackController.getSupplierInformationByID);  //? fetch
 //get supplierid by pr
-router.get('/supplier/pr/:prID', paymentTrackController.getSIDbyPRID)
+router.get('/supplier/pr/:prID', paymentTrackController.getSIDbyPRID);  //? fetch
 //get id by status
-router.get('/status/:paymentStatus', paymentTrackController.getIDbyStatus)
-// //saving receipt 
+router.get('/status/:paymentStatus', checkUser.verifyUserToken, checkUser.verifyRole(['Admin']), paymentTrackController.getIDbyStatus)
+//saving receipt 
 router.put('/productDetails/:prID/receipt', upload.single('file'), paymentTrackController.saveReceipt)
 router.get('/productDetails/:prID/receipt', paymentTrackController.getFile);
+
 module.exports = router;
 

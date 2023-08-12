@@ -12,17 +12,17 @@ const auditTrailController = require('../../controller/auditTrailController');
 
 // Audit Log
 router.post('/', checkUser.verifyUserToken, auditTrailController.createAuditLog);
-router.get('/', checkUser.verifyUserToken, auditTrailController.getAuditLogs);
+router.get('/', checkUser.verifyUserToken, checkUser.verifyRole(['Admin']), auditTrailController.getAuditLogs);
 router.get('/ID', auditTrailController.getAuditLogByItemID);
 
 // Action Type
 router.post('/actionType', auditTrailController.createActionType);
 
 // Transactions
-router.get('/Transactions', checkUser.verifyUserToken, auditTrailController.getALLTransactions);
-router.get('/Transactions/Date', checkUser.verifyUserToken, auditTrailController.getTransactionsByDate);
+router.get('/Transactions', checkUser.verifyUserToken, checkUser.verifyRole(['Admin','Approver', 'Finance']), auditTrailController.getALLTransactions);
+router.get('/Transactions/Date', checkUser.verifyUserToken, checkUser.verifyRole(['Admin','Approver', 'Finance']), auditTrailController.getTransactionsByDate);
 
 //timestamp 
-router.get('/timestamp/:itemId' , auditTrailController.getTimeStampByItemID);
+router.get('/timestamp/:itemId', checkUser.verifyUserToken, auditTrailController.getTimeStampByItemID);
 
 module.exports = router;

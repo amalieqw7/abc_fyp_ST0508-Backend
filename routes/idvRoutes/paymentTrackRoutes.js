@@ -33,10 +33,12 @@ router.get('/supplier/info/:supplierID', paymentTrackController.getSupplierInfor
 //get supplierid by pr
 router.get('/supplier/pr/:prID', paymentTrackController.getSIDbyPRID);  //? fetch
 //get id by status
-router.get('/status/:paymentStatus', checkUser.verifyUserToken, checkUser.verifyRole(['Admin']), paymentTrackController.getIDbyStatus)
+router.get('/status/:paymentStatus', checkUser.verifyUserToken, checkUser.verifyRole(['Admin']), paymentTrackController.getIDbyStatus);
 //saving receipt 
-router.put('/productDetails/:prID/receipt', upload.single('file'), paymentTrackController.saveReceipt)
+router.put('/productDetails/:prID/receipt',checkUser.verifyUserToken, upload.single('file'), paymentTrackController.saveReceipt);
 router.get('/productDetails/:prID/receipt', paymentTrackController.getFile);
+//delete receipt
+router.put('/productDetails/:prID/remove', checkUser.verifyUserToken, checkUser.verifyRole(['Finance']), paymentTrackController.removeReceipt);
 
 module.exports = router;
 

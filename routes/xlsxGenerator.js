@@ -59,6 +59,9 @@ router.get('/excel/Date', async (req, res, next) => {
     let startDate = req.query.startDate;
     let endDate = req.query.endDate;
 
+    const SD = DateString(startDate);
+    const ED = DateString(endDate);
+
     try {
         const result = await auditTrailModel.getTransactionsByDate(startDate, endDate);  //? returns an array of all data
 
@@ -89,7 +92,7 @@ router.get('/excel/Date', async (req, res, next) => {
 
         // setting headers for res
         res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        res.setHeader('Content-Disposition', `attachment; filename=TransactionReport.xlsx`);
+        res.setHeader('Content-Disposition', `attachment; filename=TransactionReport_${SD}_${ED}.xlsx`);
 
         // send response
         return res.send(excelBuffer);
@@ -149,6 +152,9 @@ router.get('/csv/Date', async (req, res, next) => {
     let startDate = req.query.startDate;
     let endDate = req.query.endDate;
 
+    const SD = DateString(startDate);
+    const ED = DateString(endDate);
+
     try {
         const result = await auditTrailModel.getTransactionsByDate(startDate, endDate);  //? returns an array of all data
 
@@ -177,7 +183,7 @@ router.get('/csv/Date', async (req, res, next) => {
 
         // setting headers for res
         res.setHeader('Content-Type', 'text/csv');
-        res.setHeader('Content-Disposition', 'attachment; filename=TransactionReport.csv');
+        res.setHeader('Content-Disposition', `attachment; filename=TransactionReport_${SD}_${ED}.csv`);
 
         // send response
         return res.send(csv);
@@ -255,6 +261,12 @@ function CalculateTotal(array) {
     };
 
     return total;
+};
+
+// convert date into number string
+function DateString(date){
+    const momentDate = moment(date).format(`YYYY-MM-DD`);
+    return momentDate;
 };
 
 module.exports = router;

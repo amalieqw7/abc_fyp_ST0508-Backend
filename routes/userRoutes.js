@@ -14,7 +14,7 @@ router.post('/login', userController.userLogin);
 router.get('/', checkUser.verifyUserToken, checkUser.verifyRole(['Admin']), userController.getAllUsers);
 
 // get user details
-router.get('/:id', checkUser.verifyUserToken, userController.getUserDetailsByID);
+router.get('/:id', userController.getUserDetailsByID);
 
 // get user details
 router.get('/:id/role', checkUser.verifyUserToken, checkUser.verifyRole(['Admin']), userController.getUserRoleByID);

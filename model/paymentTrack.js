@@ -36,7 +36,7 @@ const paymentTrackDB = {
 
     //get all payment status
     getAllPaymentStatus: async () => {
-        let sql = 'SELECT paymentStatus from paymentStatus';
+        let sql = 'SELECT paymentStatus from paymentStatus ORDER BY paymentStatusID';
 
         return connection.promise()
             .query(sql)
@@ -205,11 +205,22 @@ const paymentTrackDB = {
             console.error('error fetching receipt', err);
             throw err; 
           });
-    }
+    },
 
 
+    removeReceipt: async (prID) => {
+        let sql = 'UPDATE purchaseOrder SET ptReceipt = ? WHERE prID = ?'
 
-
+        return connection.promise()
+        .query(sql, [null, prID])
+        .then(() => {
+            console.log('deleted')
+        })
+        .catch((err) => {
+            console.log(err);
+            return err;
+        })
+    },
 }
 
 module.exports = paymentTrackDB;

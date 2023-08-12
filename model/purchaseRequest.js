@@ -226,11 +226,13 @@ const purchaseReqDB = {
 
     // get All Ad Hoc Purchases
     getAllAdHoc: async () => {
-        let sql = `SELECT PR.purchaseTypeID, PT.purchaseType, PR.requestDate, PR.prID, U.name, PR.targetDeliveryDate, PR.remarks, PR.prStatusID, PRS.prStatus, PR.apprRemarks
-                    FROM purchaseRequest PR, user U, prStatus PRS, purchaseType PT
+        let sql = `SELECT PR.purchaseTypeID, PT.purchaseType, PR.requestDate, PR.prID, U.name, B.branchName, PR.targetDeliveryDate, PR.remarks, PR.prStatusID, PRS.prStatus, PR.apprRemarks
+                    FROM purchaseRequest PR, user U, prStatus PRS, purchaseType PT, deliveryLocation DL, branch B
                     WHERE PR.userID = U.userID
                     AND PR.purchaseTypeID = PT.purchaseTypeID
                     AND PR.prStatusID = PRS.prStatusID
+                    AND PR.prID = DL.prID
+                    AND DL.branchID = B.branchID
                     AND PR.purchaseTypeID = 2
                     ORDER BY prID asc;`;
 
@@ -252,11 +254,13 @@ const purchaseReqDB = {
 
     // get ad hoc purchases by userid
     getAdHocByUserID: async (userId) => {
-        let sql = `SELECT PR.purchaseTypeID, PT.purchaseType, PR.requestDate, PR.prID, U.name, PR.targetDeliveryDate, PR.remarks, PR.prStatusID, PRS.prStatus, PR.apprRemarks
-                    FROM purchaseRequest PR, user U, prStatus PRS, purchaseType PT
+        let sql = `SELECT PR.purchaseTypeID, PT.purchaseType, PR.requestDate, PR.prID, U.name, B.branchName, PR.targetDeliveryDate, PR.remarks, PR.prStatusID, PRS.prStatus, PR.apprRemarks
+                    FROM purchaseRequest PR, user U, prStatus PRS, purchaseType PT, deliveryLocation DL, branch B
                     WHERE PR.userID = U.userID
                     AND PR.purchaseTypeID = PT.purchaseTypeID
                     AND PR.prStatusID = PRS.prStatusID
+                    AND PR.prID = DL.prID
+                    AND DL.branchID = B.branchID
                     AND PR.purchaseTypeID = 2
                     AND PR.userID = ?
                     ORDER BY prID asc;`;
@@ -279,11 +283,13 @@ const purchaseReqDB = {
 
     // get ad hoc purchases by PR ID
     getAdHocByPRID: async (prID) => {
-        let sql = `SELECT PR.prID, PR.requestDate, PR.targetDeliveryDate, PR.userID, U.name, PR.remarks, PR.prStatusID, PRS.prStatus, PO.totalPrice
-                    FROM purchaseRequest PR, user U, prStatus PRS, purchaseOrder PO
+        let sql = `SELECT PR.prID, PR.requestDate, PR.targetDeliveryDate, PR.userID, U.name, B.branchName, PR.remarks, PR.prStatusID, PRS.prStatus, PO.totalPrice
+                    FROM purchaseRequest PR, user U, prStatus PRS, purchaseOrder PO, deliveryLocation DL, branch B
                     WHERE PR.userID = U.userID
                     AND PR.prStatusID = PRS.prStatusID
                     AND PR.prID = PO.prID
+                    AND PR.prID = DL.prID
+                    AND DL.branchID = B.branchID
                     AND PR.prID = ?`;
 
         return connection.promise()
@@ -364,7 +370,7 @@ const purchaseReqDB = {
     // ===============================
     // GST
     // add gst
-    addGST: async (gst) => {
+    addGST: async (gst, startDate) => {
         let sql = `INSERT INTO gst(gst) VALUES (?)`;
 
         return connection.promise()
@@ -373,6 +379,26 @@ const purchaseReqDB = {
                 console.log(err);
                 throw err;
             })
+    },
+
+    // get all gst
+    getAllGST: async () => {
+        let sql = `SELECT * FROM gst;`;
+
+        return connection.promise()
+            .query(sql)
+            .then((result) => {
+                if (result[0] == 0) {
+                    return null;
+                }
+                else {
+                    return result[0];
+                };
+            })
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            });
     },
 
     // get gst by pr created date
@@ -420,6 +446,50 @@ const purchaseReqDB = {
             });
     },
 
+    // get latest gst
+    getLatestGST: async () => {
+        let sql = `SELECT * FROM gst
+                    WHERE endDate IS NULL
+                    ORDER BY endDate DESC
+                    LIMIT 1;`;
+
+        return connection.promise()
+            .query(sql)
+            .then((result) => {
+                if (result[0] == 0) {
+                    return null;
+                }
+                else {
+                    return result[0];
+                };
+            })
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            });
+    },
+
+    // update GST end date
+    updateGSTEndDate: async (endDate, id) => {
+        let sql = `UPDATE gst SET endDate = ?
+                        WHERE id = ?`;
+
+        return connection.promise()
+            .query(sql, [endDate, id])
+            .then((result) => {
+                if (result[0] == 0) {
+                    return null;
+                }
+                else {
+                    return result[0];
+                };
+            })
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            })
+    },
+
     // ===============================
     // Payment Mode
     // add payment mode
@@ -441,6 +511,26 @@ const purchaseReqDB = {
 
         return connection.promise()
             .query(sql)
+            .then((result) => {
+                if (result[0] == 0) {
+                    return null;
+                }
+                else {
+                    return result[0];
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+                throw err;
+            });
+    },
+
+    // delete payment mode by id
+    deletePaymentMode: async (paymentModeID) => {
+        let sql = 'DELETE FROM paymentMode WHERE paymentModeID = ?';
+
+        return connection.promise()
+            .query(sql, [paymentModeID])
             .then((result) => {
                 if (result[0] == 0) {
                     return null;

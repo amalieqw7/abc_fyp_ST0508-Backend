@@ -23,7 +23,7 @@ router.post('/purchaseStatus', checkUser.verifyUserToken, trackOrderController.a
 // get all purchase status
 router.get('/purchaseStatus/all', trackOrderController.getAllPurchaseStatus);
 // insert data into purchase order table
-router.post('/purchaseOrder', checkUser.verifyUserToken, trackOrderController.addPurchaseOrder);
+router.post('/purchaseOrder', checkUser.verifyUserToken, checkUser.verifyRole(['Approver', 'Purchaser']), trackOrderController.addPurchaseOrder);
 // update PO Total Price //? for adhoc purchases
 router.put('/purchaseOrder/totalPrice/:id', checkUser.verifyUserToken, trackOrderController.updatePOTotalPrice);
 // get purchase order by ID
@@ -33,17 +33,17 @@ router.get('/purchaseOrderDetails/:id', trackOrderController.getPODByPRID);  //?
 // get product details by PO ID 
 router.get('/productDetails/:id', trackOrderController.getPDByPOID);
 // update PO status dropdown by PO ID 
-router.put('/purchaseOrderStatus/:id', trackOrderController.updatePOByPoId);
+router.put('/purchaseOrderStatus/:id', checkUser.verifyUserToken, trackOrderController.updatePOByPoId);
 // get purchase status by ID
 router.get('/purchaseStatus/:id', trackOrderController.getPOstatusbyID);
 // insert quantity received into purchase order table
 router.put('/purchaseOrder/qty/:id', trackOrderController.updateQtyReceived);
 // get purchase statuses
-router.get('/purchaseStatuses', trackOrderController.getPurchaseStatuses);
+router.get('/purchaseStatuses', checkUser.verifyUserToken, checkUser.verifyRole(['Approver', 'Finance', 'Purchaser']), trackOrderController.getPurchaseStatuses);
 // get no. of PR as of date 
-router.get('/prAmnt', trackOrderController.getPRAmount);
+router.get('/prAmnt', checkUser.verifyUserToken, trackOrderController.getPRAmount);
 // get no. of PO as of date 
-router.get('/poAmnt', trackOrderController.getPOAmount);
+router.get('/poAmnt', checkUser.verifyUserToken, trackOrderController.getPOAmount);
 // search bar 
 router.post('/POsearch', trackOrderController.searchBar);
 // save invoice 
@@ -55,10 +55,10 @@ router.get('/documents/:prID/invoice', trackOrderController.getInvoice);
 // insert delivery date
 router.put('/purchaseDetails/DeliveryTime/:id', trackOrderController.addDDate);
 // get delivery date
-router.get('/purchaseDetails/DeliveryTime/:prID', trackOrderController.getDDateByID)
+router.get('/purchaseDetails/DeliveryTime/:prID', trackOrderController.getDDateByID);  //? fetch
 // get id by purchase status
-router.get('/purchaseStatus/id/:purchaseStatus', trackOrderController.getIDbyPurchaseStatus);
+router.get('/purchaseStatus/id/:purchaseStatus',checkUser.verifyUserToken, checkUser.verifyRole(['Admin']), trackOrderController.getIDbyPurchaseStatus);
 // delete purchase status
-router.delete('/purchaseStatus/:purchaseStatusID',trackOrderController.deletePurchaseStatusByID);
+router.delete('/purchaseStatus/:purchaseStatusID',checkUser.verifyUserToken, checkUser.verifyRole(['Admin']),trackOrderController.deletePurchaseStatusByID);
 
 module.exports = router;

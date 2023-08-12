@@ -11,16 +11,16 @@ router.post('/user', userController.createUser);
 router.post('/login', userController.userLogin);
 
 // get all users
-router.get('/', checkUser.verifyUserToken, userController.getAllUsers);
+router.get('/', checkUser.verifyUserToken, checkUser.verifyRole(['Admin']), userController.getAllUsers);
 
 // get user details
 router.get('/:id', userController.getUserDetailsByID);
 
 // get user details
-router.get('/:id/role', userController.getUserRoleByID);
+router.get('/:id/role', checkUser.verifyUserToken, checkUser.verifyRole(['Admin']), userController.getUserRoleByID);
 
 // create role
-router.post('/role', userController.createRole);
+router.post('/role', checkUser.verifyUserToken, checkUser.verifyRole(['Admin']), userController.createRole);
 
 // get all roles
 router.get('/role/all', checkUser.verifyUserToken, userController.getAllRoles);
@@ -29,6 +29,6 @@ router.get('/role/all', checkUser.verifyUserToken, userController.getAllRoles);
 router.get('/role/ByRole', userController.getRoleIDByRole);
 
 // update user role
-router.put('/role/:id', checkUser.verifyUserToken, userController.updateUserRole);
+router.put('/role/:id', checkUser.verifyUserToken, checkUser.verifyRole(['Admin']), userController.updateUserRole);
 
 module.exports = router;

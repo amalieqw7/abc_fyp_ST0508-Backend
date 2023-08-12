@@ -96,30 +96,30 @@ module.exports.getPRByPRID = async (req, res, next) => {
         const poResult = await purchaseOrderModel.getPODByPRID(prId);
         const reqDate = moment(data[0].requestDate).format();
 
-        if(poResult){
+        if (poResult) {
             const poID = poResult[0].poID;
             const auditLogCheck = await auditTrailModel.getAuditLogByItemID(3, poID, 3);
 
-            if(auditLogCheck){
+            if (auditLogCheck) {
                 const AL = auditLogCheck[auditLogCheck.length - 1];
 
                 const auditTime = moment(AL.timestamp).format();
                 const getGST = await purchaseRequestModel.getPRGST(auditTime);
-    
+
                 data[0].GST = getGST[0];
-            } else{
+            } else {
                 const gstResult = await purchaseRequestModel.getPRGST(reqDate);
-    
+
                 data[0].GST = gstResult[0];
             };
         };
-        
-        if(!poResult){
+
+        if (!poResult) {
             const gstResult = await purchaseRequestModel.getPRGST(reqDate);
-    
+
             data[0].GST = gstResult[0];
         };
-        
+
         // Return the final data (PR details + GST)
         return res.status(200).json(data);
 
@@ -454,6 +454,24 @@ module.exports.addGST = async (req, res, next) => {
         });
 };
 
+// get all gst
+module.exports.getAllGST = async (req, res, next) => {
+    return purchaseRequestModel
+        .getAllGST()
+        .then((result) => {
+            if (result == null) {
+                res.status(404).send(`GST do not exist!`);
+            }
+            else {
+                res.status(200).send(result);
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send(`Unknown Error`);
+        });
+};
+
 // get gst by pr created date
 module.exports.getPRGST = async (req, res, next) => {
     let date = req.body.requestDate;
@@ -499,6 +517,54 @@ module.exports.getGSTByID = async (req, res, next) => {
         });
 };
 
+// get latest gst
+module.exports.getLatestGST = async (req, res, next) => {
+
+    return purchaseRequestModel
+        .getLatestGST()
+        .then((result) => {
+            if (result == null) {
+                res.status(404).send(`GST does not exist!`);
+            }
+            else {
+                res.status(200).send(result);
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send(`Unknown Error`);
+        });
+};
+
+// update GST end date
+module.exports.updateGSTEndDate = async (req, res, next) => {
+    try {
+        const lastestGSTID = await purchaseRequestModel.getLatestGST();
+
+        const id = lastestGSTID[0].id;
+        const endDate = req.body.endDate;
+
+        return purchaseRequestModel
+            .updateGSTEndDate(endDate, id)
+            .then((result) => {
+                if (result.affectedRows == 0) {
+                    res.status(404).send(`GST #${id} does not exist!`);
+                }
+                else {
+                    res.status(201).send(`End Date Updated!`);
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+                res.status(500).send(`Unknown error`);
+            });
+
+
+    } catch (err) {
+        console.log(err);
+    };
+};
+
 // ===============================
 // Payment Mode
 // add payment mode
@@ -527,6 +593,31 @@ module.exports.getAllPaymentMode = async (req, res, next) => {
             else {
                 res.status(200).send(result);
             }
+        });
+};
+
+// delete payment mode by id
+module.exports.deletePaymentMode = async (req, res, next) => {
+    let paymentModeID = parseInt(req.params.id);
+
+    if (isNaN(paymentModeID)) {
+        res.status(400).send(`Payment Mode ID provided is not a number!`);
+        return;
+    };
+
+    return purchaseRequestModel
+        .deletePaymentMode(paymentModeID)
+        .then((result) => {
+            if (result.affectedRows == 0) {
+                res.status(404).send(`Payment Mode #${paymentModeID} does not exist!`);
+            }
+            else {
+                res.status(201).send(`Payment Mode #${paymentModeID} has been deleted!`);
+            }
+        })
+        .catch((err) => {
+            console.log(err);
+            res.status(500).send(`Unknown error`);
         });
 };
 

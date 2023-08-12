@@ -15,37 +15,37 @@ const supplierController = require('../../controller/supplierController');
 router.post('/bank', supplierController.insertBank);
 
 // retrieve all bank names
-router.get('/bank/all', supplierController.getAllBankNames);
+router.get('/bank/all', checkUser.verifyUserToken, supplierController.getAllBankNames);
 
 // create category
 router.post('/category', supplierController.createCategory);
 
 // get all categories
-router.get('/category/all', supplierController.getAllCategories);
+router.get('/category/all', checkUser.verifyUserToken, supplierController.getAllCategories);
 
 // create supplier
-router.post('/', checkUser.verifyUserToken, supplierController.createSupplier);
+router.post('/', checkUser.verifyUserToken, checkUser.verifyRole(['Approver']), supplierController.createSupplier);
 
 // create suppliers category
-router.post('/suppliersCategory', supplierController.createSuppliersCategory);
+router.post('/suppliersCategory', checkUser.verifyUserToken, checkUser.verifyRole(['Approver', 'Supplier']), supplierController.createSuppliersCategory);
 
 // update suppliers category
-router.put('/suppliersCategory/:fkSupplier_id', supplierController.editSuppliersCategory);
+router.put('/suppliersCategory/:fkSupplier_id', checkUser.verifyUserToken, checkUser.verifyRole(['Approver', 'Supplier']), supplierController.editSuppliersCategory);
 
 // retrieve the latest supplierID and name
 router.get('/supplierid', checkUser.verifyUserToken, supplierController.getLatestSupplierID);
 
 // retrieve all suppliers (id, name, contact person & number, categories)
-router.get('/all', supplierController.getAllSuppliers);
+router.get('/all', supplierController.getAllSuppliers); //? fetch
 
 // retrieve full supplier details by supplierID
-router.get('/:supplierID', supplierController.getFullSupplierDetailsByID);
+router.get('/:supplierID', supplierController.getFullSupplierDetailsByID); //? fetch
 
 // update supplier
-router.put('/:supplierID', checkUser.verifyUserToken, supplierController.updateSupplierDetails);
+router.put('/:supplierID', checkUser.verifyUserToken, checkUser.verifyRole(['Approver', 'Supplier']), supplierController.updateSupplierDetails);
 
 // delete supplier
-router.put('/delete/:supplierID', checkUser.verifyUserToken, supplierController.deleteSupplier);
+router.put('/delete/:supplierID', checkUser.verifyUserToken, checkUser.verifyRole(['Approver']), supplierController.deleteSupplier);
 
 // delete suppliers category
 router.put('/delete/category/:fkSupplier_id', checkUser.verifyUserToken, supplierController.deleteSuppliersCategory);

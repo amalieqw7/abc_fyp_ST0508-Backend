@@ -34,13 +34,17 @@ router.get('/lineItem/:id', purchaseReqController.getLineItemByPRID); //? fetch
 router.put('/lineItem/:id', purchaseReqController.updateQtyReceived);
 
 // GST
-router.post('/gst', checkUser.verifyRole(['Admin']), purchaseReqController.addGST);
+router.post('/gst', checkUser.verifyUserToken, checkUser.verifyRole(['Admin']), purchaseReqController.addGST);
+router.get('/gst/all/details', checkUser.verifyUserToken, checkUser.verifyRole(['Admin']), purchaseReqController.getAllGST);
 router.post('/gst/filter', purchaseReqController.getPRGST);
 router.get('/gst/:id', purchaseReqController.getGSTByID);
+router.get('/gst/latest/details', checkUser.verifyUserToken, checkUser.verifyRole(['Admin']), purchaseReqController.getLatestGST);
+router.put('/gst/EndDate', checkUser.verifyUserToken, checkUser.verifyRole(['Admin']), purchaseReqController.updateGSTEndDate);
 
 // Payment Mode
-router.post('/paymentMode', purchaseReqController.addPaymentMode);
+router.post('/paymentMode', checkUser.verifyUserToken, checkUser.verifyRole(['Admin']), purchaseReqController.addPaymentMode);
 router.get('/paymentMode/all', purchaseReqController.getAllPaymentMode); //? fetch
+router.delete('/paymentMode/:id', checkUser.verifyUserToken, checkUser.verifyRole(['Admin']), purchaseReqController.deletePaymentMode);
 
 // Branch
 router.post('/branch', purchaseReqController.addBranch);

@@ -226,11 +226,13 @@ const purchaseReqDB = {
 
     // get All Ad Hoc Purchases
     getAllAdHoc: async () => {
-        let sql = `SELECT PR.purchaseTypeID, PT.purchaseType, PR.requestDate, PR.prID, U.name, PR.targetDeliveryDate, PR.remarks, PR.prStatusID, PRS.prStatus, PR.apprRemarks
-                    FROM purchaseRequest PR, user U, prStatus PRS, purchaseType PT
+        let sql = `SELECT PR.purchaseTypeID, PT.purchaseType, PR.requestDate, PR.prID, U.name, B.branchName, PR.targetDeliveryDate, PR.remarks, PR.prStatusID, PRS.prStatus, PR.apprRemarks
+                    FROM purchaseRequest PR, user U, prStatus PRS, purchaseType PT, deliveryLocation DL, branch B
                     WHERE PR.userID = U.userID
                     AND PR.purchaseTypeID = PT.purchaseTypeID
                     AND PR.prStatusID = PRS.prStatusID
+                    AND PR.prID = DL.prID
+                    AND DL.branchID = B.branchID
                     AND PR.purchaseTypeID = 2
                     ORDER BY prID asc;`;
 
@@ -252,11 +254,13 @@ const purchaseReqDB = {
 
     // get ad hoc purchases by userid
     getAdHocByUserID: async (userId) => {
-        let sql = `SELECT PR.purchaseTypeID, PT.purchaseType, PR.requestDate, PR.prID, U.name, PR.targetDeliveryDate, PR.remarks, PR.prStatusID, PRS.prStatus, PR.apprRemarks
-                    FROM purchaseRequest PR, user U, prStatus PRS, purchaseType PT
+        let sql = `SELECT PR.purchaseTypeID, PT.purchaseType, PR.requestDate, PR.prID, U.name, B.branchName, PR.targetDeliveryDate, PR.remarks, PR.prStatusID, PRS.prStatus, PR.apprRemarks
+                    FROM purchaseRequest PR, user U, prStatus PRS, purchaseType PT, deliveryLocation DL, branch B
                     WHERE PR.userID = U.userID
                     AND PR.purchaseTypeID = PT.purchaseTypeID
                     AND PR.prStatusID = PRS.prStatusID
+                    AND PR.prID = DL.prID
+                    AND DL.branchID = B.branchID
                     AND PR.purchaseTypeID = 2
                     AND PR.userID = ?
                     ORDER BY prID asc;`;
@@ -279,11 +283,13 @@ const purchaseReqDB = {
 
     // get ad hoc purchases by PR ID
     getAdHocByPRID: async (prID) => {
-        let sql = `SELECT PR.prID, PR.requestDate, PR.targetDeliveryDate, PR.userID, U.name, PR.remarks, PR.prStatusID, PRS.prStatus, PO.totalPrice
-                    FROM purchaseRequest PR, user U, prStatus PRS, purchaseOrder PO
+        let sql = `SELECT PR.prID, PR.requestDate, PR.targetDeliveryDate, PR.userID, U.name, B.branchName, PR.remarks, PR.prStatusID, PRS.prStatus, PO.totalPrice
+                    FROM purchaseRequest PR, user U, prStatus PRS, purchaseOrder PO, deliveryLocation DL, branch B
                     WHERE PR.userID = U.userID
                     AND PR.prStatusID = PRS.prStatusID
                     AND PR.prID = PO.prID
+                    AND PR.prID = DL.prID
+                    AND DL.branchID = B.branchID
                     AND PR.prID = ?`;
 
         return connection.promise()

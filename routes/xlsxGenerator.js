@@ -58,6 +58,7 @@ router.get('/excel', async (req, res, next) => {
 router.get('/excel/Date', async (req, res, next) => {
     let startDate = req.query.startDate;
     let endDate = req.query.endDate;
+    console.log(startDate)
 
     const SD = DateString(startDate);
     const ED = DateString(endDate);
@@ -226,21 +227,19 @@ function TransactionData(resultArr) {
         };
 
         if (item.purchaseTypeID === 2) {
-            transactionObj.PO_No = '#' + reqDate + poID;
             transactionObj.Purchase_Status = 'N/A';
-            transactionObj.Branch = 'N/A';
             transactionObj.Supplier = 'N/A';
             transactionObj.Payment_Mode = 'Cash';
         } else {
-            transactionObj.PO_No = '#' + BranchPrefix + reqDate + poID;
             transactionObj.Purchase_Status = item.purchaseStatus;
-            transactionObj.Branch = item.branchName;
             transactionObj.Supplier = item.supplierName;
             transactionObj.Payment_Mode = item.paymentMode;
         };
 
+        transactionObj.PO_No = '#' + BranchPrefix + reqDate + poID;
         transactionObj.Date = moment(item.requestDate).format('YYYY-MM-DD');
         transactionObj.Name = item.name;
+        transactionObj.Branch = item.branchName;
         transactionObj.Purchase_Type = item.purchaseType;
         transactionObj.Payment_Status = item.paymentStatus;
         transactionObj.Total_Price = item.totalPrice;

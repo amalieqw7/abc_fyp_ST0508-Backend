@@ -21,7 +21,7 @@ router.put('/PR/ApprComment/:id', checkUser.verifyUserToken, checkUser.verifyRol
 router.delete('/PR/:id', checkUser.verifyUserToken, purchaseReqController.deletePRById);
 
 // Ad Hoc
-router.get('/adhoc/purchases', checkUser.verifyUserToken, checkUser.verifyRole(['Approver', 'Purchaser']), purchaseReqController.getAllAdHoc);
+router.get('/adhoc/purchases', checkUser.verifyUserToken, checkUser.verifyRole(['Approver', 'Purchaser', 'Finance']), purchaseReqController.getAllAdHoc);
 router.get('/adhoc/:id', purchaseReqController.getAdHocByUserID);
 router.get('/adhoc/viewBy/:id', purchaseReqController.getAdHocByPRID); //? fetch
 

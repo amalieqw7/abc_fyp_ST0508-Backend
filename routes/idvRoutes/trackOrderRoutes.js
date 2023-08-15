@@ -49,7 +49,7 @@ router.post('/POsearch', trackOrderController.searchBar);
 // save invoice 
 router.put('/documents/:prID/invoice',checkUser.verifyUserToken, upload.single('file'), trackOrderController.saveInvoice);
 // save DO
-router.put('/documents/:prID/deliveryOrder', upload.single('file'), trackOrderController.saveDOrder);
+router.put('/documents/:prID/deliveryOrder', checkUser.verifyUserToken, upload.single('file'), trackOrderController.saveDOrder);
 // fetch invoice
 router.get('/documents/:prID/invoice', trackOrderController.getInvoice);
 //fetch DO

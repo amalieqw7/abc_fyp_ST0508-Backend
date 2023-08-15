@@ -362,6 +362,24 @@ module.exports.getInvoice = async (req, res, next) => {
       });
   };
 
+module.exports.getDO = async (req, res, next) => {
+let prID = req.params.prID;
+  
+return trackOrderModel
+    .getDO(prID)
+    .then((result) => {
+    if (!result) {
+      return res.status(404).send('Delivery Order not found');
+    }
+    res.set('Content-Type', 'application/pdf');
+    res.send(result);
+    })
+    .catch((err) => {
+        console.error('Error fetching Delivery Order:', err);
+        res.status(500).send('Failed to fetch Delivery Order');
+    });
+};
+
 //insert deliverydate
 module.exports.addDDate = async (req, res, next) => {
     let prID = req.params.id;
@@ -431,5 +449,33 @@ module.exports.deletePurchaseStatusByID = async (req, res, next) => {
         else {
             res.status(200).send(``)
         }
+    })
+}
+
+module.exports.removeInvoice = async (req, res, next) => {
+    let prID = req.params.prID;
+
+    return trackOrderModel
+    .removeInvoice(prID)
+    .then(() => {
+        res.send('Invoice deleted succesfully')
+    })
+    .catch((err) => {
+        console.log(err)
+        res.status(500).send(`Failed to delete Invoice`)
+    })
+}
+
+module.exports.removeDO = async (req, res, next) => {
+    let prID = req.params.prID;
+
+    return trackOrderModel
+    .removeDO(prID)
+    .then(() => {
+        res.send('DO deleted succesfully')
+    })
+    .catch((err) => {
+        console.log(err)
+        res.status(500).send(`Failed to delete DO`)
     })
 }

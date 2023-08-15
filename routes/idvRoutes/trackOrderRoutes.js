@@ -52,6 +52,8 @@ router.put('/documents/:prID/invoice',checkUser.verifyUserToken, upload.single('
 router.put('/documents/:prID/deliveryOrder', upload.single('file'), trackOrderController.saveDOrder);
 // fetch invoice
 router.get('/documents/:prID/invoice', trackOrderController.getInvoice);
+//fetch DO
+router.get('/documents/:prID/deliveryOrder', trackOrderController.getDO);
 // insert delivery date
 router.put('/purchaseDetails/DeliveryTime/:id', trackOrderController.addDDate);
 // get delivery date
@@ -60,5 +62,8 @@ router.get('/purchaseDetails/DeliveryTime/:prID', trackOrderController.getDDateB
 router.get('/purchaseStatus/id/:purchaseStatus',checkUser.verifyUserToken, checkUser.verifyRole(['Admin']), trackOrderController.getIDbyPurchaseStatus);
 // delete purchase status
 router.delete('/purchaseStatus/:purchaseStatusID',checkUser.verifyUserToken, checkUser.verifyRole(['Admin']),trackOrderController.deletePurchaseStatusByID);
-
+// delete invoice
+router.put('/documents/:prID/removeInvoice',  trackOrderController.removeInvoice);
+// delete delivery order
+router.put('/documents/:prID/removeDO',  trackOrderController.removeDO);
 module.exports = router;

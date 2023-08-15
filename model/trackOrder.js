@@ -385,6 +385,24 @@ const trackOrderDB = {
                 throw err;
             });
     },
+
+    //fetch DO 
+    getDO: async (prID) => {
+        const sql = `SELECT deliveryOrder FROM purchaseOrder WHERE prID = ?`;
+
+        return connection.promise()
+            .query(sql, [prID])
+            .then(([rows]) => {
+                if (rows.length === 0) {
+                    return null;
+                }
+                return rows[0].deliveryOrder;
+            })
+            .catch((err) => {
+                console.error('error fetching Delivery Order', err);
+                throw err;
+            });
+    },
     
      //insert delivery
      addDDate: async (deliveryDate, prID) => {
@@ -454,8 +472,35 @@ const trackOrderDB = {
                 console.log(err);
                 return err
             })
-    }
+    },
 
+    removeInvoice: async (prID) => {
+        let sql = 'UPDATE purchaseOrder SET invoice = ? WHERE prID = ?'
+
+        return connection.promise()
+        .query(sql, [null, prID])
+        .then(() => {
+            console.log('deleted')
+        })
+        .catch((err) => {
+            console.log(err);
+            return err;
+        })
+    },
+
+    removeDO: async (prID) => {
+        let sql = `UPDATE purchaseOrder SET deliveryOrder = ? WHERE prID = ?`
+
+        return connection.promise()
+        .query(sql, [null, prID])
+        .then(() => {
+            console.log('deleted')
+        })
+        .catch((err) => {
+            console.log(err);
+            return err;
+        })
+    },
 
 };
 
